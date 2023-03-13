@@ -1,0 +1,41 @@
+:host {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.main-container {
+    box-shadow: 0px 0px 1vmax 1vmax rgb(190, 190, 190);
+    border-radius: 5vmax;
+    width: 50vw;
+    height: 70vh;
+    display: flex;
+    justify-content: center;
+}
+
+.form-container {
+    width: 60%;
+    height: 80%;
+    margin: auto;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+}
+
+.create-account {
+    font-size: 1.25vmax;
+}
+
+.create-account:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.buttons-layout {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}

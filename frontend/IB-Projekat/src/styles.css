@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans&family=Sono:wght@300;400&family=Work+Sans:wght@300&display=swap');
+
+* {
+    /* font-family: 'Noto Sans', sans-serif; */
+    /* font-family: 'Sono', sans-serif; */
+    font-family: 'Work Sans', sans-serif;
+}
+
+.form-field-container {
+    display: block;
+    width: 85%;
+    font-size: 1.25vmax;
+    margin: 0 auto;
+}
+
+.form-field-container input {
+    width: 90%;
+    font-size: 1vmax;
+    border-radius: 2vmax;
+    border: 2px solid rgb(190, 190, 190);
+    padding: 1vh 1vw;
+}
+
+.form-field-container input:focus {
+    outline: none;
+    border: 2px solid rgb(120, 120, 120);
+}
+
+button {
+    padding: 3vh 7vw;
+    font-size: 1.25vmax;
+    background-color: rgb(0, 126, 152);
+    color: white;
+    border-width: 0;
+    border-radius: 1vmax;
+}
+
+button:hover {
+    cursor: pointer;
+    background-color: rgb(0, 99, 118);
+}
+
+button:focus {
+    outline: none;
+    background-color: rgb(0, 99, 118);
+}
+

@@ -1,0 +1,31 @@
+<div class="main-container">
+    <form class="form-container" [formGroup]="formGroup" (ngSubmit)="createAccount()">
+        <div class="table-layout">
+            <div class="form-field-container">
+                <label for="name">Name</label>
+                <input type="text" name="name" formControlName="name"/>
+            </div>
+            <div class="form-field-container">
+                <label for="surname">Surname</label>
+                <input type="text" name="surname" formControlName="surname"/>
+            </div>
+            <div class="form-field-container">
+                <label for="email">Email</label>
+                <input type="email" name="email" formControlName="email"/>
+            </div>
+            <div class="form-field-container">
+                <label for="password">Password</label>
+                <input type="password" name="password" formControlName="password"/>
+            </div>
+            <div class="form-field-container">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" name="confirm-password" formControlName="confirmPassword"/>
+            </div>
+        </div>
+        <div class="buttons-layout">
+            <button type="submit" class="submit-button">Create account</button>
+            <p class="go-back" (click)="navigateBack()">Back to login</p>
+        </div>
+    </form>
+
+</div>
