@@ -1,5 +1,8 @@
 package ib.projekat.IBprojekat.service.impl;
 
+import ib.projekat.IBprojekat.certificate.CertificateGenerator;
+import ib.projekat.IBprojekat.certificate.keystore.KeyStoreWriter;
+import ib.projekat.IBprojekat.constant.GlobalConstants;
 import ib.projekat.IBprojekat.constant.Role;
 import ib.projekat.IBprojekat.dao.UserRepository;
 import ib.projekat.IBprojekat.dto.request.LoginRequestDto;
@@ -20,6 +23,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.KeyPair;
 import java.util.Optional;
 
 @Service("AuthService")
@@ -30,6 +34,8 @@ public class AuthService implements IAuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final KeyStoreWriter keyStoreWriter;
+    private final CertificateGenerator certificateGenerator;
 
     @Override
     public TokenResponseDto login(LoginRequestDto loginRequest) {
@@ -58,6 +64,8 @@ public class AuthService implements IAuthService {
             throw new EmailAlreadyExistsException();
         }
 
+        KeyPair keyPair = certificateGenerator.generateKeyPair();
+
         UserEntity newUser = UserEntity.builder()
                 .name(userRequest.getName())
                 .surname(userRequest.getSurname())
@@ -65,8 +73,13 @@ public class AuthService implements IAuthService {
                 .password(passwordEncoder.encode(userRequest.getPassword()))
                 .role(Role.USER)
                 .enabled(true)
+                .publicKey(keyPair.getPublic())
                 .build();
         newUser = userRepository.save(newUser);
+
+        // saving the private key for the user
+        keyStoreWriter.loadKeyStore(GlobalConstants.jksPrivateKeysPath, GlobalConstants.jksPassword.toCharArray());
+        keyStoreWriter.write(newUser.getEmail(), keyPair.getPrivate(), GlobalConstants.jksEntriesPassword.toCharArray(), null);
 
         return UserResponseDto.builder()
                 .id(newUser.getId())

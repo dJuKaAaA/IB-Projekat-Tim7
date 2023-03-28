@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
+import java.util.Enumeration;
 
 @Service
 public class KeyStoreWriter {
@@ -43,5 +44,29 @@ public class KeyStoreWriter {
             e.printStackTrace();
         }
     }
+
+    public void clearKeyStore(String keystoreFile, char[] keystorePassword) {
+        try {
+            // Load the keystore
+            FileInputStream is = new FileInputStream(keystoreFile);
+            KeyStore keystore = KeyStore.getInstance("JKS");
+            keystore.load(is, keystorePassword);
+
+            // Get all aliases in the keystore and delete each entry
+            Enumeration<String> aliases = keystore.aliases();
+            while (aliases.hasMoreElements()) {
+                String alias = aliases.nextElement();
+                keystore.deleteEntry(alias);
+            }
+
+            // Save the keystore
+            FileOutputStream os = new FileOutputStream(keystoreFile);
+            keystore.store(os, keystorePassword);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

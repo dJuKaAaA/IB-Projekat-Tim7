@@ -16,8 +16,8 @@ public class CertificateResponseDto {
     private String type;
     private UserRefResponseDto issuer;
     private UserRefResponseDto issuedTo;
-    private String validFrom;
-    private String validTo;
+    private String startDate;
+    private String endDate;
     private String publicKey;
     private String signature;
 

@@ -1,5 +1,6 @@
 package ib.projekat.IBprojekat.dto.response;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,12 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserResponseDto {
+public class CertificateDemandResponseDto {
 
     private Long id;
-    private String name;
-    private String surname;
-    private String phoneNumber;
-    private String email;
+    private UserRefResponseDto requestedIssuer;
+    private UserRefResponseDto requester;
 
 }

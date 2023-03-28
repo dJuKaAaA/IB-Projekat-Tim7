@@ -1,8 +1,12 @@
 package ib.projekat.IBprojekat.certificate;
 
+import ib.projekat.IBprojekat.certificate.keystore.KeyStoreReader;
 import ib.projekat.IBprojekat.certificate.model.IssuerData;
 import ib.projekat.IBprojekat.certificate.model.SubjectData;
+import ib.projekat.IBprojekat.constant.GlobalConstants;
+import ib.projekat.IBprojekat.dao.UserRepository;
 import ib.projekat.IBprojekat.entity.UserEntity;
+import lombok.RequiredArgsConstructor;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
@@ -23,7 +27,10 @@ import java.util.Date;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class CertificateGenerator {
+
+    private final KeyStoreReader keyStoreReader;
 
     public X509Certificate generateCertificate(SubjectData subjectData, IssuerData issuerData) {
         try {
@@ -54,19 +61,19 @@ public class CertificateGenerator {
         return null;
     }
 
-    // TODO: Instead of taking the private key as a parameter, read it from somewhere and use it
-    public IssuerData generateIssuerData(UserEntity user, PrivateKey issuerKey) {
+    public IssuerData generateIssuerData(UserEntity user) {
+        PrivateKey issuerKey = keyStoreReader.readPrivateKey(user.getEmail(), GlobalConstants.jksEntriesPassword.toCharArray());
         return new IssuerData(buildX500Name(user), issuerKey);
     }
 
     public SubjectData generateSubjectData(UserEntity user, Date startDate, Date endDate) {
-
         // generating the serial number for the certificate
         String serialNumber = UUID.randomUUID().toString();
+
         return new SubjectData(user.getPublicKey(), buildX500Name(user), serialNumber, startDate, endDate);
     }
 
-    private KeyPair generateKeyPair() {
+    public KeyPair generateKeyPair() {
         try {
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
             SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");

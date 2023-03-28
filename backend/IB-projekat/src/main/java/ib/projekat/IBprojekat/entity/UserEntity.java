@@ -28,7 +28,6 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
     private boolean enabled;
-    @Embedded
     private PublicKey publicKey;
 
 }

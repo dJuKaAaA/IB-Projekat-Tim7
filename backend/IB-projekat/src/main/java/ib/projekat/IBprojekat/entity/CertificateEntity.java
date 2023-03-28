@@ -20,15 +20,17 @@ public class CertificateEntity {
     @Id
     @GeneratedValue
     private Long id;
-    private String serialNumber;  // TODO: Change
+    private String serialNumber;
+    @ManyToOne
+    private CertificateEntity signer;
     @Enumerated(EnumType.STRING)
     private CertificateType type;
     @ManyToOne
     private UserEntity issuer;
     @ManyToOne
     private UserEntity issuedTo;
-    private Date validFrom;
-    private Date validTo;
+    private Date startDate;
+    private Date endDate;
     private byte[] publicKey;
     private byte[] signature;
 
