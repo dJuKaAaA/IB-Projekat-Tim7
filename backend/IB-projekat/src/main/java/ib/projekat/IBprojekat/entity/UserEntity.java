@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.security.PublicKey;
+
 @Entity
 @Table(name = "users")
 @Data
@@ -20,10 +22,13 @@ public class UserEntity {
     private Long id;
     private String name;
     private String surname;
+    private String phoneNumber;
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
     private boolean enabled;
+    @Embedded
+    private PublicKey publicKey;
 
 }

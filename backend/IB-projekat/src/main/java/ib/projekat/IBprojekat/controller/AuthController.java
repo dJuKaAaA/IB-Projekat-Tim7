@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private IAuthService userCrudService;
+
     @Autowired
     public void setUserCrudService(@Qualifier("AuthService") IAuthService userCrudService) {
         this.userCrudService = userCrudService;
