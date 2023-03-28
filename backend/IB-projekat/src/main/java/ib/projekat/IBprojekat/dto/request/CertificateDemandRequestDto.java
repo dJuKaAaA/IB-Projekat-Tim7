@@ -1,5 +1,6 @@
 package ib.projekat.IBprojekat.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,5 +19,7 @@ public class CertificateDemandRequestDto {
     private Long requestedIssuerId;
     @NotNull(message = "Requester id not provided!")
     private Long requesterId;
+    @NotBlank(message = "Reason not provided")
+    private String reason;
 
 }

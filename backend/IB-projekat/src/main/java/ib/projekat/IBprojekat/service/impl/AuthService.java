@@ -1,6 +1,7 @@
 package ib.projekat.IBprojekat.service.impl;
 
 import ib.projekat.IBprojekat.certificate.CertificateGenerator;
+import ib.projekat.IBprojekat.certificate.keystore.KeyStoreReader;
 import ib.projekat.IBprojekat.certificate.keystore.KeyStoreWriter;
 import ib.projekat.IBprojekat.constant.GlobalConstants;
 import ib.projekat.IBprojekat.constant.Role;
@@ -17,13 +18,20 @@ import ib.projekat.IBprojekat.service.interf.IAuthService;
 import ib.projekat.IBprojekat.websecurity.JwtService;
 import ib.projekat.IBprojekat.websecurity.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.x500.X500Principal;
+import java.math.BigInteger;
 import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.cert.X509Certificate;
+import java.util.Date;
 import java.util.Optional;
 
 @Service("AuthService")
@@ -78,8 +86,19 @@ public class AuthService implements IAuthService {
         newUser = userRepository.save(newUser);
 
         // saving the private key for the user
+        X509Certificate dummyCert;
+        try {
+            dummyCert = generateSelfSignedCertificate(keyPair.getPublic(), keyPair.getPrivate());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         keyStoreWriter.loadKeyStore(GlobalConstants.jksPrivateKeysPath, GlobalConstants.jksPassword.toCharArray());
-        keyStoreWriter.write(newUser.getEmail(), keyPair.getPrivate(), GlobalConstants.jksEntriesPassword.toCharArray(), null);
+        keyStoreWriter.write(
+                newUser.getEmail(),
+                keyPair.getPrivate(),
+                GlobalConstants.jksEntriesPassword.toCharArray(),
+                dummyCert);
+        keyStoreWriter.saveKeyStore(GlobalConstants.jksPrivateKeysPath, GlobalConstants.jksPassword.toCharArray());
 
         return UserResponseDto.builder()
                 .id(newUser.getId())
@@ -88,4 +107,17 @@ public class AuthService implements IAuthService {
                 .email(newUser.getEmail())
                 .build();
     }
+
+    private X509Certificate generateSelfSignedCertificate(PublicKey publicKey, PrivateKey privateKey) throws Exception {
+        X509V3CertificateGenerator certGen = new X509V3CertificateGenerator();
+        certGen.setSerialNumber(BigInteger.valueOf(System.currentTimeMillis()));
+        certGen.setSubjectDN(new X500Principal("CN=Dummy Certificate"));
+        certGen.setIssuerDN(new X500Principal("CN=Dummy Certificate"));
+        certGen.setNotBefore(new Date(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 30)); // 30 days ago
+        certGen.setNotAfter(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 365)); // 1 year from now
+        certGen.setPublicKey(publicKey);
+        certGen.setSignatureAlgorithm("SHA256WithRSAEncryption");
+        return certGen.generate(privateKey);
+    }
+
 }

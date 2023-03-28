@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.security.PublicKey;
 import java.util.Date;
 
 @Entity
@@ -31,7 +32,7 @@ public class CertificateEntity {
     private UserEntity issuedTo;
     private Date startDate;
     private Date endDate;
-    private byte[] publicKey;
+    private PublicKey publicKey;
     private byte[] signature;
 
 

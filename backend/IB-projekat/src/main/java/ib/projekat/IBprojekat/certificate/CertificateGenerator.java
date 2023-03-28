@@ -14,6 +14,7 @@ import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
@@ -24,6 +25,7 @@ import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -62,13 +64,18 @@ public class CertificateGenerator {
     }
 
     public IssuerData generateIssuerData(UserEntity user) {
-        PrivateKey issuerKey = keyStoreReader.readPrivateKey(user.getEmail(), GlobalConstants.jksEntriesPassword.toCharArray());
+        PrivateKey issuerKey = keyStoreReader.readPrivateKey(
+                GlobalConstants.jksPrivateKeysPath,
+                GlobalConstants.jksPassword,
+                user.getEmail(),
+                GlobalConstants.jksEntriesPassword
+        );
         return new IssuerData(buildX500Name(user), issuerKey);
     }
 
     public SubjectData generateSubjectData(UserEntity user, Date startDate, Date endDate) {
         // generating the serial number for the certificate
-        String serialNumber = UUID.randomUUID().toString();
+        String serialNumber = String.valueOf(new Random().nextLong());
 
         return new SubjectData(user.getPublicKey(), buildX500Name(user), serialNumber, startDate, endDate);
     }

@@ -13,7 +13,9 @@ import lombok.NoArgsConstructor;
 public class CertificateDemandResponseDto {
 
     private Long id;
+    private String type;
     private UserRefResponseDto requestedIssuer;
     private UserRefResponseDto requester;
+    private String reason;
 
 }

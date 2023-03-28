@@ -55,13 +55,16 @@ public class KeyStoreReader {
         return null;
     }
 
-    public PrivateKey readPrivateKey(String alias, char[] password) {
+    public PrivateKey readPrivateKey(String keyStoreFile, String keyStorePass, String alias, String pass) {
         try {
-            Key key = keyStore.getKey(alias, password);
-            if (key instanceof PrivateKey) {
-                return (PrivateKey) key;
+            BufferedInputStream in = new BufferedInputStream(new FileInputStream(keyStoreFile));
+            keyStore.load(in, keyStorePass.toCharArray());
+
+            if (keyStore.isKeyEntry(alias)) {
+                return (PrivateKey) keyStore.getKey(alias, pass.toCharArray());
             }
-        } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
+        } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException
+                 | IOException | UnrecoverableKeyException e) {
             e.printStackTrace();
         }
         return null;

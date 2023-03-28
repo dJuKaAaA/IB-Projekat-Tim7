@@ -1,6 +1,7 @@
 package ib.projekat.IBprojekat.validation;
 
 import ib.projekat.IBprojekat.dto.response.ErrorResponseDto;
+import ib.projekat.IBprojekat.exception.CertificateDemandNotFoundException;
 import ib.projekat.IBprojekat.exception.EmailAlreadyExistsException;
 import ib.projekat.IBprojekat.exception.InvalidCredentialsException;
 import ib.projekat.IBprojekat.exception.UserNotFoundException;
@@ -44,4 +45,9 @@ public class ValidationErrorHandler {
         return new ResponseEntity<>(new ErrorResponseDto(errorMessage), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({CertificateDemandNotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    protected ResponseEntity<ErrorResponseDto> handleCertificateDemandNotFoundException(CertificateDemandNotFoundException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.NOT_FOUND);
+    }
 }
