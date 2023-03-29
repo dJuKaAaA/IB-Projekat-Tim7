@@ -17,5 +17,6 @@ public class CertificateDemandResponseDto {
     private UserRefResponseDto requestedIssuer;
     private UserRefResponseDto requester;
     private String reason;
+    private String status;
 
 }

@@ -10,7 +10,8 @@ import org.springframework.stereotype.Service;
 public interface ICertificateService {
 
     PaginatedResponseDto<CertificateResponseDto> getForUser(Long userId, Pageable pageable);
-    CertificateResponseDto create(Long signerId, Long demandId);
+    CertificateResponseDto create(Long id, Long demandId);
+    boolean checkValidity(Long id);
 
 }
 

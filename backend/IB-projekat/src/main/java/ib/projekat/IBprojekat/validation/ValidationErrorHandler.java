@@ -1,10 +1,7 @@
 package ib.projekat.IBprojekat.validation;
 
 import ib.projekat.IBprojekat.dto.response.ErrorResponseDto;
-import ib.projekat.IBprojekat.exception.CertificateDemandNotFoundException;
-import ib.projekat.IBprojekat.exception.EmailAlreadyExistsException;
-import ib.projekat.IBprojekat.exception.InvalidCredentialsException;
-import ib.projekat.IBprojekat.exception.UserNotFoundException;
+import ib.projekat.IBprojekat.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
@@ -49,5 +46,29 @@ public class ValidationErrorHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     protected ResponseEntity<ErrorResponseDto> handleCertificateDemandNotFoundException(CertificateDemandNotFoundException e) {
         return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({CertificateNotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    protected ResponseEntity<ErrorResponseDto> handleCertificateNotFoundException(CertificateNotFoundException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({CannotSignCertificateException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ResponseEntity<ErrorResponseDto> handleCannotSignCertificateException(CannotSignCertificateException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({SignatureIntegrityException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ResponseEntity<ErrorResponseDto> handleSignatureIntegrityException(SignatureIntegrityException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({InvalidCertificateException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ResponseEntity<ErrorResponseDto> handleInvalidCertificateException(InvalidCertificateException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }

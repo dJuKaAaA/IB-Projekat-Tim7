@@ -45,6 +45,7 @@ public class KeyStoreWriter {
         }
     }
 
+    // code not working...
     public void clearKeyStore(String keystoreFile, char[] keystorePassword) {
         try {
             // Load the keystore

@@ -1,5 +1,6 @@
 package ib.projekat.IBprojekat.service.impl;
 
+import ib.projekat.IBprojekat.constant.CertificateDemandStatus;
 import ib.projekat.IBprojekat.constant.CertificateType;
 import ib.projekat.IBprojekat.dao.CertificateDemandRepository;
 import ib.projekat.IBprojekat.dao.UserRepository;
@@ -37,6 +38,7 @@ public class CertificateDemandService implements ICertificateDemandService {
                 .requestedIssuer(requestedIssuer)
                 .requester(requester)
                 .reason(certificateDemandRequest.getReason())
+                .status(CertificateDemandStatus.PENDING)
                 .build();
 
         certificateDemand = certificateDemandRepository.save(certificateDemand);
@@ -55,6 +57,7 @@ public class CertificateDemandService implements ICertificateDemandService {
                 .requestedIssuer(requestedIssuerRef)
                 .requester(requesterRef)
                 .reason(certificateDemand.getReason())
+                .status(certificateDemand.getStatus().name())
                 .build();
     }
 

@@ -4,7 +4,6 @@ import ib.projekat.IBprojekat.certificate.keystore.KeyStoreReader;
 import ib.projekat.IBprojekat.certificate.model.IssuerData;
 import ib.projekat.IBprojekat.certificate.model.SubjectData;
 import ib.projekat.IBprojekat.constant.GlobalConstants;
-import ib.projekat.IBprojekat.dao.UserRepository;
 import ib.projekat.IBprojekat.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.bouncycastle.asn1.x500.X500Name;
@@ -14,7 +13,6 @@ import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
@@ -26,7 +24,6 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.Random;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -34,9 +31,17 @@ public class CertificateGenerator {
 
     private final KeyStoreReader keyStoreReader;
 
-    public X509Certificate generateCertificate(SubjectData subjectData, IssuerData issuerData) {
+    public X509Certificate generateCertificate(UserEntity requester, UserEntity requestedIssuer, PublicKey subjectPublicKey, PrivateKey issuerPrivateKey) {
         try {
             JcaContentSignerBuilder builder = new JcaContentSignerBuilder("SHA256WithRSAEncryption");
+
+            SubjectData subjectData = generateSubjectData(
+                    requester,
+                    new Date(System.currentTimeMillis()),
+                    new Date(System.currentTimeMillis() + GlobalConstants.oneYearInMillis),
+                    subjectPublicKey
+            );
+            IssuerData issuerData = generateIssuerData(requestedIssuer, issuerPrivateKey);
 
             builder = builder.setProvider("BC");
 
@@ -63,21 +68,15 @@ public class CertificateGenerator {
         return null;
     }
 
-    public IssuerData generateIssuerData(UserEntity user) {
-        PrivateKey issuerKey = keyStoreReader.readPrivateKey(
-                GlobalConstants.jksPrivateKeysPath,
-                GlobalConstants.jksPassword,
-                user.getEmail(),
-                GlobalConstants.jksEntriesPassword
-        );
+    private IssuerData generateIssuerData(UserEntity user, PrivateKey issuerKey) {
         return new IssuerData(buildX500Name(user), issuerKey);
     }
 
-    public SubjectData generateSubjectData(UserEntity user, Date startDate, Date endDate) {
+    private SubjectData generateSubjectData(UserEntity user, Date startDate, Date endDate, PublicKey publicKey) {
         // generating the serial number for the certificate
         String serialNumber = String.valueOf(new Random().nextLong());
 
-        return new SubjectData(user.getPublicKey(), buildX500Name(user), serialNumber, startDate, endDate);
+        return new SubjectData(publicKey, buildX500Name(user), serialNumber, startDate, endDate);
     }
 
     public KeyPair generateKeyPair() {
@@ -109,4 +108,5 @@ public class CertificateGenerator {
 
         return builder.build();
     }
+
 }

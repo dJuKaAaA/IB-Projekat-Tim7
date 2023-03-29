@@ -22,10 +22,10 @@ public class CertificateController {
         return new ResponseEntity<>(certificateService.getForUser(userId, pageable), HttpStatus.OK);
     }
 
-    @PostMapping("/for-demand/{demandId}/signer/{signerId}")
-    public ResponseEntity<CertificateResponseDto> create(@PathVariable("signerId") Long signerId,
+    @PostMapping("/for-demand/{demandId}/signer-certificate/{id}")
+    public ResponseEntity<CertificateResponseDto> create(@PathVariable("id") Long id,
                                                          @PathVariable("demandId") Long demandId) {
-        return new ResponseEntity<>(certificateService.create(signerId, demandId), HttpStatus.OK);
+        return new ResponseEntity<>(certificateService.create(id, demandId), HttpStatus.OK);
     }
 
 }

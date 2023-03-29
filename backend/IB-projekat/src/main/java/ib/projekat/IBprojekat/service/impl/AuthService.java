@@ -27,9 +27,8 @@ import org.springframework.stereotype.Service;
 
 import javax.security.auth.x500.X500Principal;
 import java.math.BigInteger;
-import java.security.KeyPair;
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import java.security.*;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.Optional;
@@ -42,8 +41,6 @@ public class AuthService implements IAuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
-    private final KeyStoreWriter keyStoreWriter;
-    private final CertificateGenerator certificateGenerator;
 
     @Override
     public TokenResponseDto login(LoginRequestDto loginRequest) {
@@ -72,8 +69,6 @@ public class AuthService implements IAuthService {
             throw new EmailAlreadyExistsException();
         }
 
-        KeyPair keyPair = certificateGenerator.generateKeyPair();
-
         UserEntity newUser = UserEntity.builder()
                 .name(userRequest.getName())
                 .surname(userRequest.getSurname())
@@ -81,24 +76,8 @@ public class AuthService implements IAuthService {
                 .password(passwordEncoder.encode(userRequest.getPassword()))
                 .role(Role.USER)
                 .enabled(true)
-                .publicKey(keyPair.getPublic())
                 .build();
         newUser = userRepository.save(newUser);
-
-        // saving the private key for the user
-        X509Certificate dummyCert;
-        try {
-            dummyCert = generateSelfSignedCertificate(keyPair.getPublic(), keyPair.getPrivate());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        keyStoreWriter.loadKeyStore(GlobalConstants.jksPrivateKeysPath, GlobalConstants.jksPassword.toCharArray());
-        keyStoreWriter.write(
-                newUser.getEmail(),
-                keyPair.getPrivate(),
-                GlobalConstants.jksEntriesPassword.toCharArray(),
-                dummyCert);
-        keyStoreWriter.saveKeyStore(GlobalConstants.jksPrivateKeysPath, GlobalConstants.jksPassword.toCharArray());
 
         return UserResponseDto.builder()
                 .id(newUser.getId())
@@ -106,18 +85,6 @@ public class AuthService implements IAuthService {
                 .surname(newUser.getSurname())
                 .email(newUser.getEmail())
                 .build();
-    }
-
-    private X509Certificate generateSelfSignedCertificate(PublicKey publicKey, PrivateKey privateKey) throws Exception {
-        X509V3CertificateGenerator certGen = new X509V3CertificateGenerator();
-        certGen.setSerialNumber(BigInteger.valueOf(System.currentTimeMillis()));
-        certGen.setSubjectDN(new X500Principal("CN=Dummy Certificate"));
-        certGen.setIssuerDN(new X500Principal("CN=Dummy Certificate"));
-        certGen.setNotBefore(new Date(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 30)); // 30 days ago
-        certGen.setNotAfter(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 365)); // 1 year from now
-        certGen.setPublicKey(publicKey);
-        certGen.setSignatureAlgorithm("SHA256WithRSAEncryption");
-        return certGen.generate(privateKey);
     }
 
 }

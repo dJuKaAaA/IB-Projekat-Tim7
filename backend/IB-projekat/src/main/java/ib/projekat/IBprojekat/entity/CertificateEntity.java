@@ -35,5 +35,4 @@ public class CertificateEntity {
     private PublicKey publicKey;
     private byte[] signature;
 
-
 }
