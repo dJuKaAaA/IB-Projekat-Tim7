@@ -8,6 +8,7 @@ import ib.projekat.IBprojekat.dao.CertificateRepository;
 import ib.projekat.IBprojekat.dao.UserRepository;
 import ib.projekat.IBprojekat.dto.request.CertificateDemandRequestDto;
 import ib.projekat.IBprojekat.dto.response.CertificateDemandResponseDto;
+import ib.projekat.IBprojekat.dto.response.PaginatedResponseDto;
 import ib.projekat.IBprojekat.dto.response.UserRefResponseDto;
 import ib.projekat.IBprojekat.entity.CertificateDemandEntity;
 import ib.projekat.IBprojekat.entity.CertificateEntity;
@@ -19,7 +20,11 @@ import ib.projekat.IBprojekat.exception.UserNotFoundException;
 import ib.projekat.IBprojekat.service.interf.ICertificateDemandService;
 import ib.projekat.IBprojekat.service.interf.ICertificateService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
 
 @Service("CertificateDemandService")
 @RequiredArgsConstructor
@@ -84,6 +89,23 @@ public class CertificateDemandService implements ICertificateDemandService {
         certificateDemand = certificateDemandRepository.save(certificateDemand);
 
         return convertToDto(certificateDemand);
+    }
+
+    @Override
+    public PaginatedResponseDto<CertificateDemandResponseDto> getByIssuedToId(Long issuedToId, Pageable pageable) {
+        userRepository.findById(issuedToId).orElseThrow(UserNotFoundException::new);
+
+        Page<CertificateDemandEntity> certificateDemandsPage = certificateDemandRepository.findByIssuedToId(issuedToId, pageable);
+
+        Collection<CertificateDemandResponseDto> certificateDemands = certificateDemandsPage.getContent().stream()
+                .map(this::convertToDto)
+                .toList();
+
+        return new PaginatedResponseDto<>(
+                certificateDemandsPage.getPageable().getPageNumber(),
+                certificateDemandsPage.getPageable().getPageSize(),
+                certificateDemands
+        );
     }
 
     private CertificateDemandResponseDto convertToDto(CertificateDemandEntity certificateDemandEntity) {
