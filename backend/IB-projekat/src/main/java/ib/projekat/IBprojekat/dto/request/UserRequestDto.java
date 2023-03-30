@@ -16,6 +16,12 @@ public class UserRequestDto {
     private String name;
     @NotBlank(message = "Surname not provided!")
     private String surname;
+    @NotBlank(message = "Phone number not provided!")
+    @Pattern.List({
+            @Pattern(regexp = "^([+]?\\d+)$", message = "Invalid phone number"),
+            @Pattern(regexp = "^(?=.{7,15}).+", message = "Phone number have between 7 and 15 digits")
+    })
+    private String phoneNumber;
     @Email(message = "Invalid email format!")
     @NotBlank(message = "Email not provided!")
     private String email;

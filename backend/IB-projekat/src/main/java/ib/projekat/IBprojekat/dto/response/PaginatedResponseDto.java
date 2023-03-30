@@ -5,16 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Collection;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserResponseDto {
+public class PaginatedResponseDto<T> {
 
-    private Long id;
-    private String name;
-    private String surname;
-    private String phoneNumber;
-    private String email;
+    private int pageNumber;
+    private int size;
+    private Collection<T> content;
 
 }

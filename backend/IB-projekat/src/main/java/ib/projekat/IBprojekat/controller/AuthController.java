@@ -7,8 +7,6 @@ import ib.projekat.IBprojekat.dto.response.UserResponseDto;
 import ib.projekat.IBprojekat.service.interf.IAuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,20 +16,16 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private IAuthService userCrudService;
-    @Autowired
-    public void setUserCrudService(@Qualifier("AuthService") IAuthService userCrudService) {
-        this.userCrudService = userCrudService;
-    }
+    private final IAuthService authService;
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponseDto> login(@Valid @RequestBody LoginRequestDto loginRequest) {
-        return new ResponseEntity<>(userCrudService.login(loginRequest), HttpStatus.OK);
+        return new ResponseEntity<>(authService.login(loginRequest), HttpStatus.OK);
     }
 
     @PostMapping("/create-account")
     public ResponseEntity<UserResponseDto> createAccount(@Valid @RequestBody UserRequestDto userRequest) {
-        return new ResponseEntity<>(userCrudService.createAccount(userRequest), HttpStatus.OK);
+        return new ResponseEntity<>(authService.createAccount(userRequest), HttpStatus.OK);
     }
 
 }

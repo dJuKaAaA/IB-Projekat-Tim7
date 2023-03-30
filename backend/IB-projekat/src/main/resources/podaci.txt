@@ -1,0 +1,4 @@
+sifra za keystore: 123456
+sifra za postgres: postgres
+
+Pls don't abuse :(

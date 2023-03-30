@@ -1,5 +1,9 @@
 package ib.projekat.IBprojekat.service.impl;
 
+import ib.projekat.IBprojekat.certificate.CertificateGenerator;
+import ib.projekat.IBprojekat.certificate.keystore.KeyStoreReader;
+import ib.projekat.IBprojekat.certificate.keystore.KeyStoreWriter;
+import ib.projekat.IBprojekat.constant.GlobalConstants;
 import ib.projekat.IBprojekat.constant.Role;
 import ib.projekat.IBprojekat.dao.UserRepository;
 import ib.projekat.IBprojekat.dto.request.LoginRequestDto;
@@ -14,12 +18,19 @@ import ib.projekat.IBprojekat.service.interf.IAuthService;
 import ib.projekat.IBprojekat.websecurity.JwtService;
 import ib.projekat.IBprojekat.websecurity.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.x500.X500Principal;
+import java.math.BigInteger;
+import java.security.*;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.X509Certificate;
+import java.util.Date;
 import java.util.Optional;
 
 @Service("AuthService")
@@ -75,4 +86,5 @@ public class AuthService implements IAuthService {
                 .email(newUser.getEmail())
                 .build();
     }
+
 }
