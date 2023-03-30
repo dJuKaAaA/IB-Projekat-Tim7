@@ -8,5 +8,6 @@ import org.springframework.stereotype.Service;
 public interface ICertificateDemandService {
 
     CertificateDemandResponseDto create(CertificateDemandRequestDto certificateDemandRequest);
+    CertificateDemandResponseDto reject(Long id);
 
 }

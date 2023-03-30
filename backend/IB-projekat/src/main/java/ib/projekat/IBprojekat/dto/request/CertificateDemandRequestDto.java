@@ -2,6 +2,7 @@ package ib.projekat.IBprojekat.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,10 +14,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CertificateDemandRequestDto {
 
-    @NotNull(message = "Information whether the certificate is end or intermediate not provided!")
-    private Boolean isEnd;
-    @NotNull(message = "Request issuer id not provided!")
-    private Long requestedIssuerId;
+    @NotBlank(message = "Certificate type not provided!")
+    @Pattern(regexp = "^(ROOT|INTERMEDIATE|END)$", message = "Certificate can only be type ROOT, INTERMEDIATE or END!")
+    private String type;
+    private Long requestedSigningCertificateId;
     @NotNull(message = "Requester id not provided!")
     private Long requesterId;
     @NotBlank(message = "Reason not provided")

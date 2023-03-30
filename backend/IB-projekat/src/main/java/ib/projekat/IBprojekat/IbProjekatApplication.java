@@ -59,37 +59,37 @@ public class IbProjekatApplication {
 
 		// creating the root certificate
 		//===================================================================
-		KeyPair keyPair = certificateGenerator.generateKeyPair();
-        X509Certificate certificate = certificateGenerator.generateCertificate(
-				admin,
-				admin,
-				keyPair.getPublic(),
-				keyPair.getPrivate()
-        );
-
-        keyStoreWriter.loadKeyStore(GlobalConstants.jksCertificatesPath, GlobalConstants.jksPassword.toCharArray());
-        keyStoreWriter.write(
-                certificate.getSerialNumber().toString(),
-                keyPair.getPrivate(),
-                GlobalConstants.jksEntriesPassword.toCharArray(),
-                certificate
-        );
-        keyStoreWriter.saveKeyStore(GlobalConstants.jksCertificatesPath, GlobalConstants.jksPassword.toCharArray());
-
-        CertificateEntity certificateEntity = CertificateEntity.builder()
-                .serialNumber(certificate.getSerialNumber().toString())
-                .type(CertificateType.ROOT)
-                .issuer(admin)
-                .issuedTo(admin)
-                .startDate(certificate.getNotBefore())
-                .endDate(certificate.getNotAfter())
-                .publicKey(keyPair.getPublic())
-                .signature(certificate.getSignature())
-                .build();
-
-        certificateEntity = certificateRepository.save(certificateEntity);
-		certificateEntity.setSigner(certificateEntity);
-		certificateEntity = certificateRepository.save(certificateEntity);
+//		KeyPair keyPair = certificateGenerator.generateKeyPair();
+//        X509Certificate certificate = certificateGenerator.generateCertificate(
+//				admin,
+//				admin,
+//				keyPair.getPublic(),
+//				keyPair.getPrivate()
+//        );
+//
+//        keyStoreWriter.loadKeyStore(GlobalConstants.jksCertificatesPath, GlobalConstants.jksPassword.toCharArray());
+//        keyStoreWriter.write(
+//                certificate.getSerialNumber().toString(),
+//                keyPair.getPrivate(),
+//                GlobalConstants.jksEntriesPassword.toCharArray(),
+//                certificate
+//        );
+//        keyStoreWriter.saveKeyStore(GlobalConstants.jksCertificatesPath, GlobalConstants.jksPassword.toCharArray());
+//
+//        CertificateEntity certificateEntity = CertificateEntity.builder()
+//                .serialNumber(certificate.getSerialNumber().toString())
+//                .type(CertificateType.ROOT)
+//                .issuer(admin)
+//                .issuedTo(admin)
+//                .startDate(certificate.getNotBefore())
+//                .endDate(certificate.getNotAfter())
+//                .publicKey(keyPair.getPublic())
+//                .signature(certificate.getSignature())
+//                .build();
+//
+//        certificateEntity = certificateRepository.save(certificateEntity);
+//		certificateEntity.setSigner(certificateEntity);
+//		certificateEntity = certificateRepository.save(certificateEntity);
 		//===================================================================
 
 	}

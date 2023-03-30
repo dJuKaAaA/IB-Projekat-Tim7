@@ -22,6 +22,8 @@ public class CertificateDemandEntity {
     @Enumerated(EnumType.STRING)
     private CertificateType type;
     @ManyToOne
+    private CertificateEntity requestedSigningCertificate;
+    @ManyToOne
     private UserEntity requestedIssuer;
     @ManyToOne
     private UserEntity requester;

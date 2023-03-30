@@ -71,4 +71,10 @@ public class ValidationErrorHandler {
     protected ResponseEntity<ErrorResponseDto> handleInvalidCertificateException(InvalidCertificateException e) {
         return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler({CertificateDemandException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ResponseEntity<ErrorResponseDto> handleCertificateDemandException(CertificateDemandException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
 }

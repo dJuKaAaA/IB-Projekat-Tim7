@@ -4,6 +4,7 @@ import ib.projekat.IBprojekat.certificate.Base64Utility;
 import ib.projekat.IBprojekat.certificate.CertificateGenerator;
 import ib.projekat.IBprojekat.certificate.keystore.KeyStoreReader;
 import ib.projekat.IBprojekat.certificate.keystore.KeyStoreWriter;
+import ib.projekat.IBprojekat.constant.CertificateDemandStatus;
 import ib.projekat.IBprojekat.constant.CertificateType;
 import ib.projekat.IBprojekat.constant.GlobalConstants;
 import ib.projekat.IBprojekat.dao.CertificateDemandRepository;
@@ -41,6 +42,20 @@ public class CertificateService implements ICertificateService {
     private final Base64Utility base64Utility;
 
     @Override
+    public PaginatedResponseDto<CertificateResponseDto> getAll(Pageable pageable) {
+        Page<CertificateEntity> certificatesPage = certificateRepository.findAll(pageable);
+
+        Collection<CertificateResponseDto> certificatesResponse = certificatesPage.getContent().stream()
+                .map(this::convertToDto)
+                .toList();
+        return new PaginatedResponseDto<>(
+                certificatesPage.getPageable().getPageNumber(),
+                certificatesPage.getPageable().getPageSize(),
+                certificatesResponse
+        );
+    }
+
+    @Override
     public PaginatedResponseDto<CertificateResponseDto> getForUser(Long userId, Pageable pageable) {
         userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
@@ -58,27 +73,40 @@ public class CertificateService implements ICertificateService {
     }
 
     @Override
-    public CertificateResponseDto create(Long id, Long demandId) {
+    public CertificateResponseDto create(Long demandId) {
         CertificateDemandEntity certificateDemand = certificateDemandRepository.findById(demandId)
                 .orElseThrow(CertificateDemandNotFoundException::new);
-
-        CertificateEntity signerCertificateEntity = certificateRepository.findById(id)
-                .orElseThrow(() -> new CertificateNotFoundException("Signer certificate not found!"));
-
-        if (signerCertificateEntity.getType() == CertificateType.END) {
-            throw new CannotSignCertificateException("End certificates cannot sign other certificates!");
+        if (certificateDemand.getStatus() != CertificateDemandStatus.PENDING) {
+            throw new CertificateDemandException("Cannot create certificates from demands that are not pending!");
         }
 
-        // fetching signer private key
-        PrivateKey signerPrivateKey = keyStoreReader.readPrivateKey(
-                GlobalConstants.jksCertificatesPath,
-                GlobalConstants.jksPassword,
-                signerCertificateEntity.getSerialNumber(),
-                GlobalConstants.jksEntriesPassword
-        );
-
-        // generating the new key pair and the certificate
+        // generating the new key pair
         KeyPair keyPair = certificateGenerator.generateKeyPair();
+
+        // fetching signer private key
+        // if the requested signing certificate is null then it is supposed to be self-signed
+        PrivateKey signerPrivateKey;
+        CertificateEntity signerCertificateEntity;
+        if (certificateDemand.getRequestedSigningCertificate() != null) {
+            signerCertificateEntity = certificateDemand.getRequestedSigningCertificate();
+            signerPrivateKey = keyStoreReader.readPrivateKey(
+                    GlobalConstants.jksCertificatesPath,
+                    GlobalConstants.jksPassword,
+                    signerCertificateEntity.getSerialNumber(),
+                    GlobalConstants.jksEntriesPassword
+            );
+
+            if (signerCertificateEntity.getType() == CertificateType.END) {
+                throw new CannotSignCertificateException("End certificates cannot sign other certificates!");
+            }
+
+            checkValidity(signerCertificateEntity.getId());
+        } else {
+            signerCertificateEntity = null;
+            signerPrivateKey = keyPair.getPrivate();
+        }
+
+        // generating the certificate
         X509Certificate certificate = certificateGenerator.generateCertificate(
                 certificateDemand.getRequester(),
                 certificateDemand.getRequestedIssuer(),
@@ -97,10 +125,9 @@ public class CertificateService implements ICertificateService {
 
         CertificateEntity certificateEntity = CertificateEntity.builder()
                 .serialNumber(certificate.getSerialNumber().toString())
-                .signer(signerCertificateEntity)
                 .type(certificateDemand.getType())
-                .issuer(certificateDemand.getRequestedIssuer())
                 .issuedTo(certificateDemand.getRequester())
+                .issuer(certificateDemand.getRequestedIssuer())
                 .startDate(certificate.getNotBefore())
                 .endDate(certificate.getNotAfter())
                 .publicKey(certificate.getPublicKey())
@@ -108,12 +135,23 @@ public class CertificateService implements ICertificateService {
                 .build();
 
         certificateEntity = certificateRepository.save(certificateEntity);
+        if (signerCertificateEntity == null) {
+            certificateEntity.setSigner(certificateEntity);
+            certificateDemand.setRequestedSigningCertificate(certificateEntity);
+        } else {
+            certificateEntity.setSigner(signerCertificateEntity);
+        }
+        certificateEntity = certificateRepository.save(certificateEntity);
+
+        // we accept the certificate creation request
+        certificateDemand.setStatus(CertificateDemandStatus.ACCEPTED);
+        certificateDemandRepository.save(certificateDemand);
 
         return convertToDto(certificateEntity);
     }
 
     @Override
-    public boolean checkValidity(Long id) {
+    public void checkValidity(Long id) {
         CertificateEntity certificateEntity = certificateRepository.findById(id)
                 .orElseThrow(() -> new CertificateNotFoundException("Signer certificate not found!"));
         X509Certificate certificate = (X509Certificate) keyStoreReader.readCertificate(
@@ -162,7 +200,6 @@ public class CertificateService implements ICertificateService {
             throw new RuntimeException(e);
         }
 
-        return true;
     }
 
     private CertificateResponseDto convertToDto(CertificateEntity certificateEntity) {

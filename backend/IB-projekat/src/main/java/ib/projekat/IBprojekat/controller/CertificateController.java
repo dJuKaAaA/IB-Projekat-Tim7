@@ -16,16 +16,20 @@ public class CertificateController {
 
     private final ICertificateService certificateService;
 
+    @GetMapping
+    public ResponseEntity<PaginatedResponseDto<CertificateResponseDto>> getAll(Pageable pageable) {
+        return new ResponseEntity<>(certificateService.getAll(pageable), HttpStatus.OK);
+    }
+
     @GetMapping("/for-user/{userId}")
     public ResponseEntity<PaginatedResponseDto<CertificateResponseDto>> getForUser(@PathVariable("userId") Long userId,
                                                                                    Pageable pageable) {
         return new ResponseEntity<>(certificateService.getForUser(userId, pageable), HttpStatus.OK);
     }
 
-    @PostMapping("/for-demand/{demandId}/signer-certificate/{id}")
-    public ResponseEntity<CertificateResponseDto> create(@PathVariable("id") Long id,
-                                                         @PathVariable("demandId") Long demandId) {
-        return new ResponseEntity<>(certificateService.create(id, demandId), HttpStatus.OK);
+    @PostMapping("/for-demand/{demandId}")
+    public ResponseEntity<CertificateResponseDto> create(@PathVariable("demandId") Long demandId) {
+        return new ResponseEntity<>(certificateService.create(demandId), HttpStatus.OK);
     }
 
 }
