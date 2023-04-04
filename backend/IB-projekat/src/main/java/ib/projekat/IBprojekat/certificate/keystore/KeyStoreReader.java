@@ -38,6 +38,7 @@ public class KeyStoreReader {
         return null;
     }
 
+    // alias - certificate serial number
     public Certificate readCertificate(String keyStoreFile, String keyStorePass, String alias) {
         try {
             KeyStore ks = KeyStore.getInstance("JKS", "SUN");
@@ -55,6 +56,8 @@ public class KeyStoreReader {
         return null;
     }
 
+    // alias - serial keystore number
+    // pass - private key password, na osnovu njega se preuzima private key
     public PrivateKey readPrivateKey(String keyStoreFile, String keyStorePass, String alias, String pass) {
         try {
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(keyStoreFile));

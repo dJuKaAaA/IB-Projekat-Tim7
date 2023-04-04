@@ -32,4 +32,10 @@ public class CertificateController {
         return new ResponseEntity<>(certificateService.create(demandId), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/validate")
+    public HttpStatus validate(@PathVariable("id") Long id){
+        certificateService.checkValidity(id);
+        return HttpStatus.NO_CONTENT;
+    }
+
 }

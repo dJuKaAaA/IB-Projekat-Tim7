@@ -37,6 +37,7 @@ public class CertificateDemandService implements ICertificateDemandService {
 
     @Override
     public CertificateDemandResponseDto create(CertificateDemandRequestDto certificateDemandRequest) {
+
         UserEntity requester = userRepository.findById(certificateDemandRequest.getRequesterId())
                 .orElseThrow(() -> new UserNotFoundException("Requester not found!"));
 
