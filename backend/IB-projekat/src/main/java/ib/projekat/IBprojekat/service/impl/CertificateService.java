@@ -194,10 +194,16 @@ public class CertificateService implements ICertificateService {
 
         // we verify the root
         try {
+            certificate.checkValidity();
+        } catch (CertificateExpiredException | CertificateNotYetValidException e) {
+            throw new InvalidCertificateException("Certificate is expired or is not yet valid!");
+        }
+
+        try {
             certificate.verify(signerCertificate.getPublicKey());
         } catch (CertificateException | NoSuchAlgorithmException | InvalidKeyException | NoSuchProviderException |
                  SignatureException e) {
-            throw new RuntimeException(e);
+            throw new SignatureIntegrityException();
         }
 
     }

@@ -29,8 +29,6 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class CertificateGenerator {
 
-    private final KeyStoreReader keyStoreReader;
-
     public X509Certificate generateCertificate(UserEntity requester, UserEntity requestedIssuer, PublicKey subjectPublicKey, PrivateKey issuerPrivateKey) {
         try {
             JcaContentSignerBuilder builder = new JcaContentSignerBuilder("SHA256WithRSAEncryption");
