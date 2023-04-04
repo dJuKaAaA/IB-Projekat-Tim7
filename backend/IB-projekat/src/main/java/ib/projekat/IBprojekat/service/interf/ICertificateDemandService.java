@@ -11,6 +11,6 @@ public interface ICertificateDemandService {
 
     CertificateDemandResponseDto create(CertificateDemandRequestDto certificateDemandRequest);
     CertificateDemandResponseDto reject(Long id);
-    PaginatedResponseDto<CertificateDemandResponseDto> getByIssuedToId(Long issuedToId, Pageable pageable);
+    PaginatedResponseDto<CertificateDemandResponseDto> getByRequesterId(Long requesterId, Pageable pageable);
 
 }

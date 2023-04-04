@@ -183,7 +183,7 @@ public class CertificateService implements ICertificateService {
                 certificateEntity.getSigner().getSerialNumber()
         );
 
-        // iterate drought chain
+        // iterate trough out chain
         while (certificateEntity.getType() != CertificateType.ROOT) {
 
             try {

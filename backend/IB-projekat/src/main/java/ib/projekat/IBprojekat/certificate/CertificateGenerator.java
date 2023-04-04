@@ -35,15 +35,14 @@ public class CertificateGenerator {
 
             JcaContentSignerBuilder builder = new JcaContentSignerBuilder("SHA256WithRSAEncryption");
 
-            // start date
-            // end date
+            Date validityStartDate = new Date(System.currentTimeMillis());
+            Date expirationDate = new Date(System.currentTimeMillis() + GlobalConstants.oneYearInMillis);
             SubjectData subjectData = generateSubjectData(
                     requester,
-                    new Date(System.currentTimeMillis()),
-                    new Date(System.currentTimeMillis() + GlobalConstants.oneYearInMillis),
+                    validityStartDate,
+                    expirationDate,
                     subjectPublicKey
             );
-
 
             IssuerData issuerData = generateIssuerData(requestedIssuer, issuerPrivateKey);
 
