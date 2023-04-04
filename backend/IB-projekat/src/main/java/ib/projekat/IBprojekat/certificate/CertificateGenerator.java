@@ -31,16 +31,22 @@ public class CertificateGenerator {
 
     private final KeyStoreReader keyStoreReader;
 
+    // privatinim kljucem potpisujemo
     public X509Certificate generateCertificate(UserEntity requester, UserEntity requestedIssuer, PublicKey subjectPublicKey, PrivateKey issuerPrivateKey) {
         try {
+
             JcaContentSignerBuilder builder = new JcaContentSignerBuilder("SHA256WithRSAEncryption");
 
+            // start date
+            // end date
             SubjectData subjectData = generateSubjectData(
                     requester,
                     new Date(System.currentTimeMillis()),
                     new Date(System.currentTimeMillis() + GlobalConstants.oneYearInMillis),
                     subjectPublicKey
             );
+
+
             IssuerData issuerData = generateIssuerData(requestedIssuer, issuerPrivateKey);
 
             builder = builder.setProvider("BC");

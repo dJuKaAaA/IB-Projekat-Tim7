@@ -41,6 +41,7 @@ public class CertificateService implements ICertificateService {
     private final KeyStoreReader keyStoreReader;
     private final Base64Utility base64Utility;
 
+    // return all certificate
     @Override
     public PaginatedResponseDto<CertificateResponseDto> getAll(Pageable pageable) {
         Page<CertificateEntity> certificatesPage = certificateRepository.findAll(pageable);
@@ -55,6 +56,7 @@ public class CertificateService implements ICertificateService {
         );
     }
 
+    // return all certificates for specific user
     @Override
     public PaginatedResponseDto<CertificateResponseDto> getForUser(Long userId, Pageable pageable) {
         userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
@@ -72,6 +74,7 @@ public class CertificateService implements ICertificateService {
         );
     }
 
+    // create certificate base on the certificate demand
     @Override
     public CertificateResponseDto create(Long demandId) {
         CertificateDemandEntity certificateDemand = certificateDemandRepository.findById(demandId)
@@ -87,6 +90,9 @@ public class CertificateService implements ICertificateService {
         // if the requested signing certificate is null then it is supposed to be self-signed
         PrivateKey signerPrivateKey;
         CertificateEntity signerCertificateEntity;
+
+        // if is not root certificate
+        // load signer private key form keystore
         if (certificateDemand.getRequestedSigningCertificate() != null) {
             signerCertificateEntity = certificateDemand.getRequestedSigningCertificate();
             signerPrivateKey = keyStoreReader.readPrivateKey(
@@ -96,11 +102,14 @@ public class CertificateService implements ICertificateService {
                     GlobalConstants.jksEntriesPassword
             );
 
+            // end certificate cant sing another certificate
             if (signerCertificateEntity.getType() == CertificateType.END) {
                 throw new CannotSignCertificateException("End certificates cannot sign other certificates!");
             }
 
             checkValidity(signerCertificateEntity.getId());
+
+            // it's root certificate
         } else {
             signerCertificateEntity = null;
             signerPrivateKey = keyPair.getPrivate();
@@ -114,6 +123,7 @@ public class CertificateService implements ICertificateService {
                 signerPrivateKey
         );
 
+        // save certificate to keystore
         keyStoreWriter.loadKeyStore(GlobalConstants.jksCertificatesPath, GlobalConstants.jksPassword.toCharArray());
         keyStoreWriter.write(
                 certificate.getSerialNumber().toString(),
@@ -123,6 +133,7 @@ public class CertificateService implements ICertificateService {
         );
         keyStoreWriter.saveKeyStore(GlobalConstants.jksCertificatesPath, GlobalConstants.jksPassword.toCharArray());
 
+        // save certificate entity to database
         CertificateEntity certificateEntity = CertificateEntity.builder()
                 .serialNumber(certificate.getSerialNumber().toString())
                 .type(certificateDemand.getType())
@@ -133,16 +144,18 @@ public class CertificateService implements ICertificateService {
                 .publicKey(certificate.getPublicKey())
                 .signature(certificate.getSignature())
                 .build();
-
         certificateEntity = certificateRepository.save(certificateEntity);
+
+        // if it's root certificate just set that he signed him self
         if (signerCertificateEntity == null) {
             certificateEntity.setSigner(certificateEntity);
             certificateDemand.setRequestedSigningCertificate(certificateEntity);
         } else {
             certificateEntity.setSigner(signerCertificateEntity);
         }
-        certificateEntity = certificateRepository.save(certificateEntity);
+        certificateEntity = certificateRepository.save(certificateEntity); // save
 
+        // update demand status
         // we accept the certificate creation request
         certificateDemand.setStatus(CertificateDemandStatus.ACCEPTED);
         certificateDemandRepository.save(certificateDemand);
@@ -152,22 +165,29 @@ public class CertificateService implements ICertificateService {
 
     @Override
     public void checkValidity(Long id) {
+        // find certificate
         CertificateEntity certificateEntity = certificateRepository.findById(id)
                 .orElseThrow(() -> new CertificateNotFoundException("Signer certificate not found!"));
+
+        // read certificate from key store
         X509Certificate certificate = (X509Certificate) keyStoreReader.readCertificate(
                 GlobalConstants.jksCertificatesPath,
                 GlobalConstants.jksPassword,
                 certificateEntity.getSerialNumber()
         );
+
+        // read signer certificate
         X509Certificate signerCertificate = (X509Certificate) keyStoreReader.readCertificate(
                 GlobalConstants.jksCertificatesPath,
                 GlobalConstants.jksPassword,
                 certificateEntity.getSigner().getSerialNumber()
         );
 
+        // iterate drought chain
         while (certificateEntity.getType() != CertificateType.ROOT) {
+
             try {
-                certificate.checkValidity();
+                certificate.checkValidity(); // built-in method
             } catch (CertificateExpiredException | CertificateNotYetValidException e) {
                 throw new InvalidCertificateException("Certificate is expired or is not yet valid!");
             }
@@ -179,6 +199,7 @@ public class CertificateService implements ICertificateService {
                 throw new SignatureIntegrityException();
             }
 
+            // load new certificate from chain
             certificateEntity = certificateEntity.getSigner();
             certificate = (X509Certificate) keyStoreReader.readCertificate(
                     GlobalConstants.jksCertificatesPath,

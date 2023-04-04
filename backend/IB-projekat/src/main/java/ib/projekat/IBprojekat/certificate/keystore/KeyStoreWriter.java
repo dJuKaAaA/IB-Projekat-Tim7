@@ -37,6 +37,8 @@ public class KeyStoreWriter {
         }
     }
 
+    // alias - certificate serial number
+    // password - constants file jks entry password
     public void write(String alias, PrivateKey privateKey, char[] password, java.security.cert.Certificate certificate) {
         try {
             keyStore.setKeyEntry(alias, privateKey, password, new Certificate[]{certificate});
