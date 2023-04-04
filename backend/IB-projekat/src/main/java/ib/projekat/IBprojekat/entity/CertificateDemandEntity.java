@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "certificate_requests")
+@Table(name = "certificate_demands")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
