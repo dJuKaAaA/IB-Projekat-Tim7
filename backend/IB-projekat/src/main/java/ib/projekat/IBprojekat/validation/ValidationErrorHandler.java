@@ -77,4 +77,10 @@ public class ValidationErrorHandler {
     protected ResponseEntity<ErrorResponseDto> handleCertificateDemandException(CertificateDemandException e) {
         return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler({EndpointAccessException.class})
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    protected ResponseEntity<ErrorResponseDto> handleEndpointAccessException(EndpointAccessException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
 }

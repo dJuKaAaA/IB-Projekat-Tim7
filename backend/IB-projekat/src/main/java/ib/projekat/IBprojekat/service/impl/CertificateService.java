@@ -51,7 +51,7 @@ public class CertificateService implements ICertificateService {
                 .toList();
         return new PaginatedResponseDto<>(
                 certificatesPage.getPageable().getPageNumber(),
-                certificatesPage.getPageable().getPageSize(),
+                certificatesResponse.size(),
                 certificatesResponse
         );
     }
@@ -69,7 +69,7 @@ public class CertificateService implements ICertificateService {
 
         return new PaginatedResponseDto<>(
                 certificatesPage.getPageable().getPageNumber(),
-                certificatesPage.getPageable().getPageSize(),
+                certificates.size(),
                 certificates
         );
     }
@@ -109,8 +109,8 @@ public class CertificateService implements ICertificateService {
 
             checkValidity(signerCertificateEntity.getId());
 
-            // it's root certificate
         } else {
+            // it's root certificate
             signerCertificateEntity = null;
             signerPrivateKey = keyPair.getPrivate();
         }
@@ -146,14 +146,14 @@ public class CertificateService implements ICertificateService {
                 .build();
         certificateEntity = certificateRepository.save(certificateEntity);
 
-        // if it's root certificate just set that he signed him self
+        // if it's root certificate just set that it's self-signed
         if (signerCertificateEntity == null) {
             certificateEntity.setSigner(certificateEntity);
             certificateDemand.setRequestedSigningCertificate(certificateEntity);
         } else {
             certificateEntity.setSigner(signerCertificateEntity);
         }
-        certificateEntity = certificateRepository.save(certificateEntity); // save
+        certificateEntity = certificateRepository.save(certificateEntity);
 
         // update demand status
         // we accept the certificate creation request
@@ -187,7 +187,7 @@ public class CertificateService implements ICertificateService {
         while (certificateEntity.getType() != CertificateType.ROOT) {
 
             try {
-                certificate.checkValidity(); // built-in method
+                certificate.checkValidity();
             } catch (CertificateExpiredException | CertificateNotYetValidException e) {
                 throw new InvalidCertificateException("Certificate is expired or is not yet valid!");
             }
@@ -213,7 +213,7 @@ public class CertificateService implements ICertificateService {
             );
         }
 
-        // we verify the root
+        // root validation and verification
         try {
             certificate.checkValidity();
         } catch (CertificateExpiredException | CertificateNotYetValidException e) {

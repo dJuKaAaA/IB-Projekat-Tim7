@@ -11,5 +11,7 @@ public interface IAuthService {
 
     TokenResponseDto login(LoginRequestDto loginRequest);
     UserResponseDto createAccount(UserRequestDto userRequest);
+    void checkUserIdMatchesUserEmail(Long userId, String userEmail);
+    void checkIsDemandIntendedForUser(String userEmail, Long demandId);
 
 }

@@ -13,10 +13,7 @@ import ib.projekat.IBprojekat.dto.response.UserRefResponseDto;
 import ib.projekat.IBprojekat.entity.CertificateDemandEntity;
 import ib.projekat.IBprojekat.entity.CertificateEntity;
 import ib.projekat.IBprojekat.entity.UserEntity;
-import ib.projekat.IBprojekat.exception.CertificateDemandException;
-import ib.projekat.IBprojekat.exception.CertificateDemandNotFoundException;
-import ib.projekat.IBprojekat.exception.CertificateNotFoundException;
-import ib.projekat.IBprojekat.exception.UserNotFoundException;
+import ib.projekat.IBprojekat.exception.*;
 import ib.projekat.IBprojekat.service.interf.ICertificateDemandService;
 import ib.projekat.IBprojekat.service.interf.ICertificateService;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +34,6 @@ public class CertificateDemandService implements ICertificateDemandService {
 
     @Override
     public CertificateDemandResponseDto create(CertificateDemandRequestDto certificateDemandRequest) {
-
         UserEntity requester = userRepository.findById(certificateDemandRequest.getRequesterId())
                 .orElseThrow(() -> new UserNotFoundException("Requester not found!"));
 
@@ -56,7 +52,7 @@ public class CertificateDemandService implements ICertificateDemandService {
         } else {
             requestedSigningCertificate = certificateRepository.findById(certificateDemandRequest.getRequestedSigningCertificateId())
                     .orElseThrow(() -> new CertificateNotFoundException("Requested signing certificate not found!"));
-            requestedIssuer = requestedSigningCertificate.getIssuer();
+            requestedIssuer = requestedSigningCertificate.getIssuedTo();
         }
 
         CertificateDemandEntity certificateDemand = CertificateDemandEntity.builder()
@@ -73,15 +69,20 @@ public class CertificateDemandService implements ICertificateDemandService {
         // if the user request a certificate from themselves, it is accepted immediately
         // the requestedSigningCertificate being null means that the requested certificate is of type 'ROOT' and should be self-signed
         // there is already a validation above that says that only admins can create root certificates
-        if (requestedSigningCertificate == null || requestedSigningCertificate.getIssuer().getId() == requester.getId()) {
+        if (requestedSigningCertificate == null || requestedSigningCertificate.getIssuedTo().getId() == requester.getId()) {
+            if (certificateDemand.getRequestedSigningCertificate() != null &&
+                    certificateDemand.getRequestedSigningCertificate().getType() == CertificateType.END) {
+                certificateDemandRepository.delete(certificateDemand);
+                throw new CannotSignCertificateException("End certificates cannot sign other certificates!");
+            }
             certificateService.create(certificateDemand.getId());
             certificateDemand = certificateDemandRepository.findById(certificateDemand.getId())
                     .orElseThrow(CertificateDemandNotFoundException::new);
         }
 
+
         return convertToDto(certificateDemand);
     }
-
     @Override
     public CertificateDemandResponseDto reject(Long id) {
         CertificateDemandEntity certificateDemand = certificateDemandRepository.findById(id)
@@ -104,7 +105,7 @@ public class CertificateDemandService implements ICertificateDemandService {
 
         return new PaginatedResponseDto<>(
                 certificateDemandsPage.getPageable().getPageNumber(),
-                certificateDemandsPage.getPageable().getPageSize(),
+                certificateDemands.size(),
                 certificateDemands
         );
     }

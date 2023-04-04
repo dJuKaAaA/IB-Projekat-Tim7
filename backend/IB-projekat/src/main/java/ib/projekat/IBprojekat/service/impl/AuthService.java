@@ -5,15 +5,15 @@ import ib.projekat.IBprojekat.certificate.keystore.KeyStoreReader;
 import ib.projekat.IBprojekat.certificate.keystore.KeyStoreWriter;
 import ib.projekat.IBprojekat.constant.GlobalConstants;
 import ib.projekat.IBprojekat.constant.Role;
+import ib.projekat.IBprojekat.dao.CertificateDemandRepository;
 import ib.projekat.IBprojekat.dao.UserRepository;
 import ib.projekat.IBprojekat.dto.request.LoginRequestDto;
 import ib.projekat.IBprojekat.dto.request.UserRequestDto;
 import ib.projekat.IBprojekat.dto.response.TokenResponseDto;
 import ib.projekat.IBprojekat.dto.response.UserResponseDto;
+import ib.projekat.IBprojekat.entity.CertificateDemandEntity;
 import ib.projekat.IBprojekat.entity.UserEntity;
-import ib.projekat.IBprojekat.exception.EmailAlreadyExistsException;
-import ib.projekat.IBprojekat.exception.InvalidCredentialsException;
-import ib.projekat.IBprojekat.exception.UserNotFoundException;
+import ib.projekat.IBprojekat.exception.*;
 import ib.projekat.IBprojekat.service.interf.IAuthService;
 import ib.projekat.IBprojekat.websecurity.JwtService;
 import ib.projekat.IBprojekat.websecurity.UserDetailsImpl;
@@ -41,6 +41,7 @@ public class AuthService implements IAuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final CertificateDemandRepository certificateDemandRepository;
 
     @Override
     public TokenResponseDto login(LoginRequestDto loginRequest) {
@@ -85,6 +86,24 @@ public class AuthService implements IAuthService {
                 .surname(newUser.getSurname())
                 .email(newUser.getEmail())
                 .build();
+    }
+
+    @Override
+    public void checkUserIdMatchesUserEmail(Long userId, String userEmail) {
+        UserEntity userById = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        if (!userById.getEmail().equals(userEmail)) {
+            throw new EndpointAccessException();
+        }
+    }
+
+    @Override
+    public void checkIsDemandIntendedForUser(String userEmail, Long demandId) {
+        UserEntity potentialIssuer = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+        CertificateDemandEntity certificateDemandEntity = certificateDemandRepository.findById(demandId)
+                .orElseThrow(CertificateDemandNotFoundException::new);
+        if (potentialIssuer.getId() != certificateDemandEntity.getRequestedIssuer().getId()) {
+            throw new EndpointAccessException();
+        }
     }
 
 }
