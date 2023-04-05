@@ -31,13 +31,13 @@ public class CertificateDemandController {
         return new ResponseEntity<>(certificateDemandService.create(certificateDemandRequest), HttpStatus.OK);
     }
 
-    @GetMapping("/by-issued-to/{issuedToId}")
+    @GetMapping("/by-requester/{requesterId}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<PaginatedResponseDto<CertificateDemandResponseDto>> getByIssuedTo(@PathVariable("issuedToId") Long issuedToId,
+    public ResponseEntity<PaginatedResponseDto<CertificateDemandResponseDto>> getByIssuedTo(@PathVariable Long requesterId,
                                                                                             Pageable pageable,
                                                                                             Principal principal) {
-        authService.checkUserIdMatchesUserEmail(issuedToId, principal.getName());
-        return new ResponseEntity<>(certificateDemandService.getByIssuedToId(issuedToId, pageable), HttpStatus.OK);
+        authService.checkUserIdMatchesUserEmail(requesterId, principal.getName());
+        return new ResponseEntity<>(certificateDemandService.getByRequesterId(requesterId, pageable), HttpStatus.OK);
     }
 
     @PutMapping("/{id}/reject")

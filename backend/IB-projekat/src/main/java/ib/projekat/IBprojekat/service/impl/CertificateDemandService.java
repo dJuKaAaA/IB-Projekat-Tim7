@@ -87,6 +87,9 @@ public class CertificateDemandService implements ICertificateDemandService {
     public CertificateDemandResponseDto reject(Long id) {
         CertificateDemandEntity certificateDemand = certificateDemandRepository.findById(id)
                 .orElseThrow(CertificateDemandNotFoundException::new);
+        if (certificateDemand.getStatus() != CertificateDemandStatus.PENDING) {
+            throw new CertificateDemandException("Cannot reject certificate demands that are not pending!");
+        }
         certificateDemand.setStatus(CertificateDemandStatus.REJECTED);
         certificateDemand = certificateDemandRepository.save(certificateDemand);
 
@@ -94,10 +97,10 @@ public class CertificateDemandService implements ICertificateDemandService {
     }
 
     @Override
-    public PaginatedResponseDto<CertificateDemandResponseDto> getByIssuedToId(Long issuedToId, Pageable pageable) {
-        userRepository.findById(issuedToId).orElseThrow(UserNotFoundException::new);
+    public PaginatedResponseDto<CertificateDemandResponseDto> getByRequesterId(Long requesterId, Pageable pageable) {
+        userRepository.findById(requesterId).orElseThrow(UserNotFoundException::new);
 
-        Page<CertificateDemandEntity> certificateDemandsPage = certificateDemandRepository.findByIssuedToId(issuedToId, pageable);
+        Page<CertificateDemandEntity> certificateDemandsPage = certificateDemandRepository.findByRequesterId(requesterId, pageable);
 
         Collection<CertificateDemandResponseDto> certificateDemands = certificateDemandsPage.getContent().stream()
                 .map(this::convertToDto)

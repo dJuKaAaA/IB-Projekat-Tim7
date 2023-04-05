@@ -73,6 +73,7 @@ public class AuthService implements IAuthService {
         UserEntity newUser = UserEntity.builder()
                 .name(userRequest.getName())
                 .surname(userRequest.getSurname())
+                .phoneNumber(userRequest.getPhoneNumber())
                 .email(userRequest.getEmail())
                 .password(passwordEncoder.encode(userRequest.getPassword()))
                 .role(Role.USER)
@@ -84,6 +85,7 @@ public class AuthService implements IAuthService {
                 .id(newUser.getId())
                 .name(newUser.getName())
                 .surname(newUser.getSurname())
+                .phoneNumber(newUser.getPhoneNumber())
                 .email(newUser.getEmail())
                 .build();
     }

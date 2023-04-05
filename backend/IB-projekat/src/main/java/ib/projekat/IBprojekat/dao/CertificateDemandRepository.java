@@ -8,10 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface CertificateDemandRepository extends JpaRepository<CertificateDemandEntity, Long> {
 
-    @Query("select certificateDemand from CertificateDemandEntity certificateDemand where certificateDemand.requestedSigningCertificate.issuedTo.id = :issuedToId")
-    Page<CertificateDemandEntity> findByIssuedToId(Long issuedToId, Pageable pageable);
+//    @Query("select certificateDemand from CertificateDemandEntity certificateDemand where certificateDemand.requestedSigningCertificate.issuedTo.id = :issuedToId")
+    Page<CertificateDemandEntity> findByRequesterId(Long requesterId, Pageable pageable);
 
-    @Query("select certificateDemand from CertificateDemandEntity certificateDemand where certificateDemand.requestedSigningCertificate.issuer.id = :issuerId and certificateDemand.status = 'PENDING'")
-    Page<CertificateDemandEntity> findPendingByIssuerId(Long issuerId, Pageable pageable);
+    @Query("select certificateDemand from CertificateDemandEntity certificateDemand where certificateDemand.requester.id = :requesterId and certificateDemand.status = 'PENDING'")
+    Page<CertificateDemandEntity> findPendingByRequesterId(Long requesterId, Pageable pageable);
 
 }
