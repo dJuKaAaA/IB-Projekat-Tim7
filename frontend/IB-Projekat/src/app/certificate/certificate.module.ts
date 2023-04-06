@@ -1,17 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CertificateViewComponent } from './component/certificate-view/certificate-view.component';
+import { CertificateViewComponent } from './certificate-view/certificate-view.component';
+import { CertificateModelComponent } from './certificate-model/certificate-model.component';
 
 
 
 @NgModule({
   declarations: [
-    CertificateViewComponent
+    CertificateViewComponent,
+    CertificateModelComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
   ],
   exports: [
+    CertificateModelComponent,
     CertificateViewComponent
   ]
 })
