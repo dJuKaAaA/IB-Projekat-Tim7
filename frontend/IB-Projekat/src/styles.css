@@ -45,7 +45,6 @@ button:hover {
 }
 
 button:focus {
-    outline: none;
-    background-color: rgb(0, 99, 118);
+    outline: auto;
 }
 

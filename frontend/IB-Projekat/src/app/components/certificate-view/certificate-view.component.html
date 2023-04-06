@@ -1,7 +1,5 @@
 <div class="certificate-container">
-    <app-certificate-model class="certificate"></app-certificate-model>
-    <app-certificate-model class="certificate"></app-certificate-model>
-    <app-certificate-model class="certificate"></app-certificate-model>
-    <app-certificate-model class="certificate"></app-certificate-model>
-    <app-certificate-model class="certificate"></app-certificate-model>
+    <div *ngFor="let certificate of allCertificates">
+        <app-certificate-model class="certificate" [certificate]="certificate"></app-certificate-model>
+    </div>
 </div>

@@ -1,1 +1,47 @@
-<p>certificate-model works!</p>
+<div class="certificate-model">
+    <div>
+        <h3>Certificate information</h3>
+        <div class="certificate-content">
+            <p class="content-label">Serial Number</p>
+            <p>{{ certificate.serialNumber }}</p>
+            <p class="content-label">Type</p>
+            <p>{{ certificate.type }}</p>
+        </div>
+    </div>
+    <div>
+        <h3>Issued To</h3>
+        <div class="certificate-content">
+            <p class="content-label">Issuer</p>
+            <p>{{ certificate.issuedTo.email }}</p>
+        </div>
+    </div>
+    <div>
+        <h3>Issued by</h3>
+        <div class="certificate-content">
+            <p class="content-label">Owner</p>
+            <p>{{ certificate.issuer.email }}</p>
+        </div>
+    </div>
+    <div *ngIf="allDataVisible">
+        <div>
+            <h3>Validity period</h3>
+            <div class="certificate-content">
+                <p class="content-label">Issued On</p>
+                <p>{{ certificate.startDate }}</p>
+                <p class="content-label">Expires On</p>
+                <p>{{ certificate.endDate }}</p>
+            </div>
+        </div>
+        <div>
+            <h3>Fingerprints</h3>
+            <div class="certificate-content">
+                <p class="content-label">Public Key</p>
+                <p style="overflow: auto; word-break: break-all;">{{ certificate.publicKey }}</p>
+                <p class="content-label">Signature</p>
+                <p style="overflow: auto; word-break: break-all;">{{ certificate.signature }}</p>
+            </div>
+        </div>
+    </div>
+
+    <p class="show-more-button" (click)="changeDataVisibility()">{{ showDataLabel }}</p>
+</div>
