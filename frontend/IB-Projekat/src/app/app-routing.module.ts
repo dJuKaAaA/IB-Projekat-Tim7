@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CreateAccountComponent } from './auth/create-account/create-account.component';
-import { LoginComponent } from './auth/login/login.component';
-import { CertificateViewComponent } from './certificate/certificate-view/certificate-view.component';
+import { CreateAccountComponent } from './components/create-account/create-account.component';
+import { LoginComponent } from './components/login/login.component';
+import { CertificateViewComponent } from './components/certificate-view/certificate-view.component';
 
 const routes: Routes = [
   {

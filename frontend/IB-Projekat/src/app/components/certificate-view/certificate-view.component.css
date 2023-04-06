@@ -1,0 +1,13 @@
+.certificate-container {
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 3vh;
+    text-align: center;
+}
+
+.certificate {
+    border: 1px solid black;
+    padding: 28vh 7vw;
+    margin: 1vh 1vw;
+    display: inline-block;
+}

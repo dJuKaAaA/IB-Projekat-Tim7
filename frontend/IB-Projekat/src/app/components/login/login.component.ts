@@ -32,7 +32,7 @@ export class LoginComponent {
       this.authService.login(loginRequest).subscribe({
         next: (response: TokenResponse) => {
           localStorage.setItem('jwt', response.token);
-          alert("Successful login!")
+          this.router.navigate(['certificate-view']);
         },
         error: (error) => {
           if (error instanceof HttpErrorResponse) {
