@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { PaginatedResponse } from '../models/paginated-response.model';
 import { CertificateResponse } from '../models/certificate-response.model';
 import { Observable } from 'rxjs';
-import { environment } from 'environment/environment';
+import { environment } from 'src/environment/environment';
 
 @Injectable({
   providedIn: 'root'

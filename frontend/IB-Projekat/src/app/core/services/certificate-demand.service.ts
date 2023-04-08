@@ -3,8 +3,8 @@ import { EnvironmentInjector, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PaginatedResponse } from '../models/paginated-response.model';
 import { CertificateDemandResponse } from '../models/certificate-demand-response.model';
-import { environment } from 'environment/environment';
 import { CertificateDemandRequest } from '../models/certificate-demand-request.model';
+import { environment } from 'src/environment/environment';
 
 @Injectable({
   providedIn: 'root'

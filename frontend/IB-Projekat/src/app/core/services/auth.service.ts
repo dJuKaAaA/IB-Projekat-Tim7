@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from 'environment/environment';
 import { Observable } from 'rxjs';
 import { LoginRequest } from '../models/login-request.model';
 import { TokenResponse } from '../models/token-response.model';
 import { UserRequest } from '../models/user-request.model';
 import { UserResponse } from '../models/user-response.model';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { environment } from 'src/environment/environment';
 
 @Injectable({
   providedIn: 'root'

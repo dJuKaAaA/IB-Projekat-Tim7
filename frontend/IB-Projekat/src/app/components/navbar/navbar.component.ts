@@ -13,8 +13,10 @@ export class NavbarComponent {
   ) {}
 
   public logout() {
-    localStorage.removeItem("jwt");
-    this.router.navigate(['login'])
+    if (confirm("Log out?")) {
+      localStorage.removeItem("jwt");
+      this.router.navigate(['login'])
+    }
   }
 
 }

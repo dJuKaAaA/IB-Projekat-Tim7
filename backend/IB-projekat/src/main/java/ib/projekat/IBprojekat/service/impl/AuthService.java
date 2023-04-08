@@ -31,6 +31,8 @@ import java.security.*;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service("AuthService")
@@ -57,7 +59,12 @@ public class AuthService implements IAuthService {
         }
 
         UserEntity user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(UserNotFoundException::new);
-        String jwt = jwtService.generateToken(new UserDetailsImpl(user));
+
+        // creating the claims that will be put in the jwt
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", user.getId());
+
+        String jwt = jwtService.generateToken(claims, new UserDetailsImpl(user));
 
         return new TokenResponseDto(jwt);
 

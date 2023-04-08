@@ -16,7 +16,7 @@ const routes: Routes = [
   {
     path: 'certificate-view',
     component: CertificateViewComponent
-  }
+  },
 ];
 
 @NgModule({

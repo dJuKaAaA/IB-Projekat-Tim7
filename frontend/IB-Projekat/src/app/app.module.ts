@@ -11,6 +11,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CertificateModelComponent } from './components/certificate-model/certificate-model.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { JwtInterceptor } from './interceptor/jwt.interceptor';
+import { DemandCreationDialogComponent } from './components/demand-creation-dialog/demand-creation-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -20,6 +22,7 @@ import { JwtInterceptor } from './interceptor/jwt.interceptor';
     CertificateViewComponent,
     CertificateModelComponent,
     NavbarComponent,
+    DemandCreationDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -27,6 +30,7 @@ import { JwtInterceptor } from './interceptor/jwt.interceptor';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    MatDialogModule
   ],
   providers: [
     {
