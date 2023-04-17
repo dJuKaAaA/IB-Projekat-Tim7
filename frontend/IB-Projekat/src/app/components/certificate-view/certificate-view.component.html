@@ -1,0 +1,5 @@
+<div class="certificate-container">
+    <div *ngFor="let certificate of allCertificates" class="certificate-model-container">
+        <app-certificate-model [certificate]="certificate" (emitter)="createDemand($event)"></app-certificate-model>
+    </div>
+</div>

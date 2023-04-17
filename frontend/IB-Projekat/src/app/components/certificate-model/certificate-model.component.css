@@ -1,0 +1,33 @@
+.certificate-model {
+    border: 1px solid black;
+    padding: 20px 30px;
+    width: 90%;
+    border-radius: 20px;
+}
+
+.certificate-model:hover {
+    cursor: pointer;
+}
+
+.certificate-model div h3 {
+    text-align: left;
+}
+
+.certificate-content {
+    width: 80%;
+    display: grid;
+    grid-template-columns: 35% 65%;
+}
+
+.content-label {
+
+}
+
+.show-more-button {
+    font-size: large;
+}
+
+.show-more-button:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}

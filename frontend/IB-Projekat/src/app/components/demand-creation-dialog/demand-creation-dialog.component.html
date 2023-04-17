@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>Create demand</h2>
+<div class="dialog-container">
+    <div mat-dialog-content>
+        <form class="demand-form">
+            <div class="form-field-container">
+                <label for="reason">Reason</label>
+                <input type="text" name="reason" [(ngModel)]="reason" />
+            </div>
+            <div class="form-field-container">
+                <label>Select certificate type</label>
+                <select [(ngModel)]="certificateType" name="certificate-type">
+                    <option value="INTERMEDIATE">INTERMEDIATE</option>
+                    <option value="END">END</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    <div mat-dialog-actions class="actions">
+        <button mat-button (click)="onCancelClick()">Cancel</button>
+        <button mat-button color="primary" (click)="onSaveClick()">Save</button>
+    </div>
+</div>

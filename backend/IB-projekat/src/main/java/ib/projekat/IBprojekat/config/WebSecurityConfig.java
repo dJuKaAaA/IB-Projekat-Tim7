@@ -24,14 +24,14 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .cors()
+                .and()
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/v1/auth/*").permitAll()
-                .anyRequest() .authenticated()
+                .anyRequest().authenticated()
                 .and()
-                .httpBasic(Customizer.withDefaults())
-                .headers(headers -> headers.frameOptions().sameOrigin())
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
