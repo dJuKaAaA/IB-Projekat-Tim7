@@ -2,9 +2,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserRequest } from 'src/app/model/user-request.model';
-import { UserResponse } from 'src/app/model/user-response.model';
-import { AuthService } from 'src/app/service/auth.service';
+import { UserRequest } from 'src/app/core/models/user-request.model';
+import { UserResponse } from 'src/app/core/models/user-response.model';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-create-account',

@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CreateAccountComponent } from './auth/component/create-account/create-account.component';
-import { LoginComponent } from './auth/component/login/login.component';
+import { CreateAccountComponent } from './components/create-account/create-account.component';
+import { LoginComponent } from './components/login/login.component';
+import { CertificateViewComponent } from './components/certificate-view/certificate-view.component';
 
 const routes: Routes = [
   {
@@ -11,7 +12,11 @@ const routes: Routes = [
   {
     path: 'create-account',
     component: CreateAccountComponent
-  }
+  },
+  {
+    path: 'certificate-view',
+    component: CertificateViewComponent
+  },
 ];
 
 @NgModule({

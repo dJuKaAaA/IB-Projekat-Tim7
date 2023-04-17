@@ -6,6 +6,10 @@
     font-family: 'Work Sans', sans-serif;
 }
 
+body {
+    margin: 0;
+}
+
 .form-field-container {
     display: block;
     width: 85%;
@@ -26,6 +30,19 @@
     border: 2px solid rgb(120, 120, 120);
 }
 
+.form-field-container select {
+    width: 90%;
+    font-size: 1vmax;
+    border-radius: 2vmax;
+    border: 2px solid rgb(190, 190, 190);
+    padding: 1vh 1vw;
+}
+
+.form-field-container select:focus {
+    outline: none;
+    border: 2px solid rgb(120, 120, 120);
+}
+
 button {
     padding: 3vh 7vw;
     font-size: 1.25vmax;
@@ -41,7 +58,7 @@ button:hover {
 }
 
 button:focus {
-    outline: none;
-    background-color: rgb(0, 99, 118);
+    outline: auto;
 }
+
 
