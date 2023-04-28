@@ -14,6 +14,10 @@ import { JwtInterceptor } from './interceptor/jwt.interceptor';
 import { DemandCreationDialogComponent } from './components/demand-creation-dialog/demand-creation-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { VerifyRegistrationComponent } from './components/verify-registration/verify-registration.component';
+import { SendVerificationCodeComponent } from './components/send-verification-code/send-verification-code.component';
+import { PasswordRecoveryStep1Component } from './components/passwordRecovery/password-recovery-step1/password-recovery-step1.component';
+import { PasswordRecoveryStep2Component } from './components/passwordRecovery/password-recovery-step2/password-recovery-step2.component';
+import { PasswordRecoveryStep3Component } from './components/passwordRecovery/password-recovery-step3/password-recovery-step3.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +29,10 @@ import { VerifyRegistrationComponent } from './components/verify-registration/ve
     NavbarComponent,
     DemandCreationDialogComponent,
     VerifyRegistrationComponent,
+    SendVerificationCodeComponent,
+    PasswordRecoveryStep1Component,
+    PasswordRecoveryStep2Component,
+    PasswordRecoveryStep3Component,
   ],
   imports: [
     BrowserModule,

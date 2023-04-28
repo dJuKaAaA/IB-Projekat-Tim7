@@ -1,16 +1,2 @@
-<div class="main-container">
-  <form
-    class="form-container"
-    [formGroup]="formGroup"
-    (ngSubmit)="verifyAccount()"
-  >
-    <div class="form-field-container">
-      <label for="code">Enter verification code</label>
-      <input type="code" name="name" formControlName="code" />
-    </div>
-
-    <div class="buttons-layout">
-      <button type="submit" class="submit-button">Send Code</button>
-    </div>
-  </form>
-</div>
+<app-send-verification-code (sendCodeEvent)="verifyAccount($event)">
+</app-send-verification-code>
