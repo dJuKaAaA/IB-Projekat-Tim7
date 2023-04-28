@@ -1,7 +1,10 @@
 package ib.projekat.IBprojekat.controller;
 
+import ib.projekat.IBprojekat.constant.VerificationCodeType;
 import ib.projekat.IBprojekat.dto.request.LoginRequestDto;
+import ib.projekat.IBprojekat.dto.request.RegistrationVerificationRequestDto;
 import ib.projekat.IBprojekat.dto.request.UserRequestDto;
+import ib.projekat.IBprojekat.dto.request.VerificationTargetDto;
 import ib.projekat.IBprojekat.dto.response.TokenResponseDto;
 import ib.projekat.IBprojekat.dto.response.UserResponseDto;
 import ib.projekat.IBprojekat.service.interf.IAuthService;
@@ -23,9 +26,30 @@ public class AuthController {
         return new ResponseEntity<>(authService.login(loginRequest), HttpStatus.OK);
     }
 
-    @PostMapping("/create-account")
-    public ResponseEntity<UserResponseDto> createAccount(@Valid @RequestBody UserRequestDto userRequest) {
-        return new ResponseEntity<>(authService.createAccount(userRequest), HttpStatus.OK);
+    @PostMapping("/create-account/{verificationCodeType}")
+    public ResponseEntity<UserResponseDto> createAccount(@Valid @RequestBody UserRequestDto userRequest,
+                                                         @PathVariable String verificationCodeType) {
+        VerificationCodeType convertedVerificationCodeType = VerificationCodeType.valueOf(verificationCodeType.toUpperCase());
+        return new ResponseEntity<>(authService.createAccount(userRequest, convertedVerificationCodeType), HttpStatus.OK);
     }
+
+    @PostMapping("/verifyRegistration")
+    public ResponseEntity<UserResponseDto> verifyRegistration(@Valid @RequestBody RegistrationVerificationRequestDto registrationVerification) {
+        return new ResponseEntity<>(authService.verifyRegistration(registrationVerification), HttpStatus.OK);
+    }
+
+    @PostMapping("/sendVerificationCode/{verificationCodeType}")
+    public ResponseEntity sendVerificationCode(@Valid @PathVariable String verificationCodeType,
+                                               VerificationTargetDto verificationTargetDto) {
+        VerificationCodeType convertedVerificationCodeType = VerificationCodeType.valueOf(verificationCodeType.toUpperCase());
+        authService.sendPasswordRecoveryCode(convertedVerificationCodeType, verificationTargetDto);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PostMapping("/recoverPassword")
+    public ResponseEntity recoverPassword() {
+        return null;
+    }
+
 
 }

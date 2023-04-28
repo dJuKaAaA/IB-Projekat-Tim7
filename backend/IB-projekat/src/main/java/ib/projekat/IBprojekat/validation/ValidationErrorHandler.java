@@ -83,4 +83,16 @@ public class ValidationErrorHandler {
     protected ResponseEntity<ErrorResponseDto> handleEndpointAccessException(EndpointAccessException e) {
         return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler({CannotFindVerificationCodeException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    protected ResponseEntity<ErrorResponseDto> handleVerificationCodeException(CannotFindVerificationCodeException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({VerificationCodeExpiredException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ResponseEntity<ErrorResponseDto> handleVerificationCodeExpiredException(VerificationCodeExpiredException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
 }

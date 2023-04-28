@@ -1,5 +1,6 @@
 package ib.projekat.IBprojekat.dto.response;
 
+import ib.projekat.IBprojekat.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,5 +17,13 @@ public class UserResponseDto {
     private String surname;
     private String phoneNumber;
     private String email;
+
+    public UserResponseDto(UserEntity userEntity) {
+        this.id = userEntity.getId();
+        this.name = userEntity.getName();
+        this.surname = userEntity.getSurname();
+        this.phoneNumber = userEntity.getPhoneNumber();
+        this.email = userEntity.getEmail();
+    }
 
 }

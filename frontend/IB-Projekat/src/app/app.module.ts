@@ -13,6 +13,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { JwtInterceptor } from './interceptor/jwt.interceptor';
 import { DemandCreationDialogComponent } from './components/demand-creation-dialog/demand-creation-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { VerifyRegistrationComponent } from './components/verify-registration/verify-registration.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     CertificateModelComponent,
     NavbarComponent,
     DemandCreationDialogComponent,
+    VerifyRegistrationComponent,
   ],
   imports: [
     BrowserModule,
