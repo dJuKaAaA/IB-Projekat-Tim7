@@ -1,36 +1,31 @@
 package ib.projekat.IBprojekat.service.impl;
 
-import ib.projekat.IBprojekat.certificate.CertificateGenerator;
-import ib.projekat.IBprojekat.certificate.keystore.KeyStoreReader;
-import ib.projekat.IBprojekat.certificate.keystore.KeyStoreWriter;
-import ib.projekat.IBprojekat.constant.GlobalConstants;
 import ib.projekat.IBprojekat.constant.Role;
+import ib.projekat.IBprojekat.constant.VerificationCodeType;
 import ib.projekat.IBprojekat.dao.CertificateDemandRepository;
 import ib.projekat.IBprojekat.dao.UserRepository;
+import ib.projekat.IBprojekat.dao.VerificationCodeRepository;
 import ib.projekat.IBprojekat.dto.request.LoginRequestDto;
+import ib.projekat.IBprojekat.dto.request.RegistrationVerificationRequestDto;
 import ib.projekat.IBprojekat.dto.request.UserRequestDto;
+import ib.projekat.IBprojekat.dto.request.VerificationTargetDto;
 import ib.projekat.IBprojekat.dto.response.TokenResponseDto;
 import ib.projekat.IBprojekat.dto.response.UserResponseDto;
 import ib.projekat.IBprojekat.entity.CertificateDemandEntity;
 import ib.projekat.IBprojekat.entity.UserEntity;
+import ib.projekat.IBprojekat.entity.VerificationCodeEntity;
 import ib.projekat.IBprojekat.exception.*;
 import ib.projekat.IBprojekat.service.interf.IAuthService;
 import ib.projekat.IBprojekat.websecurity.JwtService;
 import ib.projekat.IBprojekat.websecurity.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
-import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.security.auth.x500.X500Principal;
-import java.math.BigInteger;
-import java.security.*;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.X509Certificate;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -44,6 +39,10 @@ public class AuthService implements IAuthService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final CertificateDemandRepository certificateDemandRepository;
+
+    private final VerificationCodeRepository verificationCodeRepository;
+
+    private final VerificationCodeService verificationCodeService;
 
     @Override
     public TokenResponseDto login(LoginRequestDto loginRequest) {
@@ -71,10 +70,17 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public UserResponseDto createAccount(UserRequestDto userRequest) {
+    @Transactional
+    public UserResponseDto createAccount(UserRequestDto userRequest, VerificationCodeType verificationCodeType) {
         Optional<UserEntity> potentiallyExistingUser = userRepository.findByEmail(userRequest.getEmail());
         if (potentiallyExistingUser.isPresent()) {
-            throw new EmailAlreadyExistsException();
+            UserEntity user = potentiallyExistingUser.get();
+            if (user.isEnabled()) {
+                throw new EmailAlreadyExistsException();
+            } else {
+                verificationCodeRepository.deleteAllByUser(user);
+                userRepository.delete(potentiallyExistingUser.get());
+            }
         }
 
         UserEntity newUser = UserEntity.builder()
@@ -84,9 +90,11 @@ public class AuthService implements IAuthService {
                 .email(userRequest.getEmail())
                 .password(passwordEncoder.encode(userRequest.getPassword()))
                 .role(Role.USER)
-                .enabled(true)
+                .enabled(false)
                 .build();
         newUser = userRepository.save(newUser);
+
+        verificationCodeService.sendVerificationCode(newUser, verificationCodeType);
 
         return UserResponseDto.builder()
                 .id(newUser.getId())
@@ -114,5 +122,45 @@ public class AuthService implements IAuthService {
             throw new EndpointAccessException();
         }
     }
+
+    @Override
+    public UserResponseDto verifyRegistration(RegistrationVerificationRequestDto registrationVerificationRequestDto) {
+
+        UserEntity userEntity =
+                userRepository.findByEmail(registrationVerificationRequestDto.getEmail()).orElseThrow(UserNotFoundException::new);
+
+        VerificationCodeEntity retrievedVerificationCode =
+                verificationCodeRepository.findFirstByUserOrderByDateOfExpirationDesc(userEntity).orElseThrow(CannotFindVerificationCodeException::new);
+
+        verificationCodeService.verifyVerificationCode(retrievedVerificationCode, registrationVerificationRequestDto);
+
+        userEntity.setEnabled(true);
+        userRepository.save(userEntity);
+
+        return new UserResponseDto(userEntity);
+    }
+
+    @Override
+    public void sendPasswordRecoveryCode(VerificationCodeType verificationCodeType,
+                                         VerificationTargetDto verificationTargetDto) {
+        UserEntity user = null;
+        if (isVerificationCodeTypeEmail(verificationCodeType)) {
+            String userEmail = verificationTargetDto.getEmail();
+            user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+        } else if (isVerificationCodeTypePhone(verificationCodeType)) {
+            String userPhone = verificationTargetDto.getPhone();
+            user = userRepository.findByPhoneNumber(userPhone).orElseThrow(UserNotFoundException::new);
+        }
+        verificationCodeService.sendVerificationCode(user, verificationCodeType);
+    }
+
+    private boolean isVerificationCodeTypeEmail(VerificationCodeType verificationCodeType) {
+        return verificationCodeType == VerificationCodeType.EMAIL;
+    }
+
+    private boolean isVerificationCodeTypePhone(VerificationCodeType verificationCodeType) {
+        return verificationCodeType == VerificationCodeType.PHONE;
+    }
+
 
 }

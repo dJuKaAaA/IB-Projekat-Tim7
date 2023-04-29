@@ -7,22 +7,38 @@ import { UserRequest } from '../models/user-request.model';
 import { UserResponse } from '../models/user-response.model';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from 'src/environment/environment';
+import { RegistrationVerificationRequest } from '../models/regisration-verification-request.mode';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
-  constructor(
-    private httpClient: HttpClient
-  ) { }
+  constructor(private httpClient: HttpClient) {}
 
   public login(loginRequest: LoginRequest): Observable<TokenResponse> {
-    return this.httpClient.post<TokenResponse>(`${environment.baseUrl}/auth/login`, loginRequest);
+    return this.httpClient.post<TokenResponse>(
+      `${environment.baseUrl}/auth/login`,
+      loginRequest
+    );
   }
 
-  public createAccount(userRequest: UserRequest): Observable<UserResponse> {
-    return this.httpClient.post<UserResponse>(`${environment.baseUrl}/auth/create-account`, userRequest);
+  public createAccount(
+    userRequest: UserRequest,
+    verificationType: string
+  ): Observable<UserResponse> {
+    return this.httpClient.post<UserResponse>(
+      `${environment.baseUrl}/auth/create-account/${verificationType}`,
+      userRequest
+    );
+  }
+
+  public verifyAccount(
+    registrationVerificationRequest: RegistrationVerificationRequest
+  ) {
+    return this.httpClient.post<TokenResponse>(
+      `${environment.baseUrl}/auth/verifyRegistration`,
+      registrationVerificationRequest
+    );
   }
 
   public getRole(): string {
@@ -32,7 +48,7 @@ export class AuthService {
       const role = helper.decodeToken(accessToken).roles[0];
       return role;
     }
-    return "";
+    return '';
   }
 
   public getId(): number {
@@ -52,20 +68,19 @@ export class AuthService {
       const email = helper.decodeToken(accessToken).sub;
       return email;
     }
-    return "";
+    return '';
   }
 
   private getToken(): string {
-      if (this.isLoggedIn()) {
-        const accessToken: any = localStorage.getItem('jwt');
-        const decodedItem = JSON.parse(accessToken);
-        return decodedItem.accessToken;
+    if (this.isLoggedIn()) {
+      const accessToken: any = localStorage.getItem('jwt');
+      const decodedItem = JSON.parse(accessToken);
+      return decodedItem.accessToken;
     }
-    return "";
+    return '';
   }
 
   public isLoggedIn(): boolean {
     return localStorage.getItem('jwt') != null;
   }
-
 }
