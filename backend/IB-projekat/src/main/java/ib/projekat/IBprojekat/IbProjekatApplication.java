@@ -2,6 +2,7 @@ package ib.projekat.IBprojekat;
 
 import ib.projekat.IBprojekat.certificate.CertificateGenerator;
 import ib.projekat.IBprojekat.certificate.keystore.KeyStoreWriter;
+import ib.projekat.IBprojekat.constant.GlobalConstants;
 import ib.projekat.IBprojekat.constant.Role;
 import ib.projekat.IBprojekat.dao.CertificateRepository;
 import ib.projekat.IBprojekat.dao.UserRepository;
@@ -26,6 +27,7 @@ public class IbProjekatApplication {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final CertificateDemandService certificateDemandService;
+    private final GlobalConstants globalConstants;
 
     public static void main(String[] args) {
         Security.addProvider(new BouncyCastleProvider());
@@ -53,6 +55,10 @@ public class IbProjekatApplication {
 
         admin = userRepository.save(admin);
         //===================================================================
+
+        System.out.println("\n\n\n\n\n\n");
+        System.out.println(globalConstants.jksPassword);
+        System.out.println("\n\n\n\n\n\n");
 
         // creating a custom user
         //===================================================================

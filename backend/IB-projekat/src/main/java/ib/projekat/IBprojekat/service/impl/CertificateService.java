@@ -40,6 +40,7 @@ public class CertificateService implements ICertificateService {
     private final KeyStoreWriter keyStoreWriter;
     private final KeyStoreReader keyStoreReader;
     private final Base64Utility base64Utility;
+    private final GlobalConstants globalConstants;
 
     // return all certificate
     @Override
@@ -96,10 +97,10 @@ public class CertificateService implements ICertificateService {
         if (certificateDemand.getRequestedSigningCertificate() != null) {
             signerCertificateEntity = certificateDemand.getRequestedSigningCertificate();
             signerPrivateKey = keyStoreReader.readPrivateKey(
-                    GlobalConstants.jksCertificatesPath,
-                    GlobalConstants.jksPassword,
+                    globalConstants.jksCertificatesPath,
+                    globalConstants.jksPassword,
                     signerCertificateEntity.getSerialNumber(),
-                    GlobalConstants.jksEntriesPassword
+                    globalConstants.jksEntriesPassword
             );
 
             // end certificate cant sing another certificate
@@ -124,14 +125,14 @@ public class CertificateService implements ICertificateService {
         );
 
         // save certificate to keystore
-        keyStoreWriter.loadKeyStore(GlobalConstants.jksCertificatesPath, GlobalConstants.jksPassword.toCharArray());
+        keyStoreWriter.loadKeyStore(globalConstants.jksCertificatesPath, globalConstants.jksPassword.toCharArray());
         keyStoreWriter.write(
                 certificate.getSerialNumber().toString(),
                 keyPair.getPrivate(),
-                GlobalConstants.jksEntriesPassword.toCharArray(),
+                globalConstants.jksEntriesPassword.toCharArray(),
                 certificate
         );
-        keyStoreWriter.saveKeyStore(GlobalConstants.jksCertificatesPath, GlobalConstants.jksPassword.toCharArray());
+        keyStoreWriter.saveKeyStore(globalConstants.jksCertificatesPath, globalConstants.jksPassword.toCharArray());
 
         // save certificate entity to database
         CertificateEntity certificateEntity = CertificateEntity.builder()
@@ -171,15 +172,15 @@ public class CertificateService implements ICertificateService {
 
         // read certificate from key store
         X509Certificate certificate = (X509Certificate) keyStoreReader.readCertificate(
-                GlobalConstants.jksCertificatesPath,
-                GlobalConstants.jksPassword,
+                globalConstants.jksCertificatesPath,
+                globalConstants.jksPassword,
                 certificateEntity.getSerialNumber()
         );
 
         // read signer certificate
         X509Certificate signerCertificate = (X509Certificate) keyStoreReader.readCertificate(
-                GlobalConstants.jksCertificatesPath,
-                GlobalConstants.jksPassword,
+                globalConstants.jksCertificatesPath,
+                globalConstants.jksPassword,
                 certificateEntity.getSigner().getSerialNumber()
         );
 
@@ -202,13 +203,13 @@ public class CertificateService implements ICertificateService {
             // load new certificate from chain
             certificateEntity = certificateEntity.getSigner();
             certificate = (X509Certificate) keyStoreReader.readCertificate(
-                    GlobalConstants.jksCertificatesPath,
-                    GlobalConstants.jksPassword,
+                    globalConstants.jksCertificatesPath,
+                    globalConstants.jksPassword,
                     certificateEntity.getSerialNumber()
             );
             signerCertificate = (X509Certificate) keyStoreReader.readCertificate(
-                    GlobalConstants.jksCertificatesPath,
-                    GlobalConstants.jksPassword,
+                    globalConstants.jksCertificatesPath,
+                    globalConstants.jksPassword,
                     certificateEntity.getSigner().getSerialNumber()
             );
         }

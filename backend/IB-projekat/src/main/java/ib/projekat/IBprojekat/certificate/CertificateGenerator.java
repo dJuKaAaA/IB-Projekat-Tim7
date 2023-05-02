@@ -29,6 +29,8 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class CertificateGenerator {
 
+    private final GlobalConstants globalConstants;
+
     // privatinim kljucem potpisujemo
     public X509Certificate generateCertificate(UserEntity requester, UserEntity requestedIssuer, PublicKey subjectPublicKey, PrivateKey issuerPrivateKey) {
         try {
@@ -36,7 +38,7 @@ public class CertificateGenerator {
             JcaContentSignerBuilder builder = new JcaContentSignerBuilder("SHA256WithRSAEncryption");
 
             Date validityStartDate = new Date(System.currentTimeMillis());
-            Date expirationDate = new Date(System.currentTimeMillis() + GlobalConstants.oneYearInMillis);
+            Date expirationDate = new Date(System.currentTimeMillis() + globalConstants.oneYearInMillis);
             SubjectData subjectData = generateSubjectData(
                     requester,
                     validityStartDate,
