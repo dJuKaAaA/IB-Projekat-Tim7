@@ -107,7 +107,7 @@ public class CertificateService implements ICertificateService {
                 throw new CannotSignCertificateException("End certificates cannot sign other certificates!");
             }
 
-            checkValidity(signerCertificateEntity.getId());
+            checkValidity(signerCertificateEntity.getSerialNumber());
 
         } else {
             // it's root certificate
@@ -164,9 +164,9 @@ public class CertificateService implements ICertificateService {
     }
 
     @Override
-    public void checkValidity(Long id) {
+    public void checkValidity(String serialNumber) {
         // find certificate
-        CertificateEntity certificateEntity = certificateRepository.findById(id)
+        CertificateEntity certificateEntity = certificateRepository.findBySerialNumber(serialNumber)
                 .orElseThrow(() -> new CertificateNotFoundException("Signer certificate not found!"));
 
         // read certificate from key store

@@ -12,7 +12,7 @@ public interface ICertificateService {
     PaginatedResponseDto<CertificateResponseDto> getAll(Pageable pageable);
     PaginatedResponseDto<CertificateResponseDto> getForUser(Long userId, Pageable pageable);
     CertificateResponseDto create(Long demandId);
-    void checkValidity(Long id);
+    void checkValidity(String serialNumber);
 
 }
 

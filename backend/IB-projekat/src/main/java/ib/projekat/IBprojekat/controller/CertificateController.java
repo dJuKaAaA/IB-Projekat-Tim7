@@ -44,10 +44,10 @@ public class CertificateController {
         return new ResponseEntity<>(certificateService.create(demandId), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}/validate")
+    @GetMapping("/{serialNumber}/validate")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public HttpStatus validate(@PathVariable("id") Long id){
-        certificateService.checkValidity(id);
+    public HttpStatus validate(@PathVariable("serialNumber") String serialNumber){
+        certificateService.checkValidity(serialNumber);
         return HttpStatus.NO_CONTENT;
     }
 
