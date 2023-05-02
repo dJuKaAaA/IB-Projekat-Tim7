@@ -15,7 +15,7 @@ export class CertificateService {
   ) { }
 
   public getAll(page: number, size: number): Observable<PaginatedResponse<CertificateResponse>> {
-    return this.httpClient.get<PaginatedResponse<CertificateResponse>>(`${environment.baseUrl}/certificate`)
+    return this.httpClient.get<PaginatedResponse<CertificateResponse>>(`${environment.baseUrl}/certificate?page=${page}&size=${size}`)
   }
 
   public getForUser(userId: number, page: number, size: number): Observable<PaginatedResponse<CertificateResponse>> {
