@@ -1,10 +1,7 @@
 package ib.projekat.IBprojekat.service.interf;
 
 import ib.projekat.IBprojekat.constant.VerificationCodeType;
-import ib.projekat.IBprojekat.dto.request.LoginRequestDto;
-import ib.projekat.IBprojekat.dto.request.RegistrationVerificationRequestDto;
-import ib.projekat.IBprojekat.dto.request.UserRequestDto;
-import ib.projekat.IBprojekat.dto.request.VerificationTargetDto;
+import ib.projekat.IBprojekat.dto.request.*;
 import ib.projekat.IBprojekat.dto.response.TokenResponseDto;
 import ib.projekat.IBprojekat.dto.response.UserResponseDto;
 import org.springframework.stereotype.Service;
@@ -20,9 +17,13 @@ public interface IAuthService {
 
     void checkIsDemandIntendedForUser(String userEmail, Long demandId);
 
-    UserResponseDto verifyRegistration(RegistrationVerificationRequestDto registrationVerificationRequestDto);
+    void verifyVerificationCode(VerifyVerificationCodeRequestDto registrationVerificationRequestDto);
+
+    void sendVerificationCode(
+            VerificationTargetDto verificationTargetDto);
+
+    UserResponseDto verifyRegistration(VerifyVerificationCodeRequestDto registrationVerificationRequestDto);
 
 
-    void sendPasswordRecoveryCode(VerificationCodeType verificationCodeType,
-                                  VerificationTargetDto verificationTargetDto);
+    void recoverPassword(PasswordRecoveryRequestDto passwordRecoveryDto);
 }

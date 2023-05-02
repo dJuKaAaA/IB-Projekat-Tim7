@@ -5,10 +5,7 @@ import ib.projekat.IBprojekat.constant.VerificationCodeType;
 import ib.projekat.IBprojekat.dao.CertificateDemandRepository;
 import ib.projekat.IBprojekat.dao.UserRepository;
 import ib.projekat.IBprojekat.dao.VerificationCodeRepository;
-import ib.projekat.IBprojekat.dto.request.LoginRequestDto;
-import ib.projekat.IBprojekat.dto.request.RegistrationVerificationRequestDto;
-import ib.projekat.IBprojekat.dto.request.UserRequestDto;
-import ib.projekat.IBprojekat.dto.request.VerificationTargetDto;
+import ib.projekat.IBprojekat.dto.request.*;
 import ib.projekat.IBprojekat.dto.response.TokenResponseDto;
 import ib.projekat.IBprojekat.dto.response.UserResponseDto;
 import ib.projekat.IBprojekat.entity.CertificateDemandEntity;
@@ -22,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +41,7 @@ public class AuthService implements IAuthService {
     private final VerificationCodeRepository verificationCodeRepository;
 
     private final VerificationCodeService verificationCodeService;
+
 
     @Override
     public TokenResponseDto login(LoginRequestDto loginRequest) {
@@ -124,43 +123,93 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public UserResponseDto verifyRegistration(RegistrationVerificationRequestDto registrationVerificationRequestDto) {
-
-        UserEntity userEntity =
-                userRepository.findByEmail(registrationVerificationRequestDto.getEmail()).orElseThrow(UserNotFoundException::new);
+    public void verifyVerificationCode(VerifyVerificationCodeRequestDto verifyVerificationCodeRequestDto) {
+        UserEntity user = this.getUserByVerificationCodeRequest(verifyVerificationCodeRequestDto);
 
         VerificationCodeEntity retrievedVerificationCode =
-                verificationCodeRepository.findFirstByUserOrderByDateOfExpirationDesc(userEntity).orElseThrow(CannotFindVerificationCodeException::new);
+                verificationCodeRepository.findFirstByUserOrderByDateOfExpirationDesc(user).orElseThrow(CannotFindVerificationCodeException::new);
 
-        verificationCodeService.verifyVerificationCode(retrievedVerificationCode, registrationVerificationRequestDto);
+        verificationCodeService.verifyVerificationCode(retrievedVerificationCode, verifyVerificationCodeRequestDto);
 
-        userEntity.setEnabled(true);
-        userRepository.save(userEntity);
 
-        return new UserResponseDto(userEntity);
     }
 
     @Override
-    public void sendPasswordRecoveryCode(VerificationCodeType verificationCodeType,
-                                         VerificationTargetDto verificationTargetDto) {
-        UserEntity user = null;
-        if (isVerificationCodeTypeEmail(verificationCodeType)) {
-            String userEmail = verificationTargetDto.getEmail();
-            user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
-        } else if (isVerificationCodeTypePhone(verificationCodeType)) {
-            String userPhone = verificationTargetDto.getPhone();
-            user = userRepository.findByPhoneNumber(userPhone).orElseThrow(UserNotFoundException::new);
-        }
+    public void sendVerificationCode(VerificationTargetDto verificationTargetDto) {
+        UserEntity user = this.getUserFromVerificationTarget(verificationTargetDto);
+        VerificationCodeType verificationCodeType =
+                this.getVerificationCodeTypeFromVerificationTarget(verificationTargetDto);
+
         verificationCodeService.sendVerificationCode(user, verificationCodeType);
     }
 
-    private boolean isVerificationCodeTypeEmail(VerificationCodeType verificationCodeType) {
-        return verificationCodeType == VerificationCodeType.EMAIL;
+    @Override
+    public UserResponseDto verifyRegistration(VerifyVerificationCodeRequestDto verifyVerificationCodeRequestDto) {
+        this.verifyVerificationCode(verifyVerificationCodeRequestDto);
+        UserEntity user = getUserByVerificationCodeRequest(verifyVerificationCodeRequestDto);
+
+        user.setEnabled(true);
+        userRepository.save(user);
+
+        return new UserResponseDto(user);
     }
 
-    private boolean isVerificationCodeTypePhone(VerificationCodeType verificationCodeType) {
-        return verificationCodeType == VerificationCodeType.PHONE;
+    @Override
+    public void recoverPassword(PasswordRecoveryRequestDto passwordRecoveryDto) {
+        String userEmail = passwordRecoveryDto.getUserEmail();
+        String userPhoneNumber = passwordRecoveryDto.getUserPhoneNumber();
+        String newPassword = passwordRecoveryDto.getNewPassword();
+
+        UserEntity user;
+        if (!userEmail.equals("")) {
+            user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+        } else {
+            user = userRepository.findByPhoneNumber(userPhoneNumber).orElseThrow(UserNotFoundException::new);
+        }
+
+        user.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+        userRepository.save(user);
+
+    }
+    
+    private UserEntity getUserByVerificationCodeRequest(VerifyVerificationCodeRequestDto verifyVerificationCodeRequestDto) {
+        UserEntity user = null;
+        String userEmail = verifyVerificationCodeRequestDto.getEmail();
+        String userPhoneNumber = verifyVerificationCodeRequestDto.getPhoneNumber();
+
+        if (!userEmail.equals("")) {
+            user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+        } else if (!userPhoneNumber.equals("")) {
+            user = userRepository.findByPhoneNumber(userPhoneNumber).orElseThrow(UserNotFoundException::new);
+        }
+        return user;
     }
 
+    private UserEntity getUserFromVerificationTarget(VerificationTargetDto verificationTargetDto) {
+        UserEntity user = null;
+        String userEmail = verificationTargetDto.getEmail();
+        String userPhoneNumber = verificationTargetDto.getPhoneNumber();
+
+        if (!userEmail.equals("")) {
+            user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+        } else if (!userPhoneNumber.equals("")) {
+            user = userRepository.findByPhoneNumber(userPhoneNumber).orElseThrow(UserNotFoundException::new);
+        }
+        return user;
+    }
+
+    private VerificationCodeType getVerificationCodeTypeFromVerificationTarget(VerificationTargetDto verificationTargetDto) {
+        VerificationCodeType verificationCodeType = null;
+        String userEmail = verificationTargetDto.getEmail();
+        String userPhoneNumber = verificationTargetDto.getPhoneNumber();
+
+        if (!userEmail.equals("")) {
+            verificationCodeType = VerificationCodeType.EMAIL;
+        } else if (!userPhoneNumber.equals("")) {
+            verificationCodeType = VerificationCodeType.PHONE;
+        }
+
+        return verificationCodeType;
+    }
 
 }

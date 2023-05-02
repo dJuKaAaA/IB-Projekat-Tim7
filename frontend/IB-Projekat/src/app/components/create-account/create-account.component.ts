@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { UserRequest } from 'src/app/core/models/user-request.model';
 import { UserResponse } from 'src/app/core/models/user-response.model';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { RegistrationVerificationRequest } from '../../core/models/regisration-verification-request.mode';
+import { VerifyVerificationCodeRequest } from '../../core/models/verify-verification-code-request.mode';
 
 @Component({
   selector: 'app-create-account',

@@ -4,7 +4,7 @@ package ib.projekat.IBprojekat.service.impl;
 import ib.projekat.IBprojekat.constant.GlobalConstants;
 import ib.projekat.IBprojekat.constant.VerificationCodeType;
 import ib.projekat.IBprojekat.dao.VerificationCodeRepository;
-import ib.projekat.IBprojekat.dto.request.RegistrationVerificationRequestDto;
+import ib.projekat.IBprojekat.dto.request.VerifyVerificationCodeRequestDto;
 import ib.projekat.IBprojekat.entity.UserEntity;
 import ib.projekat.IBprojekat.entity.VerificationCodeEntity;
 import ib.projekat.IBprojekat.exception.CannotFindVerificationCodeException;
@@ -23,7 +23,7 @@ public class VerificationCodeService {
     private final VerificationCodeRepository verificationCodeRepository;
 
     public void verifyVerificationCode(VerificationCodeEntity verificationCodeEntity,
-                                       RegistrationVerificationRequestDto registrationVerificationRequestDto) {
+                                       VerifyVerificationCodeRequestDto registrationVerificationRequestDto) {
         String sentVerificationCode = registrationVerificationRequestDto.getCode();
         Date verificationRequestCreationDate = new Date();
         this.verifyVerificationCodesMatch(verificationCodeEntity, sentVerificationCode);
