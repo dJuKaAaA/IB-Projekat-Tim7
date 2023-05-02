@@ -26,8 +26,8 @@ export class CertificateService {
     return this.httpClient.post<CertificateResponse>(`${environment.baseUrl}/certificate/for-demand/${demandId}`, {});
   }
 
-  public validate(id: number): Observable<string> {
-    return this.httpClient.get<string>(`${environment.baseUrl}/certificate/${id}/validate`);
+  public validate(serialNumber: string): Observable<string> {
+    return this.httpClient.get<string>(`${environment.baseUrl}/certificate/${serialNumber}/validate`);
   }
 
 }

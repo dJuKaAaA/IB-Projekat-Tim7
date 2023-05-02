@@ -24,10 +24,7 @@ import java.security.Security;
 public class IbProjekatApplication {
 
     private final UserRepository userRepository;
-    private final CertificateGenerator certificateGenerator;
-    private final CertificateRepository certificateRepository;
     private final PasswordEncoder passwordEncoder;
-    private final KeyStoreWriter keyStoreWriter;
     private final CertificateDemandService certificateDemandService;
 
     public static void main(String[] args) {

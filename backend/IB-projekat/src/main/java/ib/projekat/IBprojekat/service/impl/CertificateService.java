@@ -167,7 +167,7 @@ public class CertificateService implements ICertificateService {
     public void checkValidity(String serialNumber) {
         // find certificate
         CertificateEntity certificateEntity = certificateRepository.findBySerialNumber(serialNumber)
-                .orElseThrow(() -> new CertificateNotFoundException("Signer certificate not found!"));
+                .orElseThrow(() -> new CertificateNotFoundException("Certificate not found!"));
 
         // read certificate from key store
         X509Certificate certificate = (X509Certificate) keyStoreReader.readCertificate(
