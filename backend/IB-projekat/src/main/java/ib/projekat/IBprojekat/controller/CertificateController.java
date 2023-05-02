@@ -51,4 +51,11 @@ public class CertificateController {
         return HttpStatus.NO_CONTENT;
     }
 
+    @PutMapping("/{id}/pull")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public HttpStatus pull(@PathVariable("id") Long id, Principal principal) {
+        certificateService.pullCertificate(id, principal.getName());
+        return HttpStatus.NO_CONTENT;
+    }
+
 }
