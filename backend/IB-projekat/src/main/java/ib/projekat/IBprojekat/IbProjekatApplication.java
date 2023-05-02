@@ -56,10 +56,6 @@ public class IbProjekatApplication {
         admin = userRepository.save(admin);
         //===================================================================
 
-        System.out.println("\n\n\n\n\n\n");
-        System.out.println(globalConstants.jksPassword);
-        System.out.println("\n\n\n\n\n\n");
-
         // creating a custom user
         //===================================================================
         UserEntity user = UserEntity.builder()

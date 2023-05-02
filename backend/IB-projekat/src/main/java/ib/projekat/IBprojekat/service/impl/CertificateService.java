@@ -10,6 +10,7 @@ import ib.projekat.IBprojekat.constant.GlobalConstants;
 import ib.projekat.IBprojekat.dao.CertificateDemandRepository;
 import ib.projekat.IBprojekat.dao.CertificateRepository;
 import ib.projekat.IBprojekat.dao.UserRepository;
+import ib.projekat.IBprojekat.dto.request.UploadedCertificateRequestDto;
 import ib.projekat.IBprojekat.dto.response.CertificateResponseDto;
 import ib.projekat.IBprojekat.dto.response.PaginatedResponseDto;
 import ib.projekat.IBprojekat.dto.response.UserRefResponseDto;
@@ -22,12 +23,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.security.*;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateExpiredException;
-import java.security.cert.CertificateNotYetValidException;
-import java.security.cert.X509Certificate;
+import java.security.cert.*;
+import java.security.cert.Certificate;
+import java.util.Base64;
 import java.util.Collection;
+import java.util.Enumeration;
 
 @Service("CertificateService")
 @RequiredArgsConstructor
@@ -126,12 +128,32 @@ public class CertificateService implements ICertificateService {
 
         // save certificate to keystore
         keyStoreWriter.loadKeyStore(globalConstants.jksCertificatesPath, globalConstants.jksPassword.toCharArray());
-        keyStoreWriter.write(
-                certificate.getSerialNumber().toString(),
-                keyPair.getPrivate(),
-                globalConstants.jksEntriesPassword.toCharArray(),
-                certificate
-        );
+        if (signerCertificateEntity == null) {
+            keyStoreWriter.write(
+                    certificate.getSerialNumber().toString(),
+                    keyPair.getPrivate(),
+                    globalConstants.jksEntriesPassword.toCharArray(),
+                    new Certificate[]{ certificate }
+            );
+        } else {
+            X509Certificate[] certificateChain = keyStoreReader.getChainForCertificate(
+                    globalConstants.jksCertificatesPath,
+                    globalConstants.jksPassword,
+                    String.valueOf(signerCertificateEntity.getSerialNumber())
+            );
+            X509Certificate[] newCertificateChain = new X509Certificate[certificateChain.length + 1];
+            newCertificateChain[0] = certificate;
+            for (int i = 1; i < newCertificateChain.length; ++i) {
+                newCertificateChain[i] = certificateChain[i - 1];
+                System.out.println(newCertificateChain[i - 1].getSerialNumber());
+            }
+            keyStoreWriter.write(
+                    String.valueOf(certificate.getSerialNumber()),
+                    keyPair.getPrivate(),
+                    globalConstants.jksEntriesPassword.toCharArray(),
+                    newCertificateChain
+            );
+        }
         keyStoreWriter.saveKeyStore(globalConstants.jksCertificatesPath, globalConstants.jksPassword.toCharArray());
 
         // save certificate entity to database
@@ -228,6 +250,20 @@ public class CertificateService implements ICertificateService {
             throw new SignatureIntegrityException();
         }
 
+    }
+
+    @Override
+    public void checkValidityFromUploadedCertificate(UploadedCertificateRequestDto uploadedCertificateRequest) {
+        byte[] certBytes = Base64.getDecoder().decode(uploadedCertificateRequest.getBase64Certificate());
+
+        try {
+            CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
+            X509Certificate cert = (X509Certificate) certFactory.generateCertificate(new ByteArrayInputStream(certBytes));
+
+            checkValidity(String.valueOf(cert.getSerialNumber()));
+        } catch (CertificateException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private CertificateResponseDto convertToDto(CertificateEntity certificateEntity) {
