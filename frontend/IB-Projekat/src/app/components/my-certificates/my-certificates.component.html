@@ -1,0 +1,5 @@
+<div class="certificate-container">
+    <div *ngFor="let certificate of myCertificates" class="certificate-model-container">
+        <app-certificate-model [certificate]="certificate" (emitter)="pullCertificate(certificate)"></app-certificate-model>
+    </div>
+</div>

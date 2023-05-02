@@ -27,13 +27,15 @@ export class CertificateViewComponent implements OnInit {
   }
 
   createDemand(certificate: CertificateResponse) {
+    if (certificate.isPulled) {
+      alert("Cannot create a demand from pulled certificates!");
+      return;
+    }
     this.matDialog.open(DemandCreationDialogComponent, {
       data: {
         certificate: certificate
       },
     });
   }
-
-
 
 }

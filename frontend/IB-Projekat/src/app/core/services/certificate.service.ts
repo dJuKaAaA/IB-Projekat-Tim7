@@ -30,4 +30,8 @@ export class CertificateService {
     return this.httpClient.get<string>(`${environment.baseUrl}/certificate/${id}/validate`);
   }
 
+  public pull(id: number): Observable<string> {
+    return this.httpClient.put<string>(`${environment.baseUrl}/certificate/${id}/pull`, {});
+  }
+
 }
