@@ -20,6 +20,7 @@ import { PasswordRecoveryStep2Component } from './components/passwordRecovery/pa
 import { PasswordRecoveryStep3Component } from './components/passwordRecovery/password-recovery-step3/password-recovery-step3.component';
 import { ValidateCertificateDialogComponent } from './components/validate-certificate-dialog/validate-certificate-dialog.component';
 import { ValidateFromUploadComponent } from './components/validate-from-upload/validate-from-upload.component';
+import { MyCertificatesComponent } from './components/my-certificates/my-certificates.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { ValidateFromUploadComponent } from './components/validate-from-upload/v
     PasswordRecoveryStep3Component,
     ValidateCertificateDialogComponent,
     ValidateFromUploadComponent,
+    MyCertificatesComponent,
   ],
   imports: [
     BrowserModule,

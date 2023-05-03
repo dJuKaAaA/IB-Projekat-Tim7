@@ -15,6 +15,7 @@ public interface ICertificateService {
     CertificateResponseDto create(Long demandId);
     void checkValidity(String serialNumber);
     void checkValidityFromUploadedCertificate(UploadedCertificateRequestDto uploadedCertificateRequest);
+    void pullCertificate(String serialNumber, String userEmail);
 
 }
 

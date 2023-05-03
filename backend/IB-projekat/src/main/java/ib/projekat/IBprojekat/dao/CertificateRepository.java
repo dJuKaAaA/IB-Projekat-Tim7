@@ -13,7 +13,7 @@ public interface CertificateRepository extends JpaRepository<CertificateEntity, 
 
     @Query("select certificate from CertificateEntity certificate where certificate.issuer.id = :userId or certificate.issuedTo.id = :userId")
     Page<CertificateEntity> findByUserId(Long userId, Pageable pageable);
-
     Optional<CertificateEntity> findBySerialNumber(String serialNumber);
+    Collection<CertificateEntity> findBySignerId(Long singerId);
 
 }

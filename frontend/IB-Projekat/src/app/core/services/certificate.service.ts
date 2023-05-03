@@ -16,7 +16,7 @@ export class CertificateService {
   ) { }
 
   public getAll(page: number, size: number): Observable<PaginatedResponse<CertificateResponse>> {
-    return this.httpClient.get<PaginatedResponse<CertificateResponse>>(`${environment.baseUrl}/certificate`)
+    return this.httpClient.get<PaginatedResponse<CertificateResponse>>(`${environment.baseUrl}/certificate?page=${page}&size=${size}`)
   }
 
   public getForUser(userId: number, page: number, size: number): Observable<PaginatedResponse<CertificateResponse>> {
@@ -33,6 +33,10 @@ export class CertificateService {
 
   public validateFromUpload(uploadedCertificateRequest: UploadedCertificateRequest): Observable<string> {
     return this.httpClient.post<string>(`${environment.baseUrl}/certificate/validate-from-upload`, uploadedCertificateRequest);
+  }
+
+  public pull(serialNumber: string): Observable<string> {
+    return this.httpClient.put<string>(`${environment.baseUrl}/certificate/${serialNumber}/pull`, {});
   }
 
 }

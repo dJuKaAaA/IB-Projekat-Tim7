@@ -9,5 +9,6 @@ export interface CertificateResponse {
     startDate: string,
     endDate: string,
     publicKey: string,
-    signature: string
+    signature: string,
+    isPulled: boolean
 }

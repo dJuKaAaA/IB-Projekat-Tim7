@@ -60,4 +60,11 @@ public class CertificateController {
         return HttpStatus.NO_CONTENT;
     }
 
+    @PutMapping("/{serialNumber}/pull")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public HttpStatus pull(@PathVariable("serialNumber") String serialNumber, Principal principal) {
+        certificateService.pullCertificate(serialNumber, principal.getName());
+        return HttpStatus.NO_CONTENT;
+    }
+
 }

@@ -31,4 +31,12 @@ export class NavbarComponent {
     }
   }
 
+  openAllCertificates() {
+    this.router.navigate(['certificate-view'])
+  }
+
+  openMyCertificates() {
+    this.router.navigate(['my-certificates'])
+  }
+
 }
