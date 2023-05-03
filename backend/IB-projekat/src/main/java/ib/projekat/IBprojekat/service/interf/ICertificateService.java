@@ -13,6 +13,7 @@ public interface ICertificateService {
     PaginatedResponseDto<CertificateResponseDto> getForUser(Long userId, Pageable pageable);
     CertificateResponseDto create(Long demandId);
     void checkValidity(Long id);
+    void pullCertificate(Long id, String userEmail);
 
 }
 

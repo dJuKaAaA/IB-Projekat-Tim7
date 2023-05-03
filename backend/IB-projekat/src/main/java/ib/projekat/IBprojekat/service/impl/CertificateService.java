@@ -7,6 +7,7 @@ import ib.projekat.IBprojekat.certificate.keystore.KeyStoreWriter;
 import ib.projekat.IBprojekat.constant.CertificateDemandStatus;
 import ib.projekat.IBprojekat.constant.CertificateType;
 import ib.projekat.IBprojekat.constant.GlobalConstants;
+import ib.projekat.IBprojekat.constant.Role;
 import ib.projekat.IBprojekat.dao.CertificateDemandRepository;
 import ib.projekat.IBprojekat.dao.CertificateRepository;
 import ib.projekat.IBprojekat.dao.UserRepository;
@@ -15,6 +16,7 @@ import ib.projekat.IBprojekat.dto.response.PaginatedResponseDto;
 import ib.projekat.IBprojekat.dto.response.UserRefResponseDto;
 import ib.projekat.IBprojekat.entity.CertificateDemandEntity;
 import ib.projekat.IBprojekat.entity.CertificateEntity;
+import ib.projekat.IBprojekat.entity.UserEntity;
 import ib.projekat.IBprojekat.exception.*;
 import ib.projekat.IBprojekat.service.interf.ICertificateService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,7 @@ import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
+import java.util.Stack;
 
 @Service("CertificateService")
 @RequiredArgsConstructor
@@ -185,6 +188,9 @@ public class CertificateService implements ICertificateService {
 
         // iterate trough out chain
         while (certificateEntity.getType() != CertificateType.ROOT) {
+            if (certificateEntity.isPulled()) {
+                throw new InvalidCertificateException("This certificate (or the one in it's chain) has been pulled by it's owner (or the admin)!");
+            }
 
             try {
                 certificate.checkValidity();
@@ -214,6 +220,10 @@ public class CertificateService implements ICertificateService {
         }
 
         // root validation and verification
+        if (certificateEntity.isPulled()) {
+            throw new InvalidCertificateException("This certificate (or the one in it's chain) has been pulled by the owner!");
+        }
+
         try {
             certificate.checkValidity();
         } catch (CertificateExpiredException | CertificateNotYetValidException e) {
@@ -227,6 +237,39 @@ public class CertificateService implements ICertificateService {
             throw new SignatureIntegrityException();
         }
 
+    }
+
+    @Override
+    public void pullCertificate(Long id, String userEmail) {
+        UserEntity userEntity = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+
+        CertificateEntity certificateEntity = certificateRepository.findById(id)
+                .orElseThrow(CertificateNotFoundException::new);
+
+        if (userEntity.getRole() != Role.ADMIN && userEntity.getId() != certificateEntity.getIssuedTo().getId()) {
+            throw new InvalidCertificateOwnerException(
+                    "User with username %s is not the owner of the requested certificate!"
+                            .formatted(userEntity.getEmail()));
+        }
+
+        if (certificateEntity.getType() == CertificateType.ROOT) {
+            throw new CertificatePullException("Cannot pull ROOT certificates!");
+        }
+
+        Stack<CertificateEntity> certificateStack = new Stack<>();
+        certificateStack.push(certificateEntity);
+        while (!certificateStack.empty()) {
+            certificateEntity = certificateStack.pop();
+            certificateEntity.setPulled(true);
+            certificateRepository.save(certificateEntity);
+
+            Collection<CertificateEntity> childCertificates = certificateRepository.findBySignerId(certificateEntity.getId());
+            for (CertificateEntity childCertificate : childCertificates) {
+                if (!childCertificate.isPulled()) {
+                    certificateStack.push(childCertificate);
+                }
+            }
+        }
     }
 
     private CertificateResponseDto convertToDto(CertificateEntity certificateEntity) {
@@ -248,6 +291,7 @@ public class CertificateService implements ICertificateService {
                 .endDate(certificateEntity.getEndDate().toString())
                 .publicKey(certificateEntity.getPublicKey().toString())
                 .signature(base64Utility.encode(certificateEntity.getSignature()))
+                .isPulled(certificateEntity.isPulled())
                 .build();
     }
 
