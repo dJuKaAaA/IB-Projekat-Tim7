@@ -128,32 +128,12 @@ public class CertificateService implements ICertificateService {
 
         // save certificate to keystore
         keyStoreWriter.loadKeyStore(globalConstants.jksCertificatesPath, globalConstants.jksPassword.toCharArray());
-        if (signerCertificateEntity == null) {
-            keyStoreWriter.write(
-                    certificate.getSerialNumber().toString(),
-                    keyPair.getPrivate(),
-                    globalConstants.jksEntriesPassword.toCharArray(),
-                    new Certificate[]{ certificate }
-            );
-        } else {
-            X509Certificate[] certificateChain = keyStoreReader.getChainForCertificate(
-                    globalConstants.jksCertificatesPath,
-                    globalConstants.jksPassword,
-                    String.valueOf(signerCertificateEntity.getSerialNumber())
-            );
-            X509Certificate[] newCertificateChain = new X509Certificate[certificateChain.length + 1];
-            newCertificateChain[0] = certificate;
-            for (int i = 1; i < newCertificateChain.length; ++i) {
-                newCertificateChain[i] = certificateChain[i - 1];
-                System.out.println(newCertificateChain[i - 1].getSerialNumber());
-            }
-            keyStoreWriter.write(
-                    String.valueOf(certificate.getSerialNumber()),
-                    keyPair.getPrivate(),
-                    globalConstants.jksEntriesPassword.toCharArray(),
-                    newCertificateChain
-            );
-        }
+        keyStoreWriter.write(
+                certificate.getSerialNumber().toString(),
+                keyPair.getPrivate(),
+                globalConstants.jksEntriesPassword.toCharArray(),
+                new X509Certificate[]{ certificate }
+        );
         keyStoreWriter.saveKeyStore(globalConstants.jksCertificatesPath, globalConstants.jksPassword.toCharArray());
 
         // save certificate entity to database
@@ -206,7 +186,7 @@ public class CertificateService implements ICertificateService {
                 certificateEntity.getSigner().getSerialNumber()
         );
 
-        // iterate trough out chain
+        // iterate through the chain
         while (certificateEntity.getType() != CertificateType.ROOT) {
 
             try {
