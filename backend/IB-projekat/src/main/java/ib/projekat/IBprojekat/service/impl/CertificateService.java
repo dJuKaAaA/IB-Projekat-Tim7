@@ -240,10 +240,69 @@ public class CertificateService implements ICertificateService {
             CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
             X509Certificate cert = (X509Certificate) certFactory.generateCertificate(new ByteArrayInputStream(certBytes));
 
-            checkValidity(String.valueOf(cert.getSerialNumber()));
+            checkValidity(cert);
         } catch (CertificateException e) {
-            throw new RuntimeException(e);
+            throw new InvalidCertificateException(e.getMessage());
         }
+    }
+
+    private void checkValidity(X509Certificate certificate) {
+        // find certificate
+        CertificateEntity certificateEntity = certificateRepository
+                .findBySerialNumber(String.valueOf(certificate.getSerialNumber()))
+                .orElseThrow(() -> new CertificateNotFoundException("Certificate not found!"));
+
+        // read signer certificate
+        X509Certificate signerCertificate = (X509Certificate) keyStoreReader.readCertificate(
+                globalConstants.jksCertificatesPath,
+                globalConstants.jksPassword,
+                certificateEntity.getSigner().getSerialNumber()
+        );
+
+        // iterate through the chain
+        while (certificateEntity.getType() != CertificateType.ROOT) {
+
+            try {
+                certificate.checkValidity();
+            } catch (CertificateExpiredException | CertificateNotYetValidException e) {
+                throw new InvalidCertificateException("Certificate is expired or is not yet valid!");
+            }
+
+            try {
+                certificate.verify(signerCertificate.getPublicKey());
+            } catch (CertificateException | NoSuchAlgorithmException | InvalidKeyException | NoSuchProviderException |
+                     SignatureException e) {
+                throw new SignatureIntegrityException();
+            }
+
+            // load new certificate from chain
+            certificateEntity = certificateEntity.getSigner();
+            certificate = (X509Certificate) keyStoreReader.readCertificate(
+                    globalConstants.jksCertificatesPath,
+                    globalConstants.jksPassword,
+                    certificateEntity.getSerialNumber()
+            );
+            signerCertificate = (X509Certificate) keyStoreReader.readCertificate(
+                    globalConstants.jksCertificatesPath,
+                    globalConstants.jksPassword,
+                    certificateEntity.getSigner().getSerialNumber()
+            );
+        }
+
+        // root validation and verification
+        try {
+            certificate.checkValidity();
+        } catch (CertificateExpiredException | CertificateNotYetValidException e) {
+            throw new InvalidCertificateException("Certificate is expired or is not yet valid!");
+        }
+
+        try {
+            certificate.verify(signerCertificate.getPublicKey());
+        } catch (CertificateException | NoSuchAlgorithmException | InvalidKeyException | NoSuchProviderException |
+                 SignatureException e) {
+            throw new SignatureIntegrityException();
+        }
+
     }
 
     private CertificateResponseDto convertToDto(CertificateEntity certificateEntity) {

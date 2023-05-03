@@ -53,7 +53,7 @@ public class CertificateController {
         return HttpStatus.NO_CONTENT;
     }
 
-    @GetMapping("/validate-from-upload")
+    @PostMapping("/validate-from-upload")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public HttpStatus validateFromUpload(@Valid @RequestBody UploadedCertificateRequestDto uploadedCertificateRequest){
         certificateService.checkValidityFromUploadedCertificate(uploadedCertificateRequest);
