@@ -6,6 +6,8 @@ import ib.projekat.IBprojekat.dto.response.TokenResponseDto;
 import ib.projekat.IBprojekat.dto.response.UserResponseDto;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public interface IAuthService {
 
@@ -25,5 +27,9 @@ public interface IAuthService {
     UserResponseDto verifyRegistration(VerifyVerificationCodeRequestDto registrationVerificationRequestDto);
 
 
-    void recoverPassword(PasswordRecoveryRequestDto passwordRecoveryDto);
+    void recoverPassword(PasswordRecoveryRequestDto passwordRecoveryDto, int passwordNonMatchCount,
+                         Date passwordValidationTime);
+
+    void resetPassword(PasswordResetRequest passwordResetRequest, int passwordNonMatchCount,
+                       Date passwordValidationTime);
 }
