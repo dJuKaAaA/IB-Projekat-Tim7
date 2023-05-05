@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 
 @Service
@@ -39,37 +40,12 @@ public class KeyStoreWriter {
 
     // alias - certificate serial number
     // password - constants file jks entry password
-    public void write(String alias, PrivateKey privateKey, char[] password, java.security.cert.Certificate certificate) {
+    public void write(String alias, PrivateKey privateKey, char[] password, Certificate[] certificateChain) {
         try {
-            keyStore.setKeyEntry(alias, privateKey, password, new Certificate[]{certificate});
+            keyStore.setKeyEntry(alias, privateKey, password, certificateChain);
         } catch (KeyStoreException e) {
             e.printStackTrace();
         }
     }
-
-    // code not working...
-    public void clearKeyStore(String keystoreFile, char[] keystorePassword) {
-        try {
-            // Load the keystore
-            FileInputStream is = new FileInputStream(keystoreFile);
-            KeyStore keystore = KeyStore.getInstance("JKS");
-            keystore.load(is, keystorePassword);
-
-            // Get all aliases in the keystore and delete each entry
-            Enumeration<String> aliases = keystore.aliases();
-            while (aliases.hasMoreElements()) {
-                String alias = aliases.nextElement();
-                keystore.deleteEntry(alias);
-            }
-
-            // Save the keystore
-            FileOutputStream os = new FileOutputStream(keystoreFile);
-            keystore.store(os, keystorePassword);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
 }

@@ -1,17 +1,22 @@
 package ib.projekat.IBprojekat.constant;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+@Component
 public class GlobalConstants {
 
-    //    public final static String jksPrivateKeysPath = "src/main/resources/keystore/private-keys.jks";
-    public final static String jksCertificatesPath = "src/main/resources/keystore/ib-projekat.jks";
-    public final static String jksPassword = "123456";
-    public final static String jksEntriesPassword = "123456";
-    public final static long oneYearInMillis = 1000L * 60L * 60L * 24L * 365L;
+    public final String jksCertificatesPath = "src/main/resources/keystore/ib-projekat.jks";
+    @Value("${jksPassword}")
+    public String jksPassword;
+    @Value("${jksPassword}")
+    public String jksEntriesPassword;
+    public final long oneYearInMillis = 1000L * 60L * 60L * 24L * 365L;
 
-    public static final String ACCOUNT_SID = "AC278438aec92b584dacab40f92d2ff838";
-    public static final String AUTH_TOKEN = "370acec769d42adb8588f032f99f615a";
+    public final String ACCOUNT_SID = "AC278438aec92b584dacab40f92d2ff838";
+    public final String AUTH_TOKEN = "370acec769d42adb8588f032f99f615a";
 
-    public static final String PHONE_NUMBER = "+16205089516";
+    public final String PHONE_NUMBER = "+16205089516";
 
     public static final int passwordValidationInMinutes = 2;
 

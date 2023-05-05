@@ -22,7 +22,7 @@ public interface IAuthService {
     void verifyVerificationCode(VerifyVerificationCodeRequestDto registrationVerificationRequestDto);
 
     void sendVerificationCode(
-            VerificationTargetDto verificationTargetDto);
+            VerificationTargetRequestDto verificationTargetDto);
 
     UserResponseDto verifyRegistration(VerifyVerificationCodeRequestDto registrationVerificationRequestDto);
 

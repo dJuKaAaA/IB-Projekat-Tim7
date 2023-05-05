@@ -146,7 +146,7 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public void sendVerificationCode(VerificationTargetDto verificationTargetDto) {
+    public void sendVerificationCode(VerificationTargetRequestDto verificationTargetDto) {
         UserEntity user = this.getUserFromVerificationTarget(verificationTargetDto);
         VerificationCodeType verificationCodeType =
                 this.getVerificationCodeTypeFromVerificationTarget(verificationTargetDto);
@@ -235,7 +235,7 @@ public class AuthService implements IAuthService {
         return user;
     }
 
-    private UserEntity getUserFromVerificationTarget(VerificationTargetDto verificationTargetDto) {
+    private UserEntity getUserFromVerificationTarget(VerificationTargetRequestDto verificationTargetDto) {
         UserEntity user = null;
         String userEmail = verificationTargetDto.getEmail();
         String userPhoneNumber = verificationTargetDto.getPhoneNumber();
@@ -248,7 +248,7 @@ public class AuthService implements IAuthService {
         return user;
     }
 
-    private VerificationCodeType getVerificationCodeTypeFromVerificationTarget(VerificationTargetDto verificationTargetDto) {
+    private VerificationCodeType getVerificationCodeTypeFromVerificationTarget(VerificationTargetRequestDto verificationTargetDto) {
         VerificationCodeType verificationCodeType = null;
         String userEmail = verificationTargetDto.getEmail();
         String userPhoneNumber = verificationTargetDto.getPhoneNumber();

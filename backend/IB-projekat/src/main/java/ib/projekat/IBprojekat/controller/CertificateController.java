@@ -1,9 +1,11 @@
 package ib.projekat.IBprojekat.controller;
 
+import ib.projekat.IBprojekat.dto.request.UploadedCertificateRequestDto;
 import ib.projekat.IBprojekat.dto.response.CertificateResponseDto;
 import ib.projekat.IBprojekat.dto.response.PaginatedResponseDto;
 import ib.projekat.IBprojekat.service.interf.IAuthService;
 import ib.projekat.IBprojekat.service.interf.ICertificateService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -44,10 +46,24 @@ public class CertificateController {
         return new ResponseEntity<>(certificateService.create(demandId), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}/validate")
+    @GetMapping("/{serialNumber}/validate")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public HttpStatus validate(@PathVariable("id") Long id){
-        certificateService.checkValidity(id);
+    public HttpStatus validate(@PathVariable("serialNumber") String serialNumber){
+        certificateService.checkValidity(serialNumber);
+        return HttpStatus.NO_CONTENT;
+    }
+
+    @PostMapping("/validate-from-upload")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public HttpStatus validateFromUpload(@Valid @RequestBody UploadedCertificateRequestDto uploadedCertificateRequest){
+        certificateService.checkValidityFromUploadedCertificate(uploadedCertificateRequest);
+        return HttpStatus.NO_CONTENT;
+    }
+
+    @PutMapping("/{serialNumber}/pull")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public HttpStatus pull(@PathVariable("serialNumber") String serialNumber, Principal principal) {
+        certificateService.pullCertificate(serialNumber, principal.getName());
         return HttpStatus.NO_CONTENT;
     }
 

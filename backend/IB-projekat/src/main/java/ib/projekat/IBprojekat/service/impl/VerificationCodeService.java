@@ -21,6 +21,7 @@ public class VerificationCodeService {
 
     private final ComunicationService comunicationService;
     private final VerificationCodeRepository verificationCodeRepository;
+    private final GlobalConstants globalConstants;
 
     public void verifyVerificationCode(VerificationCodeEntity verificationCodeEntity,
                                        VerifyVerificationCodeRequestDto registrationVerificationRequestDto) {
@@ -42,7 +43,7 @@ public class VerificationCodeService {
             comunicationService.sendTextEmail(user.getEmail(), subject, verificationCode);
         } else if (isVerificationCodeTypePhone(verificationCodeType)) {
             String message = subject + ": " + verificationCode;
-            comunicationService.sentPhoneMessage(GlobalConstants.PHONE_NUMBER, user.getPhoneNumber(), message);
+            comunicationService.sentPhoneMessage(globalConstants.PHONE_NUMBER, user.getPhoneNumber(), message);
         }
     }
 

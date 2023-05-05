@@ -20,5 +20,6 @@ public class CertificateResponseDto {
     private String endDate;
     private String publicKey;
     private String signature;
+    private Boolean isPulled;
 
 }

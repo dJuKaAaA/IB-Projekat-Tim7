@@ -7,11 +7,15 @@ import org.springframework.stereotype.Service;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.Enumeration;
+
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 
 @Service
@@ -73,5 +77,25 @@ public class KeyStoreReader {
         return null;
     }
 
+
+    public X509Certificate[] getChainForCertificate(String keyStoreFile, String keyStorePass, String alias) {
+        try {
+            BufferedInputStream in = new BufferedInputStream(new FileInputStream(keyStoreFile));
+            keyStore.load(in, keyStorePass.toCharArray());
+
+            Certificate[] chain = keyStore.getCertificateChain(alias);
+            if (chain == null) {
+                return null;
+            }
+
+            if (!(chain[0] instanceof X509Certificate)) {
+                throw new RuntimeException("Certificate chain for alias " + alias + " is not of type X509Certificate[]");
+            }
+
+            return Arrays.copyOf(chain, chain.length, X509Certificate[].class);
+        } catch (KeyStoreException | CertificateException | IOException | NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

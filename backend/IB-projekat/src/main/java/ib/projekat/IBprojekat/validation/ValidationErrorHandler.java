@@ -96,6 +96,7 @@ public class ValidationErrorHandler {
         return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
+
     @ExceptionHandler({OldPasswordNotMatchException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ResponseEntity<ErrorResponseDto> handleOldPasswordNotMatchException(OldPasswordNotMatchException e) {
@@ -117,6 +118,18 @@ public class ValidationErrorHandler {
     @ExceptionHandler({UserNotActivatedException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ResponseEntity<ErrorResponseDto> handleUserNotActivatedException(UserNotActivatedException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({InvalidCertificateOwnerException.class})
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    protected ResponseEntity<ErrorResponseDto> handleNotCertificateOwnerException(InvalidCertificateOwnerException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler({CertificatePullException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ResponseEntity<ErrorResponseDto> handleCertificatePullException(CertificatePullException e) {
         return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }

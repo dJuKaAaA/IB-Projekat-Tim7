@@ -36,7 +36,7 @@ public class AuthController {
 
     @PostMapping("/sendVerificationCode")
     public ResponseEntity sendVerificationCode(@Valid
-                                               @RequestBody VerificationTargetDto verificationTargetDto) {
+                                               @RequestBody VerificationTargetRequestDto verificationTargetDto) {
         authService.sendVerificationCode(verificationTargetDto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Verification code is successfully sent!");
     }

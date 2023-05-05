@@ -19,6 +19,9 @@ import { PasswordRecoveryStep1Component } from './components/passwordRecovery/pa
 import { PasswordRecoveryStep2Component } from './components/passwordRecovery/password-recovery-step2/password-recovery-step2.component';
 import { PasswordRecoveryStep3Component } from './components/passwordRecovery/password-recovery-step3/password-recovery-step3.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { ValidateCertificateDialogComponent } from './components/validate-certificate-dialog/validate-certificate-dialog.component';
+import { ValidateFromUploadComponent } from './components/validate-from-upload/validate-from-upload.component';
+import { MyCertificatesComponent } from './components/my-certificates/my-certificates.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +38,9 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
     PasswordRecoveryStep2Component,
     PasswordRecoveryStep3Component,
     ResetPasswordComponent,
+    ValidateCertificateDialogComponent,
+    ValidateFromUploadComponent,
+    MyCertificatesComponent,
   ],
   imports: [
     BrowserModule,
@@ -42,7 +48,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    MatDialogModule
+    MatDialogModule,
   ],
   providers: [
     {
@@ -51,6 +57,6 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
       multi: true,
     },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

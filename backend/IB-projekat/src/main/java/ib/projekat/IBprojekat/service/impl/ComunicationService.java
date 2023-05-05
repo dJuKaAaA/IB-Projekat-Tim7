@@ -15,6 +15,8 @@ public class ComunicationService {
 
     @Autowired
     private JavaMailSender mailSender;
+    @Autowired
+    private GlobalConstants globalConstants;
 
     public void sendTextEmail(String toEmail, String subject, String emailContent) {
         SimpleMailMessage message = new SimpleMailMessage();
@@ -28,7 +30,7 @@ public class ComunicationService {
 
     public void sentPhoneMessage(String senderPhoneNumber, String receiverPhoneNumber, String textMessage) {
 
-        Twilio.init(GlobalConstants.ACCOUNT_SID, GlobalConstants.AUTH_TOKEN);
+        Twilio.init(globalConstants.ACCOUNT_SID, globalConstants.AUTH_TOKEN);
         Message message = Message.creator(
                 new PhoneNumber(receiverPhoneNumber),
                 new PhoneNumber(senderPhoneNumber),
