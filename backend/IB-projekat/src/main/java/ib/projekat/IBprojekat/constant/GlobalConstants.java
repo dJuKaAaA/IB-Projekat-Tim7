@@ -13,4 +13,9 @@ public class GlobalConstants {
 
     public static final String PHONE_NUMBER = "+16205089516";
 
+    public static final int passwordValidationInMinutes = 2;
+
+    public static final int passwordNonMatchCount = 1;
+
+
 }

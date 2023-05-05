@@ -1,14 +1,17 @@
 package ib.projekat.IBprojekat.service.impl;
 
+import ib.projekat.IBprojekat.constant.GlobalConstants;
 import ib.projekat.IBprojekat.constant.Role;
 import ib.projekat.IBprojekat.constant.VerificationCodeType;
 import ib.projekat.IBprojekat.dao.CertificateDemandRepository;
+import ib.projekat.IBprojekat.dao.PasswordHistoryRepository;
 import ib.projekat.IBprojekat.dao.UserRepository;
 import ib.projekat.IBprojekat.dao.VerificationCodeRepository;
 import ib.projekat.IBprojekat.dto.request.*;
 import ib.projekat.IBprojekat.dto.response.TokenResponseDto;
 import ib.projekat.IBprojekat.dto.response.UserResponseDto;
 import ib.projekat.IBprojekat.entity.CertificateDemandEntity;
+import ib.projekat.IBprojekat.entity.PasswordHistoryEntity;
 import ib.projekat.IBprojekat.entity.UserEntity;
 import ib.projekat.IBprojekat.entity.VerificationCodeEntity;
 import ib.projekat.IBprojekat.exception.*;
@@ -24,9 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service("AuthService")
 @RequiredArgsConstructor
@@ -41,6 +42,8 @@ public class AuthService implements IAuthService {
     private final VerificationCodeRepository verificationCodeRepository;
 
     private final VerificationCodeService verificationCodeService;
+
+    private final PasswordHistoryRepository passwordHistoryRepository;
 
 
     @Override
@@ -57,6 +60,8 @@ public class AuthService implements IAuthService {
         }
 
         UserEntity user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(UserNotFoundException::new);
+
+        if (user.getDateForChangePassword().before(new Date())) throw new PasswordOutdatedException();
 
         // creating the claims that will be put in the jwt
         Map<String, Object> claims = new HashMap<>();
@@ -82,6 +87,11 @@ public class AuthService implements IAuthService {
             }
         }
 
+        // password expiration date
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, GlobalConstants.passwordValidationInMinutes);
+        Date futureDate = calendar.getTime();
+
         UserEntity newUser = UserEntity.builder()
                 .name(userRequest.getName())
                 .surname(userRequest.getSurname())
@@ -90,6 +100,7 @@ public class AuthService implements IAuthService {
                 .password(passwordEncoder.encode(userRequest.getPassword()))
                 .role(Role.USER)
                 .enabled(false)
+                .dateForChangePassword(futureDate)
                 .build();
         newUser = userRepository.save(newUser);
 
@@ -148,6 +159,7 @@ public class AuthService implements IAuthService {
         this.verifyVerificationCode(verifyVerificationCodeRequestDto);
         UserEntity user = getUserByVerificationCodeRequest(verifyVerificationCodeRequestDto);
 
+
         user.setEnabled(true);
         userRepository.save(user);
 
@@ -155,7 +167,8 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public void recoverPassword(PasswordRecoveryRequestDto passwordRecoveryDto) {
+    public void recoverPassword(PasswordRecoveryRequestDto passwordRecoveryDto, int passwordNonMatchCount,
+                                Date passwordValidationTime) {
         String userEmail = passwordRecoveryDto.getUserEmail();
         String userPhoneNumber = passwordRecoveryDto.getUserPhoneNumber();
         String newPassword = passwordRecoveryDto.getNewPassword();
@@ -167,11 +180,48 @@ public class AuthService implements IAuthService {
             user = userRepository.findByPhoneNumber(userPhoneNumber).orElseThrow(UserNotFoundException::new);
         }
 
-        user.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+        isNewPasswordDifferentFromLastN(user, newPassword, passwordNonMatchCount);
+
+        String encryptedNewPassword = encryptPassword(newPassword);
+        PasswordHistoryEntity passwordHistoryEntity = PasswordHistoryEntity.builder()
+                .password(encryptedNewPassword)
+                .passwordCreationDate(new Date())
+                .user(user)
+                .build();
+        passwordHistoryRepository.save(passwordHistoryEntity);
+
+        user.setPassword(encryptedNewPassword);
+        user.setDateForChangePassword(passwordValidationTime);
         userRepository.save(user);
 
     }
-    
+
+    @Override
+    public void resetPassword(PasswordResetRequest passwordResetRequest, int passwordNonMatchCount,
+                              Date passwordValidationTime) {
+        String userEmail = passwordResetRequest.getEmail();
+        String oldPassword = passwordResetRequest.getOldPassword();
+        String newPassword = passwordResetRequest.getNewPassword();
+
+        UserEntity user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+
+        isCurrentAndOldPasswordSame(oldPassword, user.getPassword());
+        isNewPasswordDifferentFromLastN(user, newPassword, passwordNonMatchCount);
+
+        String encryptedNewPassword = encryptPassword(newPassword);
+        PasswordHistoryEntity passwordHistoryEntity = PasswordHistoryEntity.builder()
+                .password(encryptedNewPassword)
+                .passwordCreationDate(new Date())
+                .user(user)
+                .build();
+        passwordHistoryRepository.save(passwordHistoryEntity);
+
+        user.setPassword(encryptedNewPassword);
+        user.setDateForChangePassword(passwordValidationTime);
+        userRepository.save(user);
+
+    }
+
     private UserEntity getUserByVerificationCodeRequest(VerifyVerificationCodeRequestDto verifyVerificationCodeRequestDto) {
         UserEntity user = null;
         String userEmail = verifyVerificationCodeRequestDto.getEmail();
@@ -210,6 +260,37 @@ public class AuthService implements IAuthService {
         }
 
         return verificationCodeType;
+    }
+
+
+    private String encryptPassword(String plainTextPassword) {
+        return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
+    }
+
+    private boolean arePasswordsEqual(String plainTextPassword, String encryptPassword) {
+        return BCrypt.checkpw(plainTextPassword, encryptPassword);
+    }
+
+    private void isNewPasswordDifferentFromLastN(UserEntity user, String newPassword, int passwordNonMatchCount) {
+        List<PasswordHistoryEntity> oldPasswords =
+                passwordHistoryRepository.findAllByUserOrderByPasswordCreationDateDesc(user);
+
+        for (PasswordHistoryEntity oldPasswordHistoryEntity : oldPasswords) {
+            if (passwordNonMatchCount == 0) {
+                break;
+            }
+
+            if (arePasswordsEqual(newPassword, oldPasswordHistoryEntity.getPassword())) {
+                throw new SamePasswordException("New password cannot match with last " + passwordNonMatchCount + "passwords");
+            }
+            passwordNonMatchCount--;
+        }
+    }
+
+    private void isCurrentAndOldPasswordSame(String oldPasswordPlainText, String currentPasswordEncrypted) {
+        if (!arePasswordsEqual(oldPasswordPlainText, currentPasswordEncrypted)) {
+            throw new OldPasswordNotMatchException();
+        }
     }
 
 }

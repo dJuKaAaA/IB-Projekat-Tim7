@@ -1,36 +1,25 @@
 package ib.projekat.IBprojekat.dto.request;
 
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class UserRequestDto {
-
-    @NotBlank(message = "Name not provided!")
-    private String name;
-
-    @NotBlank(message = "Surname not provided!")
-    private String surname;
-
-    @NotBlank(message = "Phone number not provided!")
-    @Pattern.List({
-            @Pattern(regexp = "^\\+381.*", message = "Phone must start with +381"),
-            @Pattern(regexp = "^(?=.{8,9}).+", message = "Phone number have between 8 and 9 digits")
-    })
-    private String phoneNumber;
+@NoArgsConstructor
+public class PasswordResetRequest {
 
     @Email(message = "Invalid email format!")
     @NotBlank(message = "Email not provided!")
-    private String email;
+    String email;
+
+    @NotBlank(message = "Old password not provided!")
+    String oldPassword;
 
     @Pattern.List({
             @Pattern(regexp = "^(?=.{8,20}).+", message = "Password must be between 8 and 20 characters!"),
@@ -39,5 +28,6 @@ public class UserRequestDto {
             @Pattern(regexp = "^(?=.*[A-Z]).+", message = "Password must contain at least one uppercase letter!")
     })
     @NotNull(message = "Password not provided!")
-    private String password;
+    String newPassword;
+
 }

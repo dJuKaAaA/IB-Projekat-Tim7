@@ -1,5 +1,6 @@
 package ib.projekat.IBprojekat.controller;
 
+import ib.projekat.IBprojekat.constant.GlobalConstants;
 import ib.projekat.IBprojekat.constant.VerificationCodeType;
 import ib.projekat.IBprojekat.dto.request.*;
 import ib.projekat.IBprojekat.dto.response.TokenResponseDto;
@@ -10,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Calendar;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -51,7 +55,22 @@ public class AuthController {
 
     @PostMapping("/recoverPassword")
     public ResponseEntity recoverPassword(@Valid @RequestBody PasswordRecoveryRequestDto passwordRecoveryRequestDto) {
-        authService.recoverPassword(passwordRecoveryRequestDto);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, GlobalConstants.passwordValidationInMinutes);
+        Date passwordExpirationDate = calendar.getTime();
+
+        authService.recoverPassword(passwordRecoveryRequestDto, GlobalConstants.passwordNonMatchCount, passwordExpirationDate);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Password successfully changed!");
+    }
+
+
+    @PostMapping("/resetPassword")
+    public ResponseEntity resetPassword(@Valid @RequestBody PasswordResetRequest passwordResetRequest) {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, GlobalConstants.passwordValidationInMinutes);
+        Date passwordExpirationDate = calendar.getTime();
+        authService.resetPassword(passwordResetRequest, GlobalConstants.passwordNonMatchCount, passwordExpirationDate);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Password successfully changed!");
     }
 

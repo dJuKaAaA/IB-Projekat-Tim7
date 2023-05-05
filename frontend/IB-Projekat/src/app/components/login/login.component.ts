@@ -9,26 +9,22 @@ import { TokenResponse } from 'src/app/core/models/token-response.model';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
-
   formGroup: FormGroup = new FormGroup({
-    email: new FormControl(""),
-    password: new FormControl(""),
+    email: new FormControl(''),
+    password: new FormControl(''),
   });
 
-  constructor(
-    private router: Router,
-    private authService: AuthService
-  ) { }
+  constructor(private router: Router, private authService: AuthService) {}
 
   login() {
     if (this.formGroup.valid) {
       const loginRequest: LoginRequest = {
         email: this.formGroup.value.email,
-        password: this.formGroup.value.password
-      }
+        password: this.formGroup.value.password,
+      };
       this.authService.login(loginRequest).subscribe({
         next: (response: TokenResponse) => {
           localStorage.setItem('jwt', response.token);
@@ -37,14 +33,22 @@ export class LoginComponent {
         error: (error) => {
           if (error instanceof HttpErrorResponse) {
             alert(JSON.stringify(error.error.message));
+
+            if (error.error.message === 'The password is outdated') {
+              localStorage.setItem('email', this.formGroup.value.email);
+              this.goToResetPasswordPage();
+            }
           }
-        }
-      })
+        },
+      });
     }
   }
 
-  goToCreateAccount() {
-    this.router.navigate(['create-account'])
+  goToResetPasswordPage() {
+    this.router.navigate(['reset-password']);
   }
 
+  goToCreateAccount() {
+    this.router.navigate(['create-account']);
+  }
 }
