@@ -26,6 +26,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.*;
 import java.security.cert.*;
 import java.security.cert.Certificate;
@@ -346,6 +348,17 @@ public class CertificateService implements ICertificateService {
                 }
             }
         }
+    }
+
+    @Override
+    public byte[] prepareCertificateForDownload(String serialNumber) throws CertificateException, IOException {
+        X509Certificate certificate = (X509Certificate) keyStoreReader.readCertificate(
+                globalConstants.jksCertificatesPath,
+                globalConstants.jksPassword,
+                serialNumber
+        );
+        byte[] certificateBytes = certificate.getEncoded();
+        return certificateBytes;
     }
 
     private CertificateResponseDto convertToDto(CertificateEntity certificateEntity) {

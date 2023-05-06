@@ -47,4 +47,11 @@ public class CertificateDemandController {
         return new ResponseEntity<>(certificateDemandService.reject(id), HttpStatus.OK);
     }
 
+    @PutMapping("/{id}/accept")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<CertificateDemandResponseDto> accept(@PathVariable Long id, Principal principal){
+        authService.checkIsDemandIntendedForUser(principal.getName(), id);
+        return new ResponseEntity<>(certificateDemandService.accept(id), HttpStatus.OK);
+    }
+
 }
