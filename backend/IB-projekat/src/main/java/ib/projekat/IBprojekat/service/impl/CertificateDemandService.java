@@ -129,6 +129,23 @@ public class CertificateDemandService implements ICertificateDemandService {
         );
     }
 
+    @Override
+    public PaginatedResponseDto<CertificateDemandResponseDto> getByRequesterIdPending(Long requesterId, Pageable pageable) {
+        userRepository.findById(requesterId).orElseThrow(UserNotFoundException::new);
+
+        Page<CertificateDemandEntity> certificateDemandsPage = certificateDemandRepository.findByRequesterIdAndStatus(requesterId, CertificateDemandStatus.PENDING, pageable);
+
+        Collection<CertificateDemandResponseDto> certificateDemands = certificateDemandsPage.getContent().stream()
+                .map(this::convertToDto)
+                .toList();
+
+        return new PaginatedResponseDto<>(
+                certificateDemandsPage.getPageable().getPageNumber(),
+                certificateDemands.size(),
+                certificateDemands
+        );
+    }
+
     private CertificateDemandResponseDto convertToDto(CertificateDemandEntity certificateDemandEntity) {
         UserRefResponseDto requesterRef = UserRefResponseDto.builder()
                 .id(certificateDemandEntity.getRequester().getId())

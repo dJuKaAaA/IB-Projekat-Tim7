@@ -1,0 +1,12 @@
+.certificate-container {
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 3vh;
+    text-align: center;
+}
+
+.certificate-model-container {
+    width: 600px;
+    display: inline-block;
+    margin: 1vh 1vw;
+}

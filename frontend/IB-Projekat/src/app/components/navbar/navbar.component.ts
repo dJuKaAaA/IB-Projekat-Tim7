@@ -39,4 +39,8 @@ export class NavbarComponent {
     this.router.navigate(['my-certificates'])
   }
 
+  openDemandHistory(){
+    this.router.navigate(['demand-history'])
+  }
+
 }

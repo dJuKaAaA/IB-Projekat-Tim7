@@ -40,6 +40,15 @@ public class CertificateDemandController {
         return new ResponseEntity<>(certificateDemandService.getByRequesterId(requesterId, pageable), HttpStatus.OK);
     }
 
+    @GetMapping("/by-requester/pending/{requesterId}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<PaginatedResponseDto<CertificateDemandResponseDto>> getByIssuedToPending(@PathVariable Long requesterId,
+                                                                                            Pageable pageable,
+                                                                                            Principal principal) {
+        authService.checkUserIdMatchesUserEmail(requesterId, principal.getName());
+        return new ResponseEntity<>(certificateDemandService.getByRequesterIdPending(requesterId, pageable), HttpStatus.OK);
+    }
+
     @PutMapping("/{id}/reject")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<CertificateDemandResponseDto> reject(@PathVariable Long id, Principal principal){

@@ -22,6 +22,8 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { ValidateCertificateDialogComponent } from './components/validate-certificate-dialog/validate-certificate-dialog.component';
 import { ValidateFromUploadComponent } from './components/validate-from-upload/validate-from-upload.component';
 import { MyCertificatesComponent } from './components/my-certificates/my-certificates.component';
+import { CertificateDemandHistoryComponent } from './components/certificate-demand-history/certificate-demand-history.component';
+import { CertificateDemandModelComponent } from './components/certificate-demand-model/certificate-demand-model.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +43,8 @@ import { MyCertificatesComponent } from './components/my-certificates/my-certifi
     ValidateCertificateDialogComponent,
     ValidateFromUploadComponent,
     MyCertificatesComponent,
+    CertificateDemandHistoryComponent,
+    CertificateDemandModelComponent,
   ],
   imports: [
     BrowserModule,
