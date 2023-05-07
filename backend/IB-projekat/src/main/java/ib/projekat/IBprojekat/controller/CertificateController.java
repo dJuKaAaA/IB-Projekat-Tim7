@@ -13,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.security.Principal;
+import java.security.cert.CertificateException;
 
 @RestController
 @RequestMapping("/api/v1/certificate")
@@ -37,6 +39,7 @@ public class CertificateController {
         authService.checkUserIdMatchesUserEmail(userId, principal.getName());
         return new ResponseEntity<>(certificateService.getForUser(userId, pageable), HttpStatus.OK);
     }
+
 
     @PostMapping("/for-demand/{demandId}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
@@ -65,6 +68,13 @@ public class CertificateController {
     public HttpStatus pull(@PathVariable("serialNumber") String serialNumber, Principal principal) {
         certificateService.pullCertificate(serialNumber, principal.getName());
         return HttpStatus.NO_CONTENT;
+    }
+
+    @GetMapping("/{serialNumber}/download")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<byte[]> download(@PathVariable String serialNumber) throws CertificateException, IOException {
+        byte[] certificateFile = certificateService.prepareCertificateForDownload(serialNumber);
+        return new ResponseEntity<>(certificateFile, HttpStatus.OK);
     }
 
 }

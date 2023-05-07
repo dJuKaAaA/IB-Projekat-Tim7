@@ -1,0 +1,41 @@
+<div class="certificate-model" #certificateModel [ngClass]="getStatusClass()">
+    <div>
+        <div>
+            <h3>Details</h3>
+            <div class="certificate-content">
+                <p class="content-label">Type</p>
+                <p>{{ certificate.type }}</p>
+            </div>
+            <div class="certificate-content">
+                <p class="content-label">Reason</p>
+                <p>{{ certificate.reason }}</p>
+            </div>
+            <div class="certificate-content">
+                <p class="content-label">Status</p>
+                <p>{{ certificate.status }}</p>
+            </div>
+        </div>
+        <div>
+            <h3>Issued by</h3>
+            <div class="certificate-content">
+                <p class="content-label">Issuer</p>
+                <p>{{ certificate.requestedIssuer.email }}</p>
+            </div>
+        </div>
+        <div>
+            <h3>Issued to</h3>
+            <div class="certificate-content">
+                <p class="content-label">Owner</p>
+                <p>{{ certificate.requester.email }}</p>
+            </div>
+        </div>
+    </div>
+    <div id="buttons-area" *ngIf="showButtons">
+        <div id="accept" (click)="accept(certificate.id)">
+            <p>Accept</p>
+        </div>
+        <div id="decline" (click)="decline(certificate.id)">
+            <p>Decline</p>
+        </div>
+    </div>
+</div>

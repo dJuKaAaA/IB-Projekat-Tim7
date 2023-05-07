@@ -40,11 +40,34 @@ public class CertificateDemandController {
         return new ResponseEntity<>(certificateDemandService.getByRequesterId(requesterId, pageable), HttpStatus.OK);
     }
 
+    @GetMapping("/by-requester/pending/{requesterId}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<PaginatedResponseDto<CertificateDemandResponseDto>> getByIssuedToPending(@PathVariable Long requesterId,
+                                                                                            Pageable pageable,
+                                                                                            Principal principal) {
+        authService.checkUserIdMatchesUserEmail(requesterId, principal.getName());
+        return new ResponseEntity<>(certificateDemandService.getByRequesterIdPending(requesterId, pageable), HttpStatus.OK);
+    }
+
+    @GetMapping("/{requesterId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<PaginatedResponseDto<CertificateDemandResponseDto>> getAll(@PathVariable Long requesterId, Pageable pageable,Principal principal) {
+        authService.checkUserIdMatchesUserEmail(requesterId, principal.getName());
+        return new ResponseEntity<>(certificateDemandService.getAllPending(requesterId, pageable), HttpStatus.OK);
+    }
+
     @PutMapping("/{id}/reject")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<CertificateDemandResponseDto> reject(@PathVariable Long id, Principal principal){
         authService.checkIsDemandIntendedForUser(principal.getName(), id);
         return new ResponseEntity<>(certificateDemandService.reject(id), HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/accept")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<CertificateDemandResponseDto> accept(@PathVariable Long id, Principal principal){
+        authService.checkIsDemandIntendedForUser(principal.getName(), id);
+        return new ResponseEntity<>(certificateDemandService.accept(id), HttpStatus.OK);
     }
 
 }

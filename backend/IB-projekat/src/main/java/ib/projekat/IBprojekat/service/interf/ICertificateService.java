@@ -7,6 +7,10 @@ import ib.projekat.IBprojekat.dto.response.PaginatedResponseDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
+
 @Service
 public interface ICertificateService {
 
@@ -17,5 +21,6 @@ public interface ICertificateService {
     void checkValidityFromUploadedCertificate(UploadedCertificateRequestDto uploadedCertificateRequest);
     void pullCertificate(String serialNumber, String userEmail);
 
+    byte[] prepareCertificateForDownload(String serialNumber) throws CertificateException, IOException;
 }
 

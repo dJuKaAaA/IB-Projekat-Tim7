@@ -9,6 +9,8 @@ import { PasswordRecoveryStep2Component } from './components/passwordRecovery/pa
 import { PasswordRecoveryStep3Component } from './components/passwordRecovery/password-recovery-step3/password-recovery-step3.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { MyCertificatesComponent } from './components/my-certificates/my-certificates.component';
+import { CertificateDemandHistoryComponent } from './components/certificate-demand-history/certificate-demand-history.component';
+import { CertificateDemandsViewComponent } from './components/certificate-demands-view/certificate-demands-view.component';
 
 const routes: Routes = [
   {
@@ -49,6 +51,14 @@ const routes: Routes = [
     path: 'my-certificates',
     component: MyCertificatesComponent,
   },
+  {
+    path: 'demand-history',
+    component: CertificateDemandHistoryComponent,
+  },
+  {
+    path: 'certificate-demands',
+    component: CertificateDemandsViewComponent
+  }
 ];
 
 @NgModule({

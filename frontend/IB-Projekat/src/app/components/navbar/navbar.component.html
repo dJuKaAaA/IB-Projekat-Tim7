@@ -1,9 +1,11 @@
 <nav>
     <a (click)="openAllCertificates()">View all</a>
+    <a (click)="openAllRequests()">View all requests</a>
     <a (click)="openMyCertificates()">My certificates</a>
-    <a>Demand history</a>
-    <a>Evaluate demands</a>
+    <a (click)="openDemandHistory()">Demand history</a>
+    <a (click)="openEvaluateDemands()">Evaluate demands</a>
     <a (click)="openValidationDialog()">Validate</a>
+    <a (click)="openDownloadDialog()">Download</a>
     <a (click)="validateFromUpload()">Validate from upload</a>
     <a (click)="logout()">Logout</a>
 </nav>

@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>Validate certificate by serial number</h2>
+<form class="validation-form">
+    <div class="form-field-container">
+        <label for="serialNumber">Serial number</label>
+        <input type="text" name="serialNumber" [(ngModel)]="serialNumber" />
+    </div>
+</form>
+<div mat-dialog-actions class="actions">
+    <button (click)="onCancelClick()">Cancel</button>
+    <button (click)="download()">Download</button>
+</div>
