@@ -49,6 +49,13 @@ public class CertificateDemandController {
         return new ResponseEntity<>(certificateDemandService.getByRequesterIdPending(requesterId, pageable), HttpStatus.OK);
     }
 
+    @GetMapping("/{requesterId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<PaginatedResponseDto<CertificateDemandResponseDto>> getAll(@PathVariable Long requesterId, Pageable pageable,Principal principal) {
+        authService.checkUserIdMatchesUserEmail(requesterId, principal.getName());
+        return new ResponseEntity<>(certificateDemandService.getAll(requesterId, pageable), HttpStatus.OK);
+    }
+
     @PutMapping("/{id}/reject")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<CertificateDemandResponseDto> reject(@PathVariable Long id, Principal principal){

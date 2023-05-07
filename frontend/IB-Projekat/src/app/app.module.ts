@@ -24,6 +24,8 @@ import { ValidateFromUploadComponent } from './components/validate-from-upload/v
 import { MyCertificatesComponent } from './components/my-certificates/my-certificates.component';
 import { CertificateDemandHistoryComponent } from './components/certificate-demand-history/certificate-demand-history.component';
 import { CertificateDemandModelComponent } from './components/certificate-demand-model/certificate-demand-model.component';
+import { CertificateReviewComponent } from './components/certificate-review/certificate-review.component';
+import { DownloadCertificateComponent } from './components/download-certificate/download-certificate.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +47,8 @@ import { CertificateDemandModelComponent } from './components/certificate-demand
     MyCertificatesComponent,
     CertificateDemandHistoryComponent,
     CertificateDemandModelComponent,
+    CertificateReviewComponent,
+    DownloadCertificateComponent,
   ],
   imports: [
     BrowserModule,
