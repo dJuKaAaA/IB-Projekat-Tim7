@@ -72,7 +72,7 @@ public class CertificateController {
 
     @GetMapping("/{serialNumber}/download")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<byte[]> download(@PathVariable String serialNumber) throws CertificateException, IOException {
+    public ResponseEntity<byte[]> download(@PathVariable String serialNumber) {
         byte[] certificateFile = certificateService.prepareCertificateForDownload(serialNumber);
         return new ResponseEntity<>(certificateFile, HttpStatus.OK);
     }

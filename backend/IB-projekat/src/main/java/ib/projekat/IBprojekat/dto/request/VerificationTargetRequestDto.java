@@ -13,10 +13,8 @@ import lombok.NoArgsConstructor;
 public class VerificationTargetRequestDto {
 
     @Pattern(regexp = "^$|^[\\w\\.-]+@[\\w\\.-]+\\.\\w{2,}$", message = "Invalid email format!")
-    @NotBlank(message = "Email not provided!")
     private String email;
 
     @Pattern(regexp = "^(|\\+381\\d{8,13})$", message = "Invalid phone number")
-    @NotBlank(message = "Phone number not provided!")
     private String phoneNumber;
 }

@@ -8,17 +8,17 @@
     padding: 5vh 5vw;
   }
   
-  .download-form>div {
+  .pull-form>div {
     width: 100%;
     margin: 5vh auto;
     display: block;
   }
   
-  .download-form input {
+  .pull-form input {
     margin-top: 1vh;
   }
   
-  .download-form select {
+  .pull-form select {
     margin-top: 1vh;
   }
   

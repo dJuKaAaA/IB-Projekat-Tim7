@@ -1,6 +1,5 @@
 package ib.projekat.IBprojekat.certificate;
 
-import ib.projekat.IBprojekat.certificate.keystore.KeyStoreReader;
 import ib.projekat.IBprojekat.certificate.model.IssuerData;
 import ib.projekat.IBprojekat.certificate.model.SubjectData;
 import ib.projekat.IBprojekat.constant.GlobalConstants;
@@ -11,7 +10,6 @@ import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x509.BasicConstraints;
 import org.bouncycastle.asn1.x509.Extension;
-import org.bouncycastle.asn1.x509.KeyUsage;
 import org.bouncycastle.cert.CertIOException;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
@@ -27,7 +25,6 @@ import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +38,7 @@ public class CertificateGenerator {
             JcaContentSignerBuilder builder = new JcaContentSignerBuilder("SHA256WithRSAEncryption");
 
             Date validityStartDate = new Date(System.currentTimeMillis());
-            Date expirationDate = new Date(System.currentTimeMillis() + globalConstants.oneYearInMillis);
+            Date expirationDate = new Date(System.currentTimeMillis() + globalConstants.ONE_YEAR_IN_MILLIS);
             SubjectData subjectData = generateSubjectData(
                     requester,
                     validityStartDate,

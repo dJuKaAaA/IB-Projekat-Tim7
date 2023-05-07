@@ -40,19 +40,19 @@ export class ResetPasswordComponent {
       newPassword: newPassword,
     };
 
-    this.authService.resetPassword(passwordResetRequest).subscribe({
-      next: (response) => {
-        alert('You have successfully changed password!');
-        this.goToLoginPage();
-      },
-      error: (error) => {
-        if (error instanceof HttpErrorResponse) {
-          alert(JSON.stringify(error.error.message));
-        }
-      },
-    });
-  }
-  goToLoginPage() {
-    this.router.navigate(['login']);
+    if (confirm("You will be logged out. Are you sure?")) {
+      this.authService.resetPassword(passwordResetRequest).subscribe({
+        next: (response) => {
+          alert('You have successfully changed password!');
+          localStorage.removeItem("jwt");
+          this.router.navigate(['login'])
+        },
+        error: (error) => {
+          if (error instanceof HttpErrorResponse) {
+            alert(JSON.stringify(error.error.message));
+          }
+        },
+      });
+    }
   }
 }
