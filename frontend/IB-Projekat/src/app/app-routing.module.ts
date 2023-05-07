@@ -10,6 +10,7 @@ import { PasswordRecoveryStep3Component } from './components/passwordRecovery/pa
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { MyCertificatesComponent } from './components/my-certificates/my-certificates.component';
 import { CertificateDemandHistoryComponent } from './components/certificate-demand-history/certificate-demand-history.component';
+import { CertificateDemandsViewComponent } from './components/certificate-demands-view/certificate-demands-view.component';
 
 const routes: Routes = [
   {
@@ -53,6 +54,10 @@ const routes: Routes = [
   {
     path: 'demand-history',
     component: CertificateDemandHistoryComponent,
+  },
+  {
+    path: 'certificate-demands',
+    component: CertificateDemandsViewComponent
   }
 ];
 
