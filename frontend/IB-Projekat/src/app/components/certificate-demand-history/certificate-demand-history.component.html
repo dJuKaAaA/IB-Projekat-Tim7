@@ -1,5 +1,5 @@
 <div class="certificate-container">
     <div *ngFor="let certificateDemand of certificateDemands" class="certificate-model-container">
-        <app-certificate-demand-model [certificate]="certificateDemand"></app-certificate-demand-model>
+        <app-certificate-demand-model [certificate]="certificateDemand" [showButtons]="showButtons" (changedStatus)="removeCertificate($event)"></app-certificate-demand-model>
     </div>
 </div>

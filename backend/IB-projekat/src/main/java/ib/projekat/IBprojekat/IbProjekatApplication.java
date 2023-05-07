@@ -86,7 +86,7 @@ public class IbProjekatApplication {
                 .name("Ivan")
                 .surname("Martic")
                 .phoneNumber("+381604672999")
-                .email("ivanmartic311@gmail.com")
+                    .email("ivanmartic311@gmail.com")
                 .password(passwordEncoder.encode("Martic123"))
                 .role(Role.USER)
                 .enabled(true)
@@ -101,6 +101,13 @@ public class IbProjekatApplication {
                 .requesterId(1L)
                 .reason("This is a reason :)")
                 .type("ROOT")
+                .build());
+
+        certificateDemandService.create(CertificateDemandRequestDto.builder()
+                .requesterId(2L)
+                .reason("This is a reason :)")
+                .type("INTERMEDIATE")
+                .requestedSigningCertificateId(1L)
                 .build());
         //===================================================================
 

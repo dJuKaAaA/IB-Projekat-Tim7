@@ -39,4 +39,7 @@ export class CertificateService {
     return this.httpClient.put<string>(`${environment.baseUrl}/certificate/${serialNumber}/pull`, {});
   }
 
+  public download(serialNumber: string): Observable<any> {
+    return this.httpClient.get(`${environment.baseUrl}/certificate/${serialNumber}/download`, {responseType: "blob"});
+  } 
 }

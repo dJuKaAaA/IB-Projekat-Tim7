@@ -16,4 +16,7 @@ public interface ICertificateDemandService {
     PaginatedResponseDto<CertificateDemandResponseDto> getByRequesterId(Long requesterId, Pageable pageable);
 
     PaginatedResponseDto<CertificateDemandResponseDto> getByRequesterIdPending(Long requesterId, Pageable pageable);
+
+    PaginatedResponseDto<CertificateDemandResponseDto> getAll(Long requesterId, Pageable pageable);
+
 }

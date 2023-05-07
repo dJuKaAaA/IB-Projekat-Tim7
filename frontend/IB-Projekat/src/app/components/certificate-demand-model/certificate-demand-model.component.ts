@@ -1,5 +1,6 @@
-import { Component, Input, Renderer2 } from '@angular/core';
+import { Component, EventEmitter, Input, Output, Renderer2 } from '@angular/core';
 import { CertificateDemandResponse } from 'src/app/core/models/certificate-demand-response.model';
+import { CertificateDemandService } from 'src/app/core/services/certificate-demand.service';
 
 @Component({
   selector: 'app-certificate-demand-model',
@@ -8,10 +9,13 @@ import { CertificateDemandResponse } from 'src/app/core/models/certificate-deman
 })
 export class CertificateDemandModelComponent {
   @Input() certificate: CertificateDemandResponse = {} as CertificateDemandResponse;
+  @Input() showButtons: boolean;
+  @Output() changedStatus = new EventEmitter();
+  
   
 
   constructor(
-    private renderer: Renderer2
+    private renderer: Renderer2, private certificateDemandService:CertificateDemandService
   ) {}
 
 
@@ -25,6 +29,22 @@ export class CertificateDemandModelComponent {
     } else {
       this.showDataLabel = "Show more..."
     }
+  }
+
+  accept(id:number){
+    this.certificateDemandService.accept(id).subscribe(
+      data =>{
+        this.changedStatus.emit(id);
+      }
+    )
+  }
+
+  decline(id:number){
+    this.certificateDemandService.reject(id).subscribe(
+      data => {
+        this.changedStatus.emit(id);
+      }
+    )
   }
 
   getStatusClass() {

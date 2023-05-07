@@ -30,4 +30,12 @@
             </div>
         </div>
     </div>
+    <div id="buttons-area" *ngIf="showButtons">
+        <div id="accept" (click)="accept(certificate.id)">
+            <p>Accept</p>
+        </div>
+        <div id="decline" (click)="decline(certificate.id)">
+            <p>Decline</p>
+        </div>
+    </div>
 </div>
