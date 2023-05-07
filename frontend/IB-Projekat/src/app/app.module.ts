@@ -26,6 +26,7 @@ import { CertificateDemandHistoryComponent } from './components/certificate-dema
 import { CertificateDemandModelComponent } from './components/certificate-demand-model/certificate-demand-model.component';
 import { CertificateReviewComponent } from './components/certificate-review/certificate-review.component';
 import { DownloadCertificateComponent } from './components/download-certificate/download-certificate.component';
+import { CertificateDemandsViewComponent } from './components/certificate-demands-view/certificate-demands-view.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { DownloadCertificateComponent } from './components/download-certificate/
     CertificateDemandModelComponent,
     CertificateReviewComponent,
     DownloadCertificateComponent,
+    CertificateDemandsViewComponent,
   ],
   imports: [
     BrowserModule,

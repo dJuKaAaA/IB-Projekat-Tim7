@@ -55,7 +55,7 @@ export class NavbarComponent {
   }
 
   openAllRequests(){
-    
+    this.router.navigate(['certificate-demands'])
   }
 
   getRole(){

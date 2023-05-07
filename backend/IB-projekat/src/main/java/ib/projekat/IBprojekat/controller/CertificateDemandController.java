@@ -53,7 +53,7 @@ public class CertificateDemandController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PaginatedResponseDto<CertificateDemandResponseDto>> getAll(@PathVariable Long requesterId, Pageable pageable,Principal principal) {
         authService.checkUserIdMatchesUserEmail(requesterId, principal.getName());
-        return new ResponseEntity<>(certificateDemandService.getAll(requesterId, pageable), HttpStatus.OK);
+        return new ResponseEntity<>(certificateDemandService.getAllPending(requesterId, pageable), HttpStatus.OK);
     }
 
     @PutMapping("/{id}/reject")
