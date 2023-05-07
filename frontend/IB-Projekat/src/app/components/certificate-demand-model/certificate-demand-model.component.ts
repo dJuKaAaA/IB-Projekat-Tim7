@@ -35,6 +35,7 @@ export class CertificateDemandModelComponent {
     this.certificateDemandService.accept(id).subscribe(
       data =>{
         this.changedStatus.emit(id);
+        alert("Certificate approved!");
       }
     )
   }

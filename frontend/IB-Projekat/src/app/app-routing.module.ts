@@ -11,35 +11,49 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { MyCertificatesComponent } from './components/my-certificates/my-certificates.component';
 import { CertificateDemandHistoryComponent } from './components/certificate-demand-history/certificate-demand-history.component';
 import { CertificateDemandsViewComponent } from './components/certificate-demands-view/certificate-demands-view.component';
+import { NotAuthorizedGuard } from './guards/not-authorized.guard';
+import { AuthorizedGuard } from './guards/authorized.guard';
 
 const routes: Routes = [
   {
+    path: '',
+    component: LoginComponent,
+    canActivate: [NotAuthorizedGuard]
+  },
+  {
     path: 'login',
     component: LoginComponent,
+    canActivate: [NotAuthorizedGuard]
   },
   {
     path: 'create-account',
     component: CreateAccountComponent,
+    canActivate: [NotAuthorizedGuard]
   },
   {
     path: 'certificate-view',
     component: CertificateViewComponent,
+    canActivate: [AuthorizedGuard]
   },
   {
     path: 'verify-registration',
     component: VerifyRegistrationComponent,
+    canActivate: [NotAuthorizedGuard]
   },
   {
     path: 'password-recovery-step1',
     component: PasswordRecoveryStep1Component,
+    canActivate: [NotAuthorizedGuard]
   },
   {
     path: 'password-recovery-step2',
     component: PasswordRecoveryStep2Component,
+    canActivate: [NotAuthorizedGuard]
   },
   {
     path: 'password-recovery-step3',
     component: PasswordRecoveryStep3Component,
+    canActivate: [NotAuthorizedGuard]
   },
 
   {
@@ -50,14 +64,17 @@ const routes: Routes = [
   {
     path: 'my-certificates',
     component: MyCertificatesComponent,
+    canActivate: [AuthorizedGuard]
   },
   {
     path: 'demand-history',
     component: CertificateDemandHistoryComponent,
+    canActivate: [AuthorizedGuard]
   },
   {
     path: 'certificate-demands',
-    component: CertificateDemandsViewComponent
+    component: CertificateDemandsViewComponent,
+    canActivate: [AuthorizedGuard]
   }
 ];
 

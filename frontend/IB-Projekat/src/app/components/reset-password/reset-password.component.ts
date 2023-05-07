@@ -40,7 +40,12 @@ export class ResetPasswordComponent {
       newPassword: newPassword,
     };
 
-    if (confirm("You will be logged out. Are you sure?")) {
+    let confirmation: boolean = true;
+    if (this.authService.isLoggedIn()) {
+      confirmation = confirm("You will be logged out. Are you sure?");
+    }
+
+    if (confirmation) {
       this.authService.resetPassword(passwordResetRequest).subscribe({
         next: (response) => {
           alert('You have successfully changed password!');

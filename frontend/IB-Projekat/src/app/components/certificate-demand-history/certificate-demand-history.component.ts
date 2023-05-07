@@ -45,15 +45,6 @@ export class CertificateDemandHistoryComponent {
       }
       return true;
     })
-    // let counter = 0;
-    // if (this.certificateDemands != undefined)
-    //   for(let certificate of this.certificateDemands){
-    //     if(certificate.id == id){
-    //       this.certificateDemands = this.certificateDemands.slice()
-    //       console.log(this.certificateDemands)
-    //     }
-    //     counter += 1
-    //   }
   }
 
 }

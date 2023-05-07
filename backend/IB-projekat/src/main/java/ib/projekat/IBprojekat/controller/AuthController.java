@@ -56,7 +56,7 @@ public class AuthController {
 
     @PostMapping("/recoverPassword")
     public ResponseEntity recoverPassword(@Valid @RequestBody PasswordRecoveryRequestDto passwordRecoveryRequestDto) {
-        Date passwordExpirationDate = new Date(System.currentTimeMillis() + globalConstants.PASSWORD_NON_MATCH_COUNT);
+        Date passwordExpirationDate = new Date(System.currentTimeMillis() + globalConstants.PASSWORD_VALIDATION_IN_MILLIS);
 
         authService.recoverPassword(passwordRecoveryRequestDto, globalConstants.PASSWORD_NON_MATCH_COUNT, passwordExpirationDate);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Password successfully changed!");
@@ -65,7 +65,7 @@ public class AuthController {
 
     @PostMapping("/resetPassword")
     public ResponseEntity resetPassword(@Valid @RequestBody PasswordResetRequest passwordResetRequest) {
-        Date passwordExpirationDate = new Date(System.currentTimeMillis() + globalConstants.PASSWORD_NON_MATCH_COUNT);
+        Date passwordExpirationDate = new Date(System.currentTimeMillis() + globalConstants.PASSWORD_VALIDATION_IN_MILLIS);
         authService.resetPassword(passwordResetRequest, globalConstants.PASSWORD_NON_MATCH_COUNT, passwordExpirationDate);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Password successfully changed!");
     }
