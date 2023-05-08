@@ -26,14 +26,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.security.*;
 import java.security.cert.*;
-import java.security.cert.Certificate;
 import java.util.Base64;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Stack;
 
 @Service("CertificateService")
@@ -104,7 +100,7 @@ public class CertificateService implements ICertificateService {
         if (certificateDemand.getRequestedSigningCertificate() != null) {
             signerCertificateEntity = certificateDemand.getRequestedSigningCertificate();
             signerPrivateKey = keyStoreReader.readPrivateKey(
-                    globalConstants.jksCertificatesPath,
+                    globalConstants.JKS_PATH,
                     globalConstants.jksPassword,
                     signerCertificateEntity.getSerialNumber(),
                     globalConstants.jksEntriesPassword
@@ -132,14 +128,14 @@ public class CertificateService implements ICertificateService {
         );
 
         // save certificate to keystore
-        keyStoreWriter.loadKeyStore(globalConstants.jksCertificatesPath, globalConstants.jksPassword.toCharArray());
+        keyStoreWriter.loadKeyStore(globalConstants.JKS_PATH, globalConstants.jksPassword.toCharArray());
         keyStoreWriter.write(
                 certificate.getSerialNumber().toString(),
                 keyPair.getPrivate(),
                 globalConstants.jksEntriesPassword.toCharArray(),
                 new X509Certificate[]{ certificate }
         );
-        keyStoreWriter.saveKeyStore(globalConstants.jksCertificatesPath, globalConstants.jksPassword.toCharArray());
+        keyStoreWriter.saveKeyStore(globalConstants.JKS_PATH, globalConstants.jksPassword.toCharArray());
 
         // save certificate entity to database
         CertificateEntity certificateEntity = CertificateEntity.builder()
@@ -175,18 +171,18 @@ public class CertificateService implements ICertificateService {
     public void checkValidity(String serialNumber) {
         // find certificate
         CertificateEntity certificateEntity = certificateRepository.findBySerialNumber(serialNumber)
-                .orElseThrow(() -> new CertificateNotFoundException("Certificate not found!"));
+                .orElseThrow(CertificateNotFoundException::new);
 
         // read certificate from key store
         X509Certificate certificate = (X509Certificate) keyStoreReader.readCertificate(
-                globalConstants.jksCertificatesPath,
+                globalConstants.JKS_PATH,
                 globalConstants.jksPassword,
                 certificateEntity.getSerialNumber()
         );
 
         // read signer certificate
         X509Certificate signerCertificate = (X509Certificate) keyStoreReader.readCertificate(
-                globalConstants.jksCertificatesPath,
+                globalConstants.JKS_PATH,
                 globalConstants.jksPassword,
                 certificateEntity.getSigner().getSerialNumber()
         );
@@ -213,12 +209,12 @@ public class CertificateService implements ICertificateService {
             // load new certificate from chain
             certificateEntity = certificateEntity.getSigner();
             certificate = (X509Certificate) keyStoreReader.readCertificate(
-                    globalConstants.jksCertificatesPath,
+                    globalConstants.JKS_PATH,
                     globalConstants.jksPassword,
                     certificateEntity.getSerialNumber()
             );
             signerCertificate = (X509Certificate) keyStoreReader.readCertificate(
-                    globalConstants.jksCertificatesPath,
+                    globalConstants.JKS_PATH,
                     globalConstants.jksPassword,
                     certificateEntity.getSigner().getSerialNumber()
             );
@@ -258,11 +254,11 @@ public class CertificateService implements ICertificateService {
         // find certificate
         CertificateEntity certificateEntity = certificateRepository
                 .findBySerialNumber(String.valueOf(certificate.getSerialNumber()))
-                .orElseThrow(() -> new CertificateNotFoundException("Certificate not found!"));
+                .orElseThrow(CertificateNotFoundException::new);
 
         // read signer certificate
         X509Certificate signerCertificate = (X509Certificate) keyStoreReader.readCertificate(
-                globalConstants.jksCertificatesPath,
+                globalConstants.JKS_PATH,
                 globalConstants.jksPassword,
                 certificateEntity.getSigner().getSerialNumber()
         );
@@ -286,12 +282,12 @@ public class CertificateService implements ICertificateService {
             // load new certificate from chain
             certificateEntity = certificateEntity.getSigner();
             certificate = (X509Certificate) keyStoreReader.readCertificate(
-                    globalConstants.jksCertificatesPath,
+                    globalConstants.JKS_PATH,
                     globalConstants.jksPassword,
                     certificateEntity.getSerialNumber()
             );
             signerCertificate = (X509Certificate) keyStoreReader.readCertificate(
-                    globalConstants.jksCertificatesPath,
+                    globalConstants.JKS_PATH,
                     globalConstants.jksPassword,
                     certificateEntity.getSigner().getSerialNumber()
             );
@@ -334,6 +330,10 @@ public class CertificateService implements ICertificateService {
             throw new CertificatePullException("Cannot pull ROOT certificates!");
         }
 
+        if (certificateEntity.isPulled()) {
+            throw new CertificatePullException("Certificate is already pulled!");
+        }
+
         Stack<CertificateEntity> certificateStack = new Stack<>();
         certificateStack.push(certificateEntity);
         while (!certificateStack.empty()) {
@@ -351,14 +351,20 @@ public class CertificateService implements ICertificateService {
     }
 
     @Override
-    public byte[] prepareCertificateForDownload(String serialNumber) throws CertificateException, IOException {
+    public byte[] prepareCertificateForDownload(String serialNumber) {
+        certificateRepository.findBySerialNumber(serialNumber).orElseThrow(CertificateNotFoundException::new);
         X509Certificate certificate = (X509Certificate) keyStoreReader.readCertificate(
-                globalConstants.jksCertificatesPath,
+                globalConstants.JKS_PATH,
                 globalConstants.jksPassword,
                 serialNumber
         );
-        byte[] certificateBytes = certificate.getEncoded();
-        return certificateBytes;
+        try {
+            return certificate.getEncoded();
+        } catch (CertificateException e) {
+            new RuntimeException(e);
+        }
+
+        return null;
     }
 
     private CertificateResponseDto convertToDto(CertificateEntity certificateEntity) {

@@ -18,14 +18,12 @@ import java.util.Date;
 @Builder
 public class PasswordHistoryEntity {
 
-    @ManyToOne
-    UserEntity user;
-
-    String password;
-
-    Date passwordCreationDate;
 
     @Id
     @GeneratedValue
     private Long id;
+    @ManyToOne
+    private UserEntity user;
+    private String password;
+    private Date passwordCreationDate;
 }

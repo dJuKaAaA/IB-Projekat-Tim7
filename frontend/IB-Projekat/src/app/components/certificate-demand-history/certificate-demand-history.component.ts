@@ -39,15 +39,12 @@ export class CertificateDemandHistoryComponent {
   }
 
   removeCertificate(id:number){
-    let counter = 0;
-    if (this.certificateDemands != undefined)
-      for(let certificate of this.certificateDemands){
-        if(certificate.id == id){
-          this.certificateDemands = this.certificateDemands.slice(counter - 1, counter)
-          console.log(this.certificateDemands)
-        }
-        counter += 1
+    this.certificateDemands = this.certificateDemands.filter((el) => {
+      if (el.id == id) {
+        return false
       }
+      return true;
+    })
   }
 
 }

@@ -21,6 +21,7 @@ import java.util.Date;
 public class AuthController {
 
     private final IAuthService authService;
+    private final GlobalConstants globalConstants;
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponseDto> login(@Valid @RequestBody LoginRequestDto loginRequest) {
@@ -55,22 +56,17 @@ public class AuthController {
 
     @PostMapping("/recoverPassword")
     public ResponseEntity recoverPassword(@Valid @RequestBody PasswordRecoveryRequestDto passwordRecoveryRequestDto) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, GlobalConstants.passwordValidationInMinutes);
-        Date passwordExpirationDate = calendar.getTime();
+        Date passwordExpirationDate = new Date(System.currentTimeMillis() + globalConstants.PASSWORD_VALIDATION_IN_MILLIS);
 
-        authService.recoverPassword(passwordRecoveryRequestDto, GlobalConstants.passwordNonMatchCount, passwordExpirationDate);
+        authService.recoverPassword(passwordRecoveryRequestDto, globalConstants.PASSWORD_NON_MATCH_COUNT, passwordExpirationDate);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Password successfully changed!");
     }
 
 
     @PostMapping("/resetPassword")
     public ResponseEntity resetPassword(@Valid @RequestBody PasswordResetRequest passwordResetRequest) {
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, GlobalConstants.passwordValidationInMinutes);
-        Date passwordExpirationDate = calendar.getTime();
-        authService.resetPassword(passwordResetRequest, GlobalConstants.passwordNonMatchCount, passwordExpirationDate);
+        Date passwordExpirationDate = new Date(System.currentTimeMillis() + globalConstants.PASSWORD_VALIDATION_IN_MILLIS);
+        authService.resetPassword(passwordResetRequest, globalConstants.PASSWORD_NON_MATCH_COUNT, passwordExpirationDate);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Password successfully changed!");
     }
 

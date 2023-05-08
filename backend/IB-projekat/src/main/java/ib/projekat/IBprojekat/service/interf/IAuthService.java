@@ -21,8 +21,7 @@ public interface IAuthService {
 
     void verifyVerificationCode(VerifyVerificationCodeRequestDto registrationVerificationRequestDto);
 
-    void sendVerificationCode(
-            VerificationTargetRequestDto verificationTargetDto);
+    void sendVerificationCode(VerificationTargetRequestDto verificationTargetDto);
 
     UserResponseDto verifyRegistration(VerifyVerificationCodeRequestDto registrationVerificationRequestDto);
 

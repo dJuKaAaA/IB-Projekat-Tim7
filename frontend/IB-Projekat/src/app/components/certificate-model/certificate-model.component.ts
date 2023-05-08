@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { CertificateResponse } from 'src/app/core/models/certificate-response.model';
 
 @Component({
@@ -15,7 +16,7 @@ export class CertificateModelComponent implements AfterViewInit {
   @ViewChild('certificateModel') certificateModel: ElementRef;
 
   constructor(
-    private renderer: Renderer2
+    private renderer: Renderer2,
   ) {}
 
   ngAfterViewInit(): void {

@@ -5,6 +5,7 @@ import { ValidateCertificateDialogComponent } from '../validate-certificate-dial
 import { ValidateFromUploadComponent } from '../validate-from-upload/validate-from-upload.component';
 import { DownloadCertificateComponent } from '../download-certificate/download-certificate.component';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { PullCertificateDialogComponent } from '../pull-certificate-dialog/pull-certificate-dialog.component';
 
 @Component({
   selector: 'app-navbar',
@@ -16,7 +17,7 @@ export class NavbarComponent {
   constructor(
     private router: Router,
     private matDialog: MatDialog,
-    private auth:AuthService
+    public authService: AuthService
   ) {}
 
   public openValidationDialog() {
@@ -29,6 +30,10 @@ export class NavbarComponent {
 
   public validateFromUpload() {
     this.matDialog.open(ValidateFromUploadComponent);
+  }
+
+  openPullDialog() {
+    this.matDialog.open(PullCertificateDialogComponent);
   }
 
   public logout() {
@@ -54,13 +59,12 @@ export class NavbarComponent {
     this.router.navigate(['demand-history'], {queryParams:{value:"evaluation"}})
   }
 
-  openAllRequests(){
+  openAllDemands(){
     this.router.navigate(['certificate-demands'])
   }
 
-  getRole(){
-    alert(this.auth.getRole())
-    return this.auth.getRole()
+  openResetPassword() {
+    this.router.navigate(['reset-password'])
   }
 
 }

@@ -53,4 +53,8 @@ export class PasswordRecoveryStep1Component {
   navigateToPasswordRecoveryStep2() {
     this.router.navigate(['password-recovery-step2']);
   }
+
+  goToLogin() {
+    this.router.navigate(['login']);
+  }
 }

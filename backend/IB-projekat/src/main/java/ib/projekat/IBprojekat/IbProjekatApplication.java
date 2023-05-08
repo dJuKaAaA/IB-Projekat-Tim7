@@ -16,7 +16,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.security.Security;
@@ -46,15 +45,8 @@ public class IbProjekatApplication {
         return args -> setDevelopmentData();
     }
 
-    private String encryptPassword(String plainTextPassword) {
-        return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
-    }
-
     private void setDevelopmentData() {
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, GlobalConstants.passwordValidationInMinutes);
-        Date passwordExpirationDate = calendar.getTime();
+        Date passwordExpirationDate = new Date(System.currentTimeMillis() + globalConstants.PASSWORD_VALIDATION_IN_MILLIS);
 
         // creating the admin
         //===================================================================
@@ -70,44 +62,43 @@ public class IbProjekatApplication {
                 .build();
         admin = userRepository.save(admin);
 
-        PasswordHistoryEntity passwordHistoryEntity = PasswordHistoryEntity.builder()
-                .password(encryptPassword("Admin123"))
+        PasswordHistoryEntity passwordHistoryEntityAdmin = PasswordHistoryEntity.builder()
+                .password(admin.getPassword())
                 .user(admin)
                 .passwordCreationDate(new Date())
                 .build();
-        passwordHistoryRepository.save(passwordHistoryEntity);
-
+        passwordHistoryRepository.save(passwordHistoryEntityAdmin);
 
         //===================================================================
 
         // creating a custom user
         //===================================================================
-        UserEntity user = UserEntity.builder()
-                .name("Ivan")
-                .surname("Martic")
-                .phoneNumber("+381604672999")
-                    .email("ivanmartic311@gmail.com")
-                .password(passwordEncoder.encode("Martic123"))
+        UserEntity user1 = UserEntity.builder()
+                .name("Neko")
+                .surname("Neki")
+                .phoneNumber("+3812383929")
+                .email("ivan.djukanovic07@gmail.com")
+                .password(passwordEncoder.encode("Neko1234"))
                 .role(Role.USER)
+                .dateForChangePassword(passwordExpirationDate)
                 .enabled(true)
                 .build();
+        user1 = userRepository.save(user1);
 
-        user = userRepository.save(user);
+        PasswordHistoryEntity passwordHistoryEntityUser1 = PasswordHistoryEntity.builder()
+                .password(admin.getPassword())
+                .user(user1)
+                .passwordCreationDate(new Date())
+                .build();
+        passwordHistoryRepository.save(passwordHistoryEntityUser1);
         //===================================================================
 
         // creating the root certificate
         //===================================================================
         certificateDemandService.create(CertificateDemandRequestDto.builder()
-                .requesterId(1L)
+                .requesterId(admin.getId())
                 .reason("This is a reason :)")
                 .type("ROOT")
-                .build());
-
-        certificateDemandService.create(CertificateDemandRequestDto.builder()
-                .requesterId(2L)
-                .reason("This is a reason :)")
-                .type("INTERMEDIATE")
-                .requestedSigningCertificateId(1L)
                 .build());
         //===================================================================
 

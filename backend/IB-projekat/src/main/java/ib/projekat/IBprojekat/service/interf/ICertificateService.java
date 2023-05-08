@@ -20,7 +20,6 @@ public interface ICertificateService {
     void checkValidity(String serialNumber);
     void checkValidityFromUploadedCertificate(UploadedCertificateRequestDto uploadedCertificateRequest);
     void pullCertificate(String serialNumber, String userEmail);
-
-    byte[] prepareCertificateForDownload(String serialNumber) throws CertificateException, IOException;
+    byte[] prepareCertificateForDownload(String serialNumber);
 }
 

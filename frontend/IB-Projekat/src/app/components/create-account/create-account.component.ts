@@ -6,6 +6,8 @@ import { UserRequest } from 'src/app/core/models/user-request.model';
 import { UserResponse } from 'src/app/core/models/user-response.model';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { VerifyVerificationCodeRequest } from '../../core/models/verify-verification-code-request.mode';
+import { ToastrService } from 'ngx-toastr';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-create-account',
@@ -23,7 +25,10 @@ export class CreateAccountComponent {
     phoneNumber: new FormControl(''),
   });
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
   createAccount() {
     if (this.formGroup.value.password != this.formGroup.value.confirmPassword) {

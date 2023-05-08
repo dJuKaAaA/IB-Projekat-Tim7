@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { CertificateDemandRequest } from 'src/app/core/models/certificate-demand-request.model';
 import { CertificateDemandResponse } from 'src/app/core/models/certificate-demand-response.model';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -17,7 +18,7 @@ export class DemandCreationDialogComponent {
     private dialogRef: MatDialogRef<DemandCreationDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private certificateDemandService: CertificateDemandService,
-    private authService: AuthService
+    private authService: AuthService,
   ) {}
 
   reason: string = "";
