@@ -19,7 +19,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.security.Security;
-import java.util.Calendar;
 import java.util.Date;
 
 @SpringBootApplication
@@ -51,10 +50,10 @@ public class IbProjekatApplication {
         // creating the admin
         //===================================================================
         UserEntity admin = UserEntity.builder()
-                .name("Andrew")
-                .surname("Tate")
-                .phoneNumber("+3812383929")
-                .email("admin@email.com")
+                .name("Ivan")
+                .surname("Martic")
+                .phoneNumber("+381604672999")
+                .email("ivanmartic311@gmail.com")
                 .password(passwordEncoder.encode("Admin123"))
                 .role(Role.ADMIN)
                 .dateForChangePassword(passwordExpirationDate)

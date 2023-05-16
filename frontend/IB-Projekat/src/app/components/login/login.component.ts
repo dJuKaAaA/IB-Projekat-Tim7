@@ -11,6 +11,7 @@ import { LoginRequest } from 'src/app/core/models/login-request.model';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { TokenResponse } from 'src/app/core/models/token-response.model';
 import { environment } from '../../../environment/environment';
+import { UserResponse } from '../../core/models/user-response.model';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +27,7 @@ export class LoginComponent {
     email: ['', Validators.required],
     password: ['', Validators.required],
     recaptcha: ['', Validators.required],
+    verificationCodeType: ['', Validators.required],
   });
 
   constructor(private router: Router, private authService: AuthService) {}
@@ -41,42 +43,35 @@ export class LoginComponent {
 
       if (!this.isRecaptchaVerified) {
         this.setRecaptchaVerified();
-
-        this.authService.login(loginRequest, recaptchaResponse).subscribe({
-          next: (response: TokenResponse) => {
-            localStorage.setItem('jwt', response.token);
-            this.router.navigate(['certificate-view']);
-          },
-          error: (error) => {
-            if (error instanceof HttpErrorResponse) {
-              alert(JSON.stringify(error.error.message));
-
-              if (error.error.message === 'The password is outdated') {
-                localStorage.setItem('email', this.formGroup.value.email);
-                this.goToResetPasswordPage();
-              }
-            }
-          },
-        });
+        this.loginWithRecaptcha(loginRequest, recaptchaResponse);
       } else {
-        this.authService.login(loginRequest, '').subscribe({
-          next: (response: TokenResponse) => {
-            localStorage.setItem('jwt', response.token);
-            this.router.navigate(['certificate-view']);
-          },
-          error: (error) => {
-            if (error instanceof HttpErrorResponse) {
-              alert(JSON.stringify(error.error.message));
-
-              if (error.error.message === 'The password is outdated') {
-                localStorage.setItem('email', this.formGroup.value.email);
-                this.goToResetPasswordPage();
-              }
-            }
-          },
-        });
+        this.loginWithRecaptcha(loginRequest, '');
       }
     }
+  }
+
+  loginWithRecaptcha(loginRequest: LoginRequest, recaptchaResponse: string) {
+    let verificationCodeType: string =
+      this.formGroup.value.verificationCodeType;
+    this.authService
+      .login(loginRequest, recaptchaResponse, verificationCodeType)
+      .subscribe({
+        next: (response: UserResponse) => {
+          console.log(response);
+          localStorage.setItem('userResponse', JSON.stringify(response));
+          this.router.navigate(['verify-login']);
+        },
+        error: (error) => {
+          if (error instanceof HttpErrorResponse) {
+            alert(JSON.stringify(error.error.message));
+
+            if (error.error.message === 'The password is outdated') {
+              localStorage.setItem('email', this.formGroup.value.email);
+              this.goToResetPasswordPage();
+            }
+          }
+        },
+      });
   }
 
   goToResetPasswordPage() {

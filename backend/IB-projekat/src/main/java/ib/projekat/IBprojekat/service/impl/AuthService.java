@@ -45,7 +45,9 @@ public class AuthService implements IAuthService {
 
 
     @Override
-    public TokenResponseDto login(LoginRequestDto loginRequest) {
+    public UserResponseDto login(LoginRequestDto loginRequest, VerificationCodeType verificationCodeType) {
+
+
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -58,18 +60,18 @@ public class AuthService implements IAuthService {
         }
 
         UserEntity user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(UserNotFoundException::new);
-
         if (user.getDateForChangePassword().before(new Date())) throw new PasswordOutdatedException();
 
-        // creating the claims that will be put in the jwt
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("id", user.getId());
-        claims.put("roles", List.of(user.getRole()));
-
-        String jwt = jwtService.generateToken(claims, new UserDetailsImpl(user));
-
-        return new TokenResponseDto(jwt);
-
+        if (verificationCodeType == VerificationCodeType.EMAIL) {
+            VerificationTargetRequestDto verificationTargetRequestDto = new VerificationTargetRequestDto();
+            verificationTargetRequestDto.setEmail(user.getEmail());
+            sendVerificationCode(verificationTargetRequestDto);
+        } else {
+            VerificationTargetRequestDto verificationTargetRequestDto = new VerificationTargetRequestDto();
+            verificationTargetRequestDto.setPhoneNumber(user.getPhoneNumber());
+            sendVerificationCode(verificationTargetRequestDto);
+        }
+        return new UserResponseDto(user);
     }
 
     @Override
@@ -155,6 +157,27 @@ public class AuthService implements IAuthService {
                 this.getVerificationCodeTypeFromVerificationTarget(verificationTargetDto);
 
         verificationCodeService.sendVerificationCode(user, verificationCodeType);
+    }
+
+    public TokenResponseDto verifyLogin(VerifyLoginRequestDto userLoginResponseDto) {
+        String userEmail = userLoginResponseDto.getEmail();
+        String code = userLoginResponseDto.getCode();
+
+        UserEntity user = this.userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+        VerifyVerificationCodeRequestDto verifyVerificationCodeRequestDto =
+                new VerifyVerificationCodeRequestDto(user.getEmail(), user.getPhoneNumber(), code);
+
+        this.verifyVerificationCode(verifyVerificationCodeRequestDto);
+
+        // creating the claims that will be put in the jwt
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", user.getId());
+        claims.put("roles", List.of(user.getRole()));
+
+        String jwt = jwtService.generateToken(claims, new UserDetailsImpl(user));
+
+        return new TokenResponseDto(jwt);
+
     }
 
     @Override

@@ -8,8 +8,22 @@
       <label for="password">Password</label>
       <input type="password" name="password" formControlName="password" />
     </div>
+    <div class="form-field-container">
+      <label for="verification-code-type" style="font-size: small"
+        >Select the way you want to receive activation code</label
+      >
+      <select
+        name="verification-code-type"
+        formControlName="verificationCodeType"
+      >
+        <option value="email">Email</option>
+        <option value="phone">Phone</option>
+      </select>
+    </div>
     <div class="buttons-layout">
-      <button type="submit" class="submit-button">Login</button>
+      <button style="margin-top: 10px" type="submit" class="submit-button">
+        Login
+      </button>
       <p class="create-account" (click)="goToCreateAccount()">
         Create an account
       </p>

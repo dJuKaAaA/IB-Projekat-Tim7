@@ -11,6 +11,7 @@ import { VerifyVerificationCodeRequest } from '../models/verify-verification-cod
 import { VerificationTarget } from '../models/verification-target.model';
 import { PasswordRecoveryRequest } from '../models/password-recovery-request.model';
 import { PasswordResetRequest } from '../models/password-reset-request.model';
+import { VerifyLoginRequest } from '../models/verify-login-request.model';
 
 @Injectable({
   providedIn: 'root',
@@ -36,11 +37,21 @@ export class AuthService {
 
   public login(
     loginRequest: LoginRequest,
-    recaptchaResponse: string
+    recaptchaResponse: string,
+    verificationType: string
+  ): Observable<UserResponse> {
+    return this.httpClient.post<UserResponse>(
+      `${environment.baseUrl}/auth/login/${verificationType}/?g-recaptcha-response=${recaptchaResponse}`,
+      loginRequest
+    );
+  }
+
+  public verifyLogin(
+    verificationLoginRequest: VerifyLoginRequest
   ): Observable<TokenResponse> {
     return this.httpClient.post<TokenResponse>(
-      `${environment.baseUrl}/auth/login?g-recaptcha-response=${recaptchaResponse}`,
-      loginRequest
+      `${environment.baseUrl}/auth/verifyLogin`,
+      verificationLoginRequest
     );
   }
 

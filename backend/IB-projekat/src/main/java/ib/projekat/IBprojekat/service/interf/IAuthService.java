@@ -11,7 +11,9 @@ import java.util.Date;
 @Service
 public interface IAuthService {
 
-    TokenResponseDto login(LoginRequestDto loginRequest);
+    TokenResponseDto verifyLogin(VerifyLoginRequestDto userLoginResponseDto);
+
+    UserResponseDto login(LoginRequestDto loginRequest, VerificationCodeType verificationCodeType);
 
     UserResponseDto createAccount(UserRequestDto userRequest, VerificationCodeType verificationCodeType);
 
