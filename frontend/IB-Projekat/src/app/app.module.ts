@@ -28,6 +28,7 @@ import { CertificateReviewComponent } from './components/certificate-review/cert
 import { DownloadCertificateComponent } from './components/download-certificate/download-certificate.component';
 import { CertificateDemandsViewComponent } from './components/certificate-demands-view/certificate-demands-view.component';
 import { PullCertificateDialogComponent } from './components/pull-certificate-dialog/pull-certificate-dialog.component';
+import { NgxCaptchaModule } from 'ngx-captcha';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { PullCertificateDialogComponent } from './components/pull-certificate-di
     FormsModule,
     ReactiveFormsModule,
     MatDialogModule,
+    NgxCaptchaModule,
   ],
   providers: [
     {

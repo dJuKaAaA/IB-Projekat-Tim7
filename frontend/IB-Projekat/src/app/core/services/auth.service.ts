@@ -34,19 +34,23 @@ export class AuthService {
     );
   }
 
-  public login(loginRequest: LoginRequest): Observable<TokenResponse> {
+  public login(
+    loginRequest: LoginRequest,
+    recaptchaResponse: string
+  ): Observable<TokenResponse> {
     return this.httpClient.post<TokenResponse>(
-      `${environment.baseUrl}/auth/login`,
+      `${environment.baseUrl}/auth/login?g-recaptcha-response=${recaptchaResponse}`,
       loginRequest
     );
   }
 
   public createAccount(
     userRequest: UserRequest,
-    verificationType: string
+    verificationType: string,
+    recaptchaResponse: string
   ): Observable<UserResponse> {
     return this.httpClient.post<UserResponse>(
-      `${environment.baseUrl}/auth/create-account/${verificationType}`,
+      `${environment.baseUrl}/auth/create-account/${verificationType}?g-recaptcha-response=${recaptchaResponse}`,
       userRequest
     );
   }

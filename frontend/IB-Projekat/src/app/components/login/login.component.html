@@ -1,17 +1,28 @@
 <div class="main-container">
-    <form [formGroup]="formGroup" (ngSubmit)="login()" class="form-container">
-        <div class="form-field-container">
-            <label for="email">Email</label>
-            <input type="email" name="email" formControlName="email"/>
-        </div>
-        <div class="form-field-container">
-            <label for="password">Password</label>
-            <input type="password" name="password" formControlName="password"/>
-        </div>
-        <div class="buttons-layout">
-            <button type="submit" class="submit-button">Login</button>
-            <p class="create-account" (click)="goToCreateAccount()">Create an account</p>
-            <p class="create-account" (click)="goToResetPassword()"><b>Forgot password?</b></p>
-        </div>
-    </form>
+  <form [formGroup]="formGroup" (ngSubmit)="login()" class="form-container">
+    <div class="form-field-container">
+      <label for="email">Email</label>
+      <input type="email" name="email" formControlName="email" />
+    </div>
+    <div class="form-field-container">
+      <label for="password">Password</label>
+      <input type="password" name="password" formControlName="password" />
+    </div>
+    <div class="buttons-layout">
+      <button type="submit" class="submit-button">Login</button>
+      <p class="create-account" (click)="goToCreateAccount()">
+        Create an account
+      </p>
+      <p class="create-account" (click)="goToResetPassword()">
+        <b>Forgot password?</b>
+      </p>
+      <ngx-recaptcha2
+        *ngIf="!isRecaptchaVerified"
+        #captchaElem
+        [siteKey]="siteKey"
+        formControlName="recaptcha"
+      >
+      </ngx-recaptcha2>
+    </div>
+  </form>
 </div>
