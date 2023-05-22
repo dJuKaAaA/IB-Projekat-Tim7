@@ -13,47 +13,53 @@ import { CertificateDemandHistoryComponent } from './components/certificate-dema
 import { CertificateDemandsViewComponent } from './components/certificate-demands-view/certificate-demands-view.component';
 import { NotAuthorizedGuard } from './guards/not-authorized.guard';
 import { AuthorizedGuard } from './guards/authorized.guard';
+import { LoginVerificationCodeComponent } from './components/login-verification-code/login-verification-code.component';
 
 const routes: Routes = [
   {
     path: '',
     component: LoginComponent,
-    canActivate: [NotAuthorizedGuard]
+    canActivate: [NotAuthorizedGuard],
   },
   {
     path: 'login',
     component: LoginComponent,
-    canActivate: [NotAuthorizedGuard]
+    canActivate: [NotAuthorizedGuard],
+  },
+  {
+    path: 'verify-login',
+    component: LoginVerificationCodeComponent,
+    canActivate: [NotAuthorizedGuard],
   },
   {
     path: 'create-account',
     component: CreateAccountComponent,
-    canActivate: [NotAuthorizedGuard]
+    canActivate: [NotAuthorizedGuard],
   },
   {
     path: 'certificate-view',
     component: CertificateViewComponent,
-    canActivate: [AuthorizedGuard]
+    canActivate: [AuthorizedGuard],
   },
   {
     path: 'verify-registration',
     component: VerifyRegistrationComponent,
-    canActivate: [NotAuthorizedGuard]
+    canActivate: [NotAuthorizedGuard],
   },
   {
     path: 'password-recovery-step1',
     component: PasswordRecoveryStep1Component,
-    canActivate: [NotAuthorizedGuard]
+    canActivate: [NotAuthorizedGuard],
   },
   {
     path: 'password-recovery-step2',
     component: PasswordRecoveryStep2Component,
-    canActivate: [NotAuthorizedGuard]
+    canActivate: [NotAuthorizedGuard],
   },
   {
     path: 'password-recovery-step3',
     component: PasswordRecoveryStep3Component,
-    canActivate: [NotAuthorizedGuard]
+    canActivate: [NotAuthorizedGuard],
   },
 
   {
@@ -64,18 +70,18 @@ const routes: Routes = [
   {
     path: 'my-certificates',
     component: MyCertificatesComponent,
-    canActivate: [AuthorizedGuard]
+    canActivate: [AuthorizedGuard],
   },
   {
     path: 'demand-history',
     component: CertificateDemandHistoryComponent,
-    canActivate: [AuthorizedGuard]
+    canActivate: [AuthorizedGuard],
   },
   {
     path: 'certificate-demands',
     component: CertificateDemandsViewComponent,
-    canActivate: [AuthorizedGuard]
-  }
+    canActivate: [AuthorizedGuard],
+  },
 ];
 
 @NgModule({

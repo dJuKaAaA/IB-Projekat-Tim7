@@ -132,4 +132,10 @@ public class ValidationErrorHandler {
     protected ResponseEntity<ErrorResponseDto> handleCertificatePullException(CertificatePullException e) {
         return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler({ReCaptchaException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ResponseEntity<ErrorResponseDto> handleReCaptchaException(ReCaptchaException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
 }

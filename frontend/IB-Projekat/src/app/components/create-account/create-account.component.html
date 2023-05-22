@@ -50,5 +50,12 @@
       <button type="submit" class="submit-button">Create account</button>
       <p class="go-back" (click)="navigateBack()">Back to login</p>
     </div>
+    <ngx-recaptcha2
+      *ngIf="!isRecaptchaVerified"
+      #captchaElem
+      [siteKey]="siteKey"
+      formControlName="recaptcha"
+    >
+    </ngx-recaptcha2>
   </form>
 </div>
