@@ -8,15 +8,23 @@ import ib.projekat.IBprojekat.dto.response.TokenResponseDto;
 import ib.projekat.IBprojekat.dto.response.UserResponseDto;
 import ib.projekat.IBprojekat.exception.ReCaptchaException;
 import ib.projekat.IBprojekat.service.interf.IAuthService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.Date;
 
 @RestController
@@ -26,6 +34,7 @@ public class AuthController {
 
     private final IAuthService authService;
     private final GlobalConstants globalConstants;
+    private final OAuth2UserService<OAuth2UserRequest, OAuth2User> userService;
     @Autowired
     RestTemplate restTemplate;
 
@@ -75,7 +84,6 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Code successfully verified!");
     }
 
-
     @PostMapping("/verifyRegistration")
     public ResponseEntity<UserResponseDto> verifyRegistration(@Valid @RequestBody VerifyVerificationCodeRequestDto registrationVerification) {
         return new ResponseEntity<>(authService.verifyRegistration(registrationVerification), HttpStatus.OK);
@@ -89,7 +97,6 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Password successfully changed!");
     }
 
-
     @PostMapping("/resetPassword")
     public ResponseEntity resetPassword(@Valid @RequestBody PasswordResetRequest passwordResetRequest) {
         Date passwordExpirationDate = new Date(System.currentTimeMillis() + globalConstants.PASSWORD_VALIDATION_IN_MILLIS);
@@ -102,5 +109,18 @@ public class AuthController {
         return new ResponseEntity<>(authService.verifyLogin(verifyUserLoginRequestDto), HttpStatus.OK);
     }
 
+    @GetMapping("/login/google")
+    public void googleLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        response.sendRedirect("/oauth2/authorization/google"); // Redirekcija na putanju za OAuth2 autorizaciju
+    }
+
+
+    @GetMapping("/googleLoginVerification")
+    public ResponseEntity<TokenResponseDto> loginWithGoogle(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        OAuth2AuthenticationToken authentication = (OAuth2AuthenticationToken) session.getAttribute("oauthToken");
+
+        return new ResponseEntity<>(this.authService.loginWithGoogle(authentication), HttpStatus.OK);
+    }
 
 }

@@ -24,6 +24,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -180,6 +182,25 @@ public class AuthService implements IAuthService {
 
     }
 
+    public TokenResponseDto loginWithGoogle(OAuth2AuthenticationToken authentication) {
+        if (authentication != null) {
+            OAuth2User googleUser = authentication.getPrincipal();
+            String email = googleUser.getAttribute("email");
+            UserEntity user = this.userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("id", user.getId());
+            claims.put("roles", List.of(user.getRole()));
+
+            String jwt = jwtService.generateToken(claims, new UserDetailsImpl(user));
+
+            return new TokenResponseDto(jwt);
+
+        }
+
+        throw new UserNotFoundException("Google nalog zajebava");
+
+    }
+
     @Override
     public UserResponseDto verifyRegistration(VerifyVerificationCodeRequestDto verifyVerificationCodeRequestDto) {
         this.verifyVerificationCode(verifyVerificationCodeRequestDto);
@@ -247,6 +268,7 @@ public class AuthService implements IAuthService {
 
     }
 
+
     private UserEntity getUserByVerificationCodeRequest(VerifyVerificationCodeRequestDto verifyVerificationCodeRequestDto) {
         UserEntity user = null;
         String userEmail = verifyVerificationCodeRequestDto.getEmail();
@@ -312,5 +334,6 @@ public class AuthService implements IAuthService {
             throw new OldPasswordNotMatchException();
         }
     }
+
 
 }

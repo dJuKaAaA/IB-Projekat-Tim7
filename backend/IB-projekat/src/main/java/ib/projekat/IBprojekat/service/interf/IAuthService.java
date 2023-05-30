@@ -4,12 +4,15 @@ import ib.projekat.IBprojekat.constant.VerificationCodeType;
 import ib.projekat.IBprojekat.dto.request.*;
 import ib.projekat.IBprojekat.dto.response.TokenResponseDto;
 import ib.projekat.IBprojekat.dto.response.UserResponseDto;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 @Service
 public interface IAuthService {
+
+    TokenResponseDto loginWithGoogle(OAuth2AuthenticationToken authentication);
 
     TokenResponseDto verifyLogin(VerifyLoginRequestDto userLoginResponseDto);
 

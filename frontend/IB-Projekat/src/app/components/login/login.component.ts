@@ -74,6 +74,10 @@ export class LoginComponent {
       });
   }
 
+  public loginWithGoogle(): void {
+    this.authService.loginWithGoogle();
+  }
+
   goToResetPasswordPage() {
     this.router.navigate(['reset-password']);
   }

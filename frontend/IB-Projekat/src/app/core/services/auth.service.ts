@@ -46,6 +46,30 @@ export class AuthService {
     );
   }
 
+  public loginWithGoogle() {
+    this.httpClient.get(`${environment.baseUrl}/auth/login/google`).subscribe(
+      () => {
+        this.getGoogleLoginVerification();
+      },
+      (error) => {
+        console.error('Greška prilikom poziva /login/google:', error);
+      }
+    );
+  }
+
+  private getGoogleLoginVerification() {
+    this.httpClient.get<any>('/googleLoginVerification').subscribe(
+      (response: any) => {
+        let tokenResponse = response;
+        alert(tokenResponse);
+        return tokenResponse;
+      },
+      (error) => {
+        console.error('Greška prilikom dohvaćanja odgovora od servera:', error);
+      }
+    );
+  }
+
   public verifyLogin(
     verificationLoginRequest: VerifyLoginRequest
   ): Observable<TokenResponse> {
