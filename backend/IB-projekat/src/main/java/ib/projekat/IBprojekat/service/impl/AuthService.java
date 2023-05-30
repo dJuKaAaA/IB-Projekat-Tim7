@@ -252,11 +252,14 @@ public class AuthService implements IAuthService {
         String userEmail = verifyVerificationCodeRequestDto.getEmail();
         String userPhoneNumber = verifyVerificationCodeRequestDto.getPhoneNumber();
 
-        if (!userEmail.equals("")) {
+        if (userEmail == null || !userEmail.isBlank()) {
             user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
-        } else if (!userPhoneNumber.equals("")) {
+        } else if (userPhoneNumber == null || !userPhoneNumber.isBlank()) {
             user = userRepository.findByPhoneNumber(userPhoneNumber).orElseThrow(UserNotFoundException::new);
+        } else {
+            throw new UserNotFoundException();
         }
+
         return user;
     }
 
