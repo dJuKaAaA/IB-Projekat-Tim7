@@ -9,13 +9,8 @@
       <input type="password" name="password" formControlName="password" />
     </div>
     <div class="form-field-container">
-      <label for="verification-code-type" style="font-size: small"
-        >Select the way you want to receive activation code</label
-      >
-      <select
-        name="verification-code-type"
-        formControlName="verificationCodeType"
-      >
+      <label for="verification-code-type">Activation code type</label>
+      <select name="verification-code-type" formControlName="verificationCodeType" style="width: 100%;">
         <option value="email">Email</option>
         <option value="phone">Phone</option>
       </select>
@@ -30,12 +25,7 @@
       <p class="create-account" (click)="goToResetPassword()">
         <b>Forgot password?</b>
       </p>
-      <ngx-recaptcha2
-        *ngIf="!isRecaptchaVerified"
-        #captchaElem
-        [siteKey]="siteKey"
-        formControlName="recaptcha"
-      >
+      <ngx-recaptcha2 *ngIf="!isRecaptchaVerified" #captchaElem [siteKey]="siteKey" formControlName="recaptcha">
       </ngx-recaptcha2>
     </div>
   </form>

@@ -5,6 +5,7 @@ import { CertificateResponse } from '../models/certificate-response.model';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environment/environment';
 import { UploadedCertificateRequest } from '../models/uploaded-certificate-request.model';
+import { CertificateDownloadResponse } from '../models/certificate-download-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,7 @@ export class CertificateService {
     return this.httpClient.put<string>(`${environment.baseUrl}/certificate/${serialNumber}/pull`, {});
   }
 
-  public download(serialNumber: string): Observable<any> {
-    return this.httpClient.get(`${environment.baseUrl}/certificate/${serialNumber}/download`, {responseType: "blob"});
+  public download(serialNumber: string): Observable<CertificateDownloadResponse> {
+    return this.httpClient.get<CertificateDownloadResponse>(`${environment.baseUrl}/certificate/${serialNumber}/download`);
   } 
 }

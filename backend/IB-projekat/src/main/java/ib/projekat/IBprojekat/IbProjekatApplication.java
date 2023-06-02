@@ -7,9 +7,11 @@ import ib.projekat.IBprojekat.dao.CertificateRepository;
 import ib.projekat.IBprojekat.dao.PasswordHistoryRepository;
 import ib.projekat.IBprojekat.dao.UserRepository;
 import ib.projekat.IBprojekat.dto.request.CertificateDemandRequestDto;
+import ib.projekat.IBprojekat.dto.response.CertificateDemandResponseDto;
 import ib.projekat.IBprojekat.entity.PasswordHistoryEntity;
 import ib.projekat.IBprojekat.entity.UserEntity;
 import ib.projekat.IBprojekat.service.impl.CertificateDemandService;
+import ib.projekat.IBprojekat.service.impl.CertificateService;
 import lombok.RequiredArgsConstructor;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.boot.CommandLineRunner;
@@ -32,6 +34,7 @@ public class IbProjekatApplication {
     private final CertificateRepository certificateRepository;
     private final PasswordEncoder passwordEncoder;
     private final CertificateDemandService certificateDemandService;
+    private final CertificateService certificateService;
     private final GlobalConstants globalConstants;
 
     public static void main(String[] args) {
@@ -99,6 +102,13 @@ public class IbProjekatApplication {
                 .reason("This is a reason :)")
                 .type("ROOT")
                 .build());
+        CertificateDemandResponseDto response = certificateDemandService.create(CertificateDemandRequestDto.builder()
+                .requesterId(user1.getId())
+                .requestedSigningCertificateId(1L)
+                .reason("Some reason")
+                .type("INTERMEDIATE")
+                .build());
+        certificateService.create(response.getId());
         //===================================================================
 
     }

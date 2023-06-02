@@ -11,6 +11,7 @@ import ib.projekat.IBprojekat.constant.Role;
 import ib.projekat.IBprojekat.dao.CertificateDemandRepository;
 import ib.projekat.IBprojekat.dao.CertificateRepository;
 import ib.projekat.IBprojekat.dao.UserRepository;
+import ib.projekat.IBprojekat.dto.response.CertificateDownloadResponseDto;
 import ib.projekat.IBprojekat.dto.request.UploadedCertificateRequestDto;
 import ib.projekat.IBprojekat.dto.response.CertificateResponseDto;
 import ib.projekat.IBprojekat.dto.response.PaginatedResponseDto;
@@ -351,15 +352,27 @@ public class CertificateService implements ICertificateService {
     }
 
     @Override
-    public byte[] prepareCertificateForDownload(String serialNumber) {
-        certificateRepository.findBySerialNumber(serialNumber).orElseThrow(CertificateNotFoundException::new);
+    public CertificateDownloadResponseDto prepareForDownload(String serialNumber, String userEmail) {
+        CertificateEntity certificateEntity = certificateRepository.findBySerialNumber(serialNumber)
+                .orElseThrow(CertificateNotFoundException::new);
+        CertificateDownloadResponseDto certificateDownloadRequest = new CertificateDownloadResponseDto();
+        if (certificateEntity.getIssuedTo().getEmail().equals(userEmail)) {
+            PrivateKey privateKey = keyStoreReader.readPrivateKey(
+                    globalConstants.JKS_PATH,
+                    globalConstants.jksPassword,
+                    serialNumber,
+                    globalConstants.jksPassword
+            );
+            certificateDownloadRequest.setCertificatePrivateKeyBytes(privateKey.getEncoded());
+        }
         X509Certificate certificate = (X509Certificate) keyStoreReader.readCertificate(
                 globalConstants.JKS_PATH,
                 globalConstants.jksPassword,
                 serialNumber
         );
         try {
-            return certificate.getEncoded();
+            certificateDownloadRequest.setCertificateBytes(certificate.getEncoded());
+            return certificateDownloadRequest;
         } catch (CertificateException e) {
             new RuntimeException(e);
         }

@@ -47,7 +47,6 @@ public class AuthService implements IAuthService {
     @Override
     public UserResponseDto login(LoginRequestDto loginRequest, VerificationCodeType verificationCodeType) {
 
-
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
