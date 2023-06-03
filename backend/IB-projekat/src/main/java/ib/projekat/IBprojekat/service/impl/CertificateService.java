@@ -206,7 +206,7 @@ public class CertificateService implements ICertificateService {
 
         // iterate through the chain
         while (certificateEntity.getType() != CertificateType.ROOT) {
-            if (certificateEntity.isPulled()) {
+            if (certificateEntity.isRetracted()) {
                 throw new InvalidCertificateException("This certificate (or the one in it's chain) has been pulled by it's owner (or the admin)!");
             }
 
@@ -321,7 +321,7 @@ public class CertificateService implements ICertificateService {
         }
 
         // root validation and verification
-        if (certificateEntity.isPulled()) {
+        if (certificateEntity.isRetracted()) {
             throw new InvalidCertificateException("This certificate (or the one in it's chain) has been pulled by the owner!");
         }
 
@@ -359,7 +359,7 @@ public class CertificateService implements ICertificateService {
             throw new CertificateRetractionException("Cannot pull ROOT certificates!");
         }
 
-        if (certificateEntity.isPulled()) {
+        if (certificateEntity.isRetracted()) {
             throw new CertificateRetractionException("Certificate is already pulled!");
         }
 
@@ -367,12 +367,12 @@ public class CertificateService implements ICertificateService {
         certificateStack.push(certificateEntity);
         while (!certificateStack.empty()) {
             certificateEntity = certificateStack.pop();
-            certificateEntity.setPulled(true);
+            certificateEntity.setRetracted(true);
             certificateRepository.save(certificateEntity);
 
             Collection<CertificateEntity> childCertificates = certificateRepository.findBySignerId(certificateEntity.getId());
             for (CertificateEntity childCertificate : childCertificates) {
-                if (!childCertificate.isPulled()) {
+                if (!childCertificate.isRetracted()) {
                     certificateStack.push(childCertificate);
                 }
             }
@@ -429,7 +429,7 @@ public class CertificateService implements ICertificateService {
                 .endDate(certificateEntity.getEndDate().toString())
                 .publicKey(certificateEntity.getPublicKey().toString())
                 .signature(base64Utility.encode(certificateEntity.getSignature()))
-                .isPulled(certificateEntity.isPulled())
+                .isPulled(certificateEntity.isRetracted())
                 .build();
     }
 

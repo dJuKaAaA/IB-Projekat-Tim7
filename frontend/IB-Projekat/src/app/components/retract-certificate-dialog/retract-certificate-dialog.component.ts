@@ -9,7 +9,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   templateUrl: './retract-certificate-dialog.component.html',
   styleUrls: ['./retract-certificate-dialog.component.css']
 })
-export class PullCertificateDialogComponent {
+export class RetractCertificateDialogComponent {
 
   constructor(
     private dialogRef: MatDialogRef<ValidateCertificateDialogComponent>,

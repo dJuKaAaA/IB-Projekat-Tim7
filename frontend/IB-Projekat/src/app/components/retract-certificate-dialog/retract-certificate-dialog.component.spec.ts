@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PullCertificateDialogComponent } from './retract-certificate-dialog.component';
+import { RetractCertificateDialogComponent } from './retract-certificate-dialog.component';
 
 describe('PullCertificateDialogComponent', () => {
-  let component: PullCertificateDialogComponent;
-  let fixture: ComponentFixture<PullCertificateDialogComponent>;
+  let component: RetractCertificateDialogComponent;
+  let fixture: ComponentFixture<RetractCertificateDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PullCertificateDialogComponent ]
+      declarations: [ RetractCertificateDialogComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PullCertificateDialogComponent);
+    fixture = TestBed.createComponent(RetractCertificateDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

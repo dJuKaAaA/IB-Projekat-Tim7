@@ -1,12 +1,15 @@
 package ib.projekat.IBprojekat.constant;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GlobalConstants {
 
-    public final static String jksPassword = "123456";
-    public final static String jksEntriesPassword = "123456";
+    @Value("${jksPassword}")
+    public String jksPassword;
+    @Value("${jksPassword}")
+    public String jksEntriesPassword;
     public final String JKS_PATH = "src/main/resources/keystore/ib-projekat.jks";
     public final long ONE_YEAR_IN_MILLIS = 1000L * 60L * 60L * 24L * 365L;
     public final String ACCOUNT_SID = "AC278438aec92b584dacab40f92d2ff838";
@@ -22,6 +25,7 @@ public class GlobalConstants {
     public final long PASSWORD_VALIDATION_IN_MILLIS = TWO_MINUTES_IN_MILLIS;
 
     public final long TEN_MBS_IN_BYTES = 1024L * 1024L * 10L;
+    public final String TRUSTED_CERT_SERIAL_NUMBER = "11704431061612271539";
 
 
 }

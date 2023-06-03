@@ -27,7 +27,7 @@ import { CertificateDemandModelComponent } from './components/certificate-demand
 import { CertificateReviewComponent } from './components/certificate-review/certificate-review.component';
 import { DownloadCertificateComponent } from './components/download-certificate/download-certificate.component';
 import { CertificateDemandsViewComponent } from './components/certificate-demands-view/certificate-demands-view.component';
-import { PullCertificateDialogComponent } from './components/retract-certificate-dialog/retract-certificate-dialog.component';
+import { RetractCertificateDialogComponent } from './components/retract-certificate-dialog/retract-certificate-dialog.component';
 import { NgxCaptchaModule } from 'ngx-captcha';
 import { LoginVerificationCodeComponent } from './components/login-verification-code/login-verification-code.component';
 
@@ -54,7 +54,7 @@ import { LoginVerificationCodeComponent } from './components/login-verification-
     CertificateReviewComponent,
     DownloadCertificateComponent,
     CertificateDemandsViewComponent,
-    PullCertificateDialogComponent,
+    RetractCertificateDialogComponent,
     LoginVerificationCodeComponent,
   ],
   imports: [

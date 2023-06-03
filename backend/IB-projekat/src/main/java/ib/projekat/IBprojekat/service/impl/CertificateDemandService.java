@@ -57,7 +57,7 @@ public class CertificateDemandService implements ICertificateDemandService {
         } else {
             requestedSigningCertificate = certificateRepository.findById(certificateDemandRequest.getRequestedSigningCertificateId())
                     .orElseThrow(() -> new CertificateNotFoundException("Requested signing certificate not found!"));
-            if (requestedSigningCertificate.isPulled()) {
+            if (requestedSigningCertificate.isRetracted()) {
                 throw new CertificateRetractionException("Cannot make a demand with a pulled certificate as the signer!");
             }
             requestedIssuer = requestedSigningCertificate.getIssuedTo();

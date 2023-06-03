@@ -5,7 +5,7 @@ import { ValidateCertificateDialogComponent } from '../validate-certificate-dial
 import { ValidateFromUploadComponent } from '../validate-from-upload/validate-from-upload.component';
 import { DownloadCertificateComponent } from '../download-certificate/download-certificate.component';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { PullCertificateDialogComponent } from '../retract-certificate-dialog/retract-certificate-dialog.component';
+import { RetractCertificateDialogComponent } from '../retract-certificate-dialog/retract-certificate-dialog.component';
 
 @Component({
   selector: 'app-navbar',
@@ -32,8 +32,8 @@ export class NavbarComponent {
     this.matDialog.open(ValidateFromUploadComponent);
   }
 
-  openPullDialog() {
-    this.matDialog.open(PullCertificateDialogComponent);
+  openRetractDialog() {
+    this.matDialog.open(RetractCertificateDialogComponent);
   }
 
   public logout() {
