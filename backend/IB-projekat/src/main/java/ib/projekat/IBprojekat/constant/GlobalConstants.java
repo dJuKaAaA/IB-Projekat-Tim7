@@ -10,7 +10,7 @@ public class GlobalConstants {
     public String jksPassword;
     @Value("${jksPassword}")
     public String jksEntriesPassword;
-    public final String JKS_PATH = "src/main/resources/keystore/ib-projekat.jks";
+    public final String JKS_PATH = "src/main/resources/keystore/hope/keystore.jks";
     public final long ONE_YEAR_IN_MILLIS = 1000L * 60L * 60L * 24L * 365L;
     public final String ACCOUNT_SID = "AC278438aec92b584dacab40f92d2ff838";
     public final String AUTH_TOKEN = "728d419329682de4cf9957f09dbb768e";
@@ -25,7 +25,6 @@ public class GlobalConstants {
     public final long PASSWORD_VALIDATION_IN_MILLIS = TWO_MINUTES_IN_MILLIS;
 
     public final long TEN_MBS_IN_BYTES = 1024L * 1024L * 10L;
-    public final String TRUSTED_CERT_SERIAL_NUMBER = "11704431061612271539";
-
+    public final String TRUSTED_CERT_SERIAL_NUMBER = "37989688751968406714210527370859553275549998687";
 
 }

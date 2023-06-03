@@ -126,13 +126,13 @@ public class IbProjekatApplication {
         trustedCertEntity.setSigner(trustedCertEntity);
         trustedCertEntity = certificateRepository.save(trustedCertEntity);
 
-        CertificateDemandResponseDto response = certificateDemandService.create(CertificateDemandRequestDto.builder()
-                .requesterId(user1.getId())
-                .requestedSigningCertificateId(trustedCertEntity.getId())
-                .reason("Some reason")
-                .type("INTERMEDIATE")
-                .build());
-        certificateService.create(response.getId());
+//        CertificateDemandResponseDto response = certificateDemandService.create(CertificateDemandRequestDto.builder()
+//                .requesterId(user1.getId())
+//                .requestedSigningCertificateId(trustedCertEntity.getId())
+//                .reason("Some reason")
+//                .type("INTERMEDIATE")
+//                .build());
+//        certificateService.create(response.getId());
         //===================================================================
 
     }

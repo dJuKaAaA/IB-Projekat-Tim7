@@ -61,8 +61,8 @@
           "options": {
             "browserTarget": "IB-Projekat:build:production",
             "ssl": true,
-            "sslKey": "./trusted-certificate/private.key",
-            "sslCert": "./trusted-certificate/trusted-cert.crt"
+            "sslKey": "./trusted-certificate/localhost.key",
+            "sslCert": "./trusted-certificate/localhost.crt"
           },
           "configurations": {
             "production": {
