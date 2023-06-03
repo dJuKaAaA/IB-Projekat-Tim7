@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PullCertificateDialogComponent } from './pull-certificate-dialog.component';
+import { PullCertificateDialogComponent } from './retract-certificate-dialog.component';
 
 describe('PullCertificateDialogComponent', () => {
   let component: PullCertificateDialogComponent;

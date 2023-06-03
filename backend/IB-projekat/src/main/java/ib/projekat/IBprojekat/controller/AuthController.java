@@ -10,6 +10,8 @@ import ib.projekat.IBprojekat.exception.ReCaptchaException;
 import ib.projekat.IBprojekat.service.interf.IAuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -26,14 +28,13 @@ public class AuthController {
 
     private final IAuthService authService;
     private final GlobalConstants globalConstants;
-    @Autowired
-    RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
+    private final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @PostMapping("/login/{verificationCodeType}/")
     public ResponseEntity<UserResponseDto> login(@Valid @RequestBody LoginRequestDto loginRequest,
                                                  @PathVariable String verificationCodeType,
                                                  @RequestParam("g-recaptcha-response") String captchaResponse) {
-
 
         String params = "?secret=" + globalConstants.GOOGLE_RECAPTCHA_SECRET_KEY + "&response=" + captchaResponse;
         ReCaptchaResponse reCaptchaResponse = restTemplate.exchange(globalConstants.GOOGLE_RECAPTCHA_VERIFICATION_URL + params, HttpMethod.POST, null,
@@ -43,9 +44,9 @@ public class AuthController {
             VerificationCodeType convertedVerificationCodeType = VerificationCodeType.valueOf(verificationCodeType.toUpperCase());
             return new ResponseEntity<>(authService.login(loginRequest, convertedVerificationCodeType), HttpStatus.OK);
         } else {
+            logger.error("Recaptcha not ticked");
             throw new ReCaptchaException();
         }
-
     }
 
     @PostMapping("/create-account/{verificationCodeType}")

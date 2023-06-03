@@ -35,8 +35,8 @@ export class CertificateDemandService {
     return this.httpClient.put<CertificateDemandResponse>(`${environment.baseUrl}/certificate-demand/${id}/accept`, {});
   }
 
-  public getAll(requesterId: number, page: number, size: number): Observable<PaginatedResponse<CertificateDemandResponse>>{
-    return this.httpClient.get<PaginatedResponse<CertificateDemandResponse>>(`${environment.baseUrl}/certificate-demand/${requesterId}?page=${page}&size=${size}`)
+  public getAll(page: number, size: number): Observable<PaginatedResponse<CertificateDemandResponse>>{
+    return this.httpClient.get<PaginatedResponse<CertificateDemandResponse>>(`${environment.baseUrl}/certificate-demand?page=${page}&size=${size}`)
     
   }
 }

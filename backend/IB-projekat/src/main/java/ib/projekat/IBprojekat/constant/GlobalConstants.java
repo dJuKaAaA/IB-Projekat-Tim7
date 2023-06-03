@@ -21,5 +21,7 @@ public class GlobalConstants {
     private final long TWO_MINUTES_IN_MILLIS = 1000L * 60L * 2L;
     public final long PASSWORD_VALIDATION_IN_MILLIS = TWO_MINUTES_IN_MILLIS;
 
+    public final long TEN_MBS_IN_BYTES = 1024L * 1024L * 10L;
+
 
 }

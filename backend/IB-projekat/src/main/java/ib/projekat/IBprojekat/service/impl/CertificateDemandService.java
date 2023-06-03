@@ -17,6 +17,8 @@ import ib.projekat.IBprojekat.exception.*;
 import ib.projekat.IBprojekat.service.interf.ICertificateDemandService;
 import ib.projekat.IBprojekat.service.interf.ICertificateService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,9 +33,12 @@ public class CertificateDemandService implements ICertificateDemandService {
     private final UserRepository userRepository;
     private final CertificateRepository certificateRepository;
     private final ICertificateService certificateService;
+    private final Logger logger = LoggerFactory.getLogger(CertificateDemandService.class);
 
     @Override
     public CertificateDemandResponseDto create(CertificateDemandRequestDto certificateDemandRequest) {
+        logger.info("Started certificate demand creation process");
+
         UserEntity requester = userRepository.findById(certificateDemandRequest.getRequesterId())
                 .orElseThrow(() -> new UserNotFoundException("Requester not found!"));
 
@@ -53,7 +58,7 @@ public class CertificateDemandService implements ICertificateDemandService {
             requestedSigningCertificate = certificateRepository.findById(certificateDemandRequest.getRequestedSigningCertificateId())
                     .orElseThrow(() -> new CertificateNotFoundException("Requested signing certificate not found!"));
             if (requestedSigningCertificate.isPulled()) {
-                throw new CertificatePullException("Cannot make a demand with a pulled certificate as the signer!");
+                throw new CertificateRetractionException("Cannot make a demand with a pulled certificate as the signer!");
             }
             requestedIssuer = requestedSigningCertificate.getIssuedTo();
         }
@@ -83,11 +88,14 @@ public class CertificateDemandService implements ICertificateDemandService {
                     .orElseThrow(CertificateDemandNotFoundException::new);
         }
 
+        logger.info("Successfully created certificate demand");
 
         return convertToDto(certificateDemand);
     }
     @Override
     public CertificateDemandResponseDto reject(Long id) {
+        logger.info("Started certificate demand rejection process");
+
         CertificateDemandEntity certificateDemand = certificateDemandRepository.findById(id)
                 .orElseThrow(CertificateDemandNotFoundException::new);
         if (certificateDemand.getStatus() != CertificateDemandStatus.PENDING) {
@@ -96,11 +104,14 @@ public class CertificateDemandService implements ICertificateDemandService {
         certificateDemand.setStatus(CertificateDemandStatus.REJECTED);
         certificateDemand = certificateDemandRepository.save(certificateDemand);
 
+        logger.info("Successfully rejected certificate demand");
         return convertToDto(certificateDemand);
     }
 
     @Override
     public CertificateDemandResponseDto accept(Long id){
+        logger.info("Started certificate acceptance process");
+
         CertificateDemandEntity certificateDemand = certificateDemandRepository.findById(id)
                 .orElseThrow(CertificateDemandNotFoundException::new);
         if (certificateDemand.getStatus() != CertificateDemandStatus.PENDING) {
@@ -109,11 +120,14 @@ public class CertificateDemandService implements ICertificateDemandService {
 
         certificateService.create(id);
 
+        logger.info("Successfully accepted certificate demand");
         return convertToDto(certificateDemand);
     }
 
     @Override
     public PaginatedResponseDto<CertificateDemandResponseDto> getByRequesterId(Long requesterId, Pageable pageable) {
+        logger.info("Started certificate demands fetching by requester ID: %d".formatted(requesterId));
+
         userRepository.findById(requesterId).orElseThrow(UserNotFoundException::new);
 
         Page<CertificateDemandEntity> certificateDemandsPage = certificateDemandRepository.findByRequesterId(requesterId, pageable);
@@ -121,6 +135,8 @@ public class CertificateDemandService implements ICertificateDemandService {
         Collection<CertificateDemandResponseDto> certificateDemands = certificateDemandsPage.getContent().stream()
                 .map(this::convertToDto)
                 .toList();
+
+        logger.info("Successfully fetched certificate demands by requester ID: %d".formatted(requesterId));
 
         return new PaginatedResponseDto<>(
                 certificateDemandsPage.getPageable().getPageNumber(),
@@ -131,6 +147,8 @@ public class CertificateDemandService implements ICertificateDemandService {
 
     @Override
     public PaginatedResponseDto<CertificateDemandResponseDto> getByRequesterIdPending(Long requesterId, Pageable pageable) {
+        logger.info("Started certificate demands fetching by requester ID: %d, that are pending".formatted(requesterId));
+
         userRepository.findById(requesterId).orElseThrow(UserNotFoundException::new);
 
         Page<CertificateDemandEntity> certificateDemandsPage = certificateDemandRepository.findPendingByRequestedIssuer(requesterId, pageable);
@@ -139,6 +157,7 @@ public class CertificateDemandService implements ICertificateDemandService {
                 .map(this::convertToDto)
                 .toList();
 
+        logger.info("Successfully fetched certificate demands by requester ID: %d, that are pending".formatted(requesterId));
         return new PaginatedResponseDto<>(
                 certificateDemandsPage.getPageable().getPageNumber(),
                 certificateDemands.size(),
@@ -147,8 +166,8 @@ public class CertificateDemandService implements ICertificateDemandService {
     }
 
     @Override
-    public PaginatedResponseDto<CertificateDemandResponseDto> getAll(Long requesterId, Pageable pageable) {
-        userRepository.findById(requesterId).orElseThrow(UserNotFoundException::new);
+    public PaginatedResponseDto<CertificateDemandResponseDto> getAll(Pageable pageable) {
+        logger.info("Started fetching all certificate demands");
 
         Page<CertificateDemandEntity> certificateDemandsPage = certificateDemandRepository.findAll(pageable);
 
@@ -156,6 +175,7 @@ public class CertificateDemandService implements ICertificateDemandService {
                 .map(this::convertToDto)
                 .toList();
 
+        logger.info("Successfully fetched all certificate demands");
         return new PaginatedResponseDto<>(
                 certificateDemandsPage.getPageable().getPageNumber(),
                 certificateDemands.size(),

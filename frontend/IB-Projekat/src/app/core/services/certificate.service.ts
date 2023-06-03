@@ -36,8 +36,8 @@ export class CertificateService {
     return this.httpClient.post<string>(`${environment.baseUrl}/certificate/validate-from-upload`, uploadedCertificateRequest);
   }
 
-  public pull(serialNumber: string): Observable<string> {
-    return this.httpClient.put<string>(`${environment.baseUrl}/certificate/${serialNumber}/pull`, {});
+  public retract(serialNumber: string): Observable<string> {
+    return this.httpClient.put<string>(`${environment.baseUrl}/certificate/${serialNumber}/retract`, {});
   }
 
   public download(serialNumber: string): Observable<CertificateDownloadResponse> {

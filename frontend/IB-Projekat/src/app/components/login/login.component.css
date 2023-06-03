@@ -24,11 +24,11 @@
     flex-direction: column;
 }
 
-.create-account {
+.navigation-text {
     font-size: 1.25vmax;
 }
 
-.create-account:hover {
+.navigation-text:hover {
     cursor: pointer;
     text-decoration: underline;
 }
