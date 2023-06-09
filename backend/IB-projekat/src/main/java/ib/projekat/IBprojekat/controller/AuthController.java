@@ -123,8 +123,10 @@ public class AuthController {
     }
 
     @GetMapping("/login/github")
-    public String loginFromGithub() {
-        return "Hope";
+    public String loginFromGithub(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        OAuth2AuthenticationToken authentication = (OAuth2AuthenticationToken) session.getAttribute("oauthToken");
+        return "Is authentication null: %s".formatted(authentication == null);
     }
 
 

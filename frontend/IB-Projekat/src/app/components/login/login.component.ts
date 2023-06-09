@@ -87,11 +87,7 @@ export class LoginComponent {
   }
 
   loginWithGitHub(): void {
-    this.authService.loginWithGithub().subscribe({
-      next: () => {
-        alert("Yeaaa");
-      }
-    })
+    window.location.href = `${environment.baseUrl}/auth/github/oauth`;
   }
 
   goToResetPasswordPage() {
