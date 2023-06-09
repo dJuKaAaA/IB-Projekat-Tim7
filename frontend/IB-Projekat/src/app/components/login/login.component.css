@@ -26,6 +26,7 @@
 
 .navigation-text {
     font-size: 1.25vmax;
+    margin: 15px 0;
 }
 
 .navigation-text:hover {

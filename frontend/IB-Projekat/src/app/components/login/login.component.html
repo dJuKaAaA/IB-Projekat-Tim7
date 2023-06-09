@@ -19,12 +19,15 @@
       <button style="margin-top: 10px" type="submit" class="submit-button" [disabled]="loginButtonDisabled">
         Login
       </button>
-      <p class="navigation-text" (click)="goToCreateAccount()">
+      <div class="navigation-text" (click)="loginWithGitHub()">
+        <b>Login with Github</b>
+      </div>
+      <div class="navigation-text" (click)="goToCreateAccount()">
         Create an account
-      </p>
-      <p class="navigation-text" (click)="goToResetPassword()">
+      </div>
+      <div class="navigation-text" (click)="goToResetPassword()">
         <b>Forgot password?</b>
-      </p>
+      </div>
       <ngx-recaptcha2 *ngIf="!isRecaptchaVerified" #captchaElem [siteKey]="siteKey" formControlName="recaptcha">
       </ngx-recaptcha2>
     </div>

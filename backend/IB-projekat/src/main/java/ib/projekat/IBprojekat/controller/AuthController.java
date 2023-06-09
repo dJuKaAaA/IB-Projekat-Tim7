@@ -8,18 +8,32 @@ import ib.projekat.IBprojekat.dto.response.TokenResponseDto;
 import ib.projekat.IBprojekat.dto.response.UserResponseDto;
 import ib.projekat.IBprojekat.exception.ReCaptchaException;
 import ib.projekat.IBprojekat.service.interf.IAuthService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
+import org.apache.coyote.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.Date;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -101,6 +115,16 @@ public class AuthController {
     @PostMapping("/verifyLogin")
     public ResponseEntity<TokenResponseDto> verifyLogin(@Valid @RequestBody VerifyLoginRequestDto verifyUserLoginRequestDto) {
         return new ResponseEntity<>(authService.verifyLogin(verifyUserLoginRequestDto), HttpStatus.OK);
+    }
+
+    @GetMapping("/github/oauth")
+    public void redirectToGithubLogin(HttpServletResponse response) throws IOException {
+        response.sendRedirect("/oauth2/authorization/github");
+    }
+
+    @GetMapping("/login/github")
+    public String loginFromGithub() {
+        return "Hope";
     }
 
 

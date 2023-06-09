@@ -86,6 +86,14 @@ export class LoginComponent {
       });
   }
 
+  loginWithGitHub(): void {
+    this.authService.loginWithGithub().subscribe({
+      next: () => {
+        alert("Yeaaa");
+      }
+    })
+  }
+
   goToResetPasswordPage() {
     this.router.navigate(['reset-password']);
   }
