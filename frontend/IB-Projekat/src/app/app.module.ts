@@ -13,6 +13,23 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { JwtInterceptor } from './interceptor/jwt.interceptor';
 import { DemandCreationDialogComponent } from './components/demand-creation-dialog/demand-creation-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { VerifyRegistrationComponent } from './components/verify-registration/verify-registration.component';
+import { SendVerificationCodeComponent } from './components/send-verification-code/send-verification-code.component';
+import { PasswordRecoveryStep1Component } from './components/passwordRecovery/password-recovery-step1/password-recovery-step1.component';
+import { PasswordRecoveryStep2Component } from './components/passwordRecovery/password-recovery-step2/password-recovery-step2.component';
+import { PasswordRecoveryStep3Component } from './components/passwordRecovery/password-recovery-step3/password-recovery-step3.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { ValidateCertificateDialogComponent } from './components/validate-certificate-dialog/validate-certificate-dialog.component';
+import { ValidateFromUploadComponent } from './components/validate-from-upload/validate-from-upload.component';
+import { MyCertificatesComponent } from './components/my-certificates/my-certificates.component';
+import { CertificateDemandHistoryComponent } from './components/certificate-demand-history/certificate-demand-history.component';
+import { CertificateDemandModelComponent } from './components/certificate-demand-model/certificate-demand-model.component';
+import { CertificateReviewComponent } from './components/certificate-review/certificate-review.component';
+import { DownloadCertificateComponent } from './components/download-certificate/download-certificate.component';
+import { CertificateDemandsViewComponent } from './components/certificate-demands-view/certificate-demands-view.component';
+import { PullCertificateDialogComponent } from './components/pull-certificate-dialog/pull-certificate-dialog.component';
+import { NgxCaptchaModule } from 'ngx-captcha';
+import { LoginVerificationCodeComponent } from './components/login-verification-code/login-verification-code.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +40,22 @@ import { MatDialogModule } from '@angular/material/dialog';
     CertificateModelComponent,
     NavbarComponent,
     DemandCreationDialogComponent,
+    VerifyRegistrationComponent,
+    SendVerificationCodeComponent,
+    PasswordRecoveryStep1Component,
+    PasswordRecoveryStep2Component,
+    PasswordRecoveryStep3Component,
+    ResetPasswordComponent,
+    ValidateCertificateDialogComponent,
+    ValidateFromUploadComponent,
+    MyCertificatesComponent,
+    CertificateDemandHistoryComponent,
+    CertificateDemandModelComponent,
+    CertificateReviewComponent,
+    DownloadCertificateComponent,
+    CertificateDemandsViewComponent,
+    PullCertificateDialogComponent,
+    LoginVerificationCodeComponent,
   ],
   imports: [
     BrowserModule,
@@ -30,7 +63,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    MatDialogModule
+    MatDialogModule,
+    NgxCaptchaModule,
   ],
   providers: [
     {
@@ -39,6 +73,6 @@ import { MatDialogModule } from '@angular/material/dialog';
       multi: true,
     },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

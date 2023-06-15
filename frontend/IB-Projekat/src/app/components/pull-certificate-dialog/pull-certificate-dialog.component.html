@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>Pull certificate by serial number</h2>
+<form class="pull-form">
+    <div class="form-field-container">
+        <label for="serialNumber">Serial number</label>
+        <input type="text" name="serialNumber" [(ngModel)]="serialNumber" />
+    </div>
+</form>
+<div mat-dialog-actions class="actions">
+    <button (click)="onCancelClick()">Cancel</button>
+    <button (click)="pullCertificate()">Pull</button>
+</div>

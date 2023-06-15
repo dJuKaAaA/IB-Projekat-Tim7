@@ -7,14 +7,17 @@ import ib.projekat.IBprojekat.certificate.keystore.KeyStoreWriter;
 import ib.projekat.IBprojekat.constant.CertificateDemandStatus;
 import ib.projekat.IBprojekat.constant.CertificateType;
 import ib.projekat.IBprojekat.constant.GlobalConstants;
+import ib.projekat.IBprojekat.constant.Role;
 import ib.projekat.IBprojekat.dao.CertificateDemandRepository;
 import ib.projekat.IBprojekat.dao.CertificateRepository;
 import ib.projekat.IBprojekat.dao.UserRepository;
+import ib.projekat.IBprojekat.dto.request.UploadedCertificateRequestDto;
 import ib.projekat.IBprojekat.dto.response.CertificateResponseDto;
 import ib.projekat.IBprojekat.dto.response.PaginatedResponseDto;
 import ib.projekat.IBprojekat.dto.response.UserRefResponseDto;
 import ib.projekat.IBprojekat.entity.CertificateDemandEntity;
 import ib.projekat.IBprojekat.entity.CertificateEntity;
+import ib.projekat.IBprojekat.entity.UserEntity;
 import ib.projekat.IBprojekat.exception.*;
 import ib.projekat.IBprojekat.service.interf.ICertificateService;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +25,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.security.*;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateExpiredException;
-import java.security.cert.CertificateNotYetValidException;
-import java.security.cert.X509Certificate;
+import java.security.cert.*;
+import java.util.Base64;
 import java.util.Collection;
+import java.util.Stack;
 
 @Service("CertificateService")
 @RequiredArgsConstructor
@@ -40,6 +43,7 @@ public class CertificateService implements ICertificateService {
     private final KeyStoreWriter keyStoreWriter;
     private final KeyStoreReader keyStoreReader;
     private final Base64Utility base64Utility;
+    private final GlobalConstants globalConstants;
 
     // return all certificate
     @Override
@@ -96,10 +100,10 @@ public class CertificateService implements ICertificateService {
         if (certificateDemand.getRequestedSigningCertificate() != null) {
             signerCertificateEntity = certificateDemand.getRequestedSigningCertificate();
             signerPrivateKey = keyStoreReader.readPrivateKey(
-                    GlobalConstants.jksCertificatesPath,
-                    GlobalConstants.jksPassword,
+                    globalConstants.JKS_PATH,
+                    globalConstants.jksPassword,
                     signerCertificateEntity.getSerialNumber(),
-                    GlobalConstants.jksEntriesPassword
+                    globalConstants.jksEntriesPassword
             );
 
             // end certificate cant sing another certificate
@@ -107,7 +111,7 @@ public class CertificateService implements ICertificateService {
                 throw new CannotSignCertificateException("End certificates cannot sign other certificates!");
             }
 
-            checkValidity(signerCertificateEntity.getId());
+            checkValidity(signerCertificateEntity.getSerialNumber());
 
         } else {
             // it's root certificate
@@ -124,14 +128,14 @@ public class CertificateService implements ICertificateService {
         );
 
         // save certificate to keystore
-        keyStoreWriter.loadKeyStore(GlobalConstants.jksCertificatesPath, GlobalConstants.jksPassword.toCharArray());
+        keyStoreWriter.loadKeyStore(globalConstants.JKS_PATH, globalConstants.jksPassword.toCharArray());
         keyStoreWriter.write(
                 certificate.getSerialNumber().toString(),
                 keyPair.getPrivate(),
-                GlobalConstants.jksEntriesPassword.toCharArray(),
-                certificate
+                globalConstants.jksEntriesPassword.toCharArray(),
+                new X509Certificate[]{ certificate }
         );
-        keyStoreWriter.saveKeyStore(GlobalConstants.jksCertificatesPath, GlobalConstants.jksPassword.toCharArray());
+        keyStoreWriter.saveKeyStore(globalConstants.JKS_PATH, globalConstants.jksPassword.toCharArray());
 
         // save certificate entity to database
         CertificateEntity certificateEntity = CertificateEntity.builder()
@@ -164,27 +168,30 @@ public class CertificateService implements ICertificateService {
     }
 
     @Override
-    public void checkValidity(Long id) {
+    public void checkValidity(String serialNumber) {
         // find certificate
-        CertificateEntity certificateEntity = certificateRepository.findById(id)
-                .orElseThrow(() -> new CertificateNotFoundException("Signer certificate not found!"));
+        CertificateEntity certificateEntity = certificateRepository.findBySerialNumber(serialNumber)
+                .orElseThrow(CertificateNotFoundException::new);
 
         // read certificate from key store
         X509Certificate certificate = (X509Certificate) keyStoreReader.readCertificate(
-                GlobalConstants.jksCertificatesPath,
-                GlobalConstants.jksPassword,
+                globalConstants.JKS_PATH,
+                globalConstants.jksPassword,
                 certificateEntity.getSerialNumber()
         );
 
         // read signer certificate
         X509Certificate signerCertificate = (X509Certificate) keyStoreReader.readCertificate(
-                GlobalConstants.jksCertificatesPath,
-                GlobalConstants.jksPassword,
+                globalConstants.JKS_PATH,
+                globalConstants.jksPassword,
                 certificateEntity.getSigner().getSerialNumber()
         );
 
-        // iterate trough out chain
+        // iterate through the chain
         while (certificateEntity.getType() != CertificateType.ROOT) {
+            if (certificateEntity.isPulled()) {
+                throw new InvalidCertificateException("This certificate (or the one in it's chain) has been pulled by it's owner (or the admin)!");
+            }
 
             try {
                 certificate.checkValidity();
@@ -202,13 +209,13 @@ public class CertificateService implements ICertificateService {
             // load new certificate from chain
             certificateEntity = certificateEntity.getSigner();
             certificate = (X509Certificate) keyStoreReader.readCertificate(
-                    GlobalConstants.jksCertificatesPath,
-                    GlobalConstants.jksPassword,
+                    globalConstants.JKS_PATH,
+                    globalConstants.jksPassword,
                     certificateEntity.getSerialNumber()
             );
             signerCertificate = (X509Certificate) keyStoreReader.readCertificate(
-                    GlobalConstants.jksCertificatesPath,
-                    GlobalConstants.jksPassword,
+                    globalConstants.JKS_PATH,
+                    globalConstants.jksPassword,
                     certificateEntity.getSigner().getSerialNumber()
             );
         }
@@ -227,6 +234,137 @@ public class CertificateService implements ICertificateService {
             throw new SignatureIntegrityException();
         }
 
+    }
+
+    @Override
+    public void checkValidityFromUploadedCertificate(UploadedCertificateRequestDto uploadedCertificateRequest) {
+        byte[] certBytes = Base64.getDecoder().decode(uploadedCertificateRequest.getBase64Certificate());
+
+        try {
+            CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
+            X509Certificate cert = (X509Certificate) certFactory.generateCertificate(new ByteArrayInputStream(certBytes));
+
+            checkValidity(cert);
+        } catch (CertificateException e) {
+            throw new InvalidCertificateException(e.getMessage());
+        }
+    }
+
+    private void checkValidity(X509Certificate certificate) {
+        // find certificate
+        CertificateEntity certificateEntity = certificateRepository
+                .findBySerialNumber(String.valueOf(certificate.getSerialNumber()))
+                .orElseThrow(CertificateNotFoundException::new);
+
+        // read signer certificate
+        X509Certificate signerCertificate = (X509Certificate) keyStoreReader.readCertificate(
+                globalConstants.JKS_PATH,
+                globalConstants.jksPassword,
+                certificateEntity.getSigner().getSerialNumber()
+        );
+
+        // iterate through the chain
+        while (certificateEntity.getType() != CertificateType.ROOT) {
+
+            try {
+                certificate.checkValidity();
+            } catch (CertificateExpiredException | CertificateNotYetValidException e) {
+                throw new InvalidCertificateException("Certificate is expired or is not yet valid!");
+            }
+
+            try {
+                certificate.verify(signerCertificate.getPublicKey());
+            } catch (CertificateException | NoSuchAlgorithmException | InvalidKeyException | NoSuchProviderException |
+                     SignatureException e) {
+                throw new SignatureIntegrityException();
+            }
+
+            // load new certificate from chain
+            certificateEntity = certificateEntity.getSigner();
+            certificate = (X509Certificate) keyStoreReader.readCertificate(
+                    globalConstants.JKS_PATH,
+                    globalConstants.jksPassword,
+                    certificateEntity.getSerialNumber()
+            );
+            signerCertificate = (X509Certificate) keyStoreReader.readCertificate(
+                    globalConstants.JKS_PATH,
+                    globalConstants.jksPassword,
+                    certificateEntity.getSigner().getSerialNumber()
+            );
+        }
+
+        // root validation and verification
+        if (certificateEntity.isPulled()) {
+            throw new InvalidCertificateException("This certificate (or the one in it's chain) has been pulled by the owner!");
+        }
+
+        try {
+            certificate.checkValidity();
+        } catch (CertificateExpiredException | CertificateNotYetValidException e) {
+            throw new InvalidCertificateException("Certificate is expired or is not yet valid!");
+        }
+
+        try {
+            certificate.verify(signerCertificate.getPublicKey());
+        } catch (CertificateException | NoSuchAlgorithmException | InvalidKeyException | NoSuchProviderException |
+                 SignatureException e) {
+            throw new SignatureIntegrityException();
+        }
+
+    }
+
+    @Override
+    public void pullCertificate(String serialNumber, String userEmail) {
+        UserEntity userEntity = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+
+        CertificateEntity certificateEntity = certificateRepository.findBySerialNumber(serialNumber)
+                .orElseThrow(CertificateNotFoundException::new);
+
+        if (userEntity.getRole() != Role.ADMIN && userEntity.getId() != certificateEntity.getIssuedTo().getId()) {
+            throw new InvalidCertificateOwnerException(
+                    "User with username %s is not the owner of the requested certificate!"
+                            .formatted(userEntity.getEmail()));
+        }
+
+        if (certificateEntity.getType() == CertificateType.ROOT) {
+            throw new CertificatePullException("Cannot pull ROOT certificates!");
+        }
+
+        if (certificateEntity.isPulled()) {
+            throw new CertificatePullException("Certificate is already pulled!");
+        }
+
+        Stack<CertificateEntity> certificateStack = new Stack<>();
+        certificateStack.push(certificateEntity);
+        while (!certificateStack.empty()) {
+            certificateEntity = certificateStack.pop();
+            certificateEntity.setPulled(true);
+            certificateRepository.save(certificateEntity);
+
+            Collection<CertificateEntity> childCertificates = certificateRepository.findBySignerId(certificateEntity.getId());
+            for (CertificateEntity childCertificate : childCertificates) {
+                if (!childCertificate.isPulled()) {
+                    certificateStack.push(childCertificate);
+                }
+            }
+        }
+    }
+
+    @Override
+    public byte[] prepareCertificateForDownload(String serialNumber) {
+        certificateRepository.findBySerialNumber(serialNumber).orElseThrow(CertificateNotFoundException::new);
+        X509Certificate certificate = (X509Certificate) keyStoreReader.readCertificate(
+                globalConstants.JKS_PATH,
+                globalConstants.jksPassword,
+                serialNumber
+        );
+        try {
+            return certificate.getEncoded();
+        } catch (CertificateException e) {
+            new RuntimeException(e);
+        }
+
+        return null;
     }
 
     private CertificateResponseDto convertToDto(CertificateEntity certificateEntity) {
@@ -248,6 +386,7 @@ public class CertificateService implements ICertificateService {
                 .endDate(certificateEntity.getEndDate().toString())
                 .publicKey(certificateEntity.getPublicKey().toString())
                 .signature(base64Utility.encode(certificateEntity.getSignature()))
+                .isPulled(certificateEntity.isPulled())
                 .build();
     }
 

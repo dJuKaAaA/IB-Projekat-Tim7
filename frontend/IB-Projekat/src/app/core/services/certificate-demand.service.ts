@@ -23,8 +23,20 @@ export class CertificateDemandService {
     return this.httpClient.get<PaginatedResponse<CertificateDemandResponse>>(`${environment.baseUrl}/certificate-demand/by-requester/${requesterId}?page=${page}&size=${size}`)
   }
 
-  public reject(id: number): Observable<CertificateDemandResponse> {
-    return this.httpClient.put<CertificateDemandResponse>(`${environment.baseUrl}/${id}/reject`, {});
+  public getByRequesterIdPending(requesterId: number, page: number, size: number): Observable<PaginatedResponse<CertificateDemandResponse>> {
+    return this.httpClient.get<PaginatedResponse<CertificateDemandResponse>>(`${environment.baseUrl}/certificate-demand/by-requester/pending/${requesterId}?page=${page}&size=${size}`)
   }
 
+  public reject(id: number): Observable<CertificateDemandResponse> {
+    return this.httpClient.put<CertificateDemandResponse>(`${environment.baseUrl}/certificate-demand/${id}/reject`, {});
+  }
+
+  public accept(id:number):Observable<CertificateDemandResponse>{
+    return this.httpClient.put<CertificateDemandResponse>(`${environment.baseUrl}/certificate-demand/${id}/accept`, {});
+  }
+
+  public getAll(requesterId: number, page: number, size: number): Observable<PaginatedResponse<CertificateDemandResponse>>{
+    return this.httpClient.get<PaginatedResponse<CertificateDemandResponse>>(`${environment.baseUrl}/certificate-demand/${requesterId}?page=${page}&size=${size}`)
+    
+  }
 }

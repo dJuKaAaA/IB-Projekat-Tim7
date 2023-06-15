@@ -52,6 +52,9 @@ public class CertificateDemandService implements ICertificateDemandService {
         } else {
             requestedSigningCertificate = certificateRepository.findById(certificateDemandRequest.getRequestedSigningCertificateId())
                     .orElseThrow(() -> new CertificateNotFoundException("Requested signing certificate not found!"));
+            if (requestedSigningCertificate.isPulled()) {
+                throw new CertificatePullException("Cannot make a demand with a pulled certificate as the signer!");
+            }
             requestedIssuer = requestedSigningCertificate.getIssuedTo();
         }
 
@@ -97,10 +100,57 @@ public class CertificateDemandService implements ICertificateDemandService {
     }
 
     @Override
+    public CertificateDemandResponseDto accept(Long id){
+        CertificateDemandEntity certificateDemand = certificateDemandRepository.findById(id)
+                .orElseThrow(CertificateDemandNotFoundException::new);
+        if (certificateDemand.getStatus() != CertificateDemandStatus.PENDING) {
+            throw new CertificateDemandException("Cannot reject certificate demands that are not pending!");
+        }
+
+        certificateService.create(id);
+
+        return convertToDto(certificateDemand);
+    }
+
+    @Override
     public PaginatedResponseDto<CertificateDemandResponseDto> getByRequesterId(Long requesterId, Pageable pageable) {
         userRepository.findById(requesterId).orElseThrow(UserNotFoundException::new);
 
         Page<CertificateDemandEntity> certificateDemandsPage = certificateDemandRepository.findByRequesterId(requesterId, pageable);
+
+        Collection<CertificateDemandResponseDto> certificateDemands = certificateDemandsPage.getContent().stream()
+                .map(this::convertToDto)
+                .toList();
+
+        return new PaginatedResponseDto<>(
+                certificateDemandsPage.getPageable().getPageNumber(),
+                certificateDemands.size(),
+                certificateDemands
+        );
+    }
+
+    @Override
+    public PaginatedResponseDto<CertificateDemandResponseDto> getByRequesterIdPending(Long requesterId, Pageable pageable) {
+        userRepository.findById(requesterId).orElseThrow(UserNotFoundException::new);
+
+        Page<CertificateDemandEntity> certificateDemandsPage = certificateDemandRepository.findPendingByRequestedIssuer(requesterId, pageable);
+
+        Collection<CertificateDemandResponseDto> certificateDemands = certificateDemandsPage.getContent().stream()
+                .map(this::convertToDto)
+                .toList();
+
+        return new PaginatedResponseDto<>(
+                certificateDemandsPage.getPageable().getPageNumber(),
+                certificateDemands.size(),
+                certificateDemands
+        );
+    }
+
+    @Override
+    public PaginatedResponseDto<CertificateDemandResponseDto> getAll(Long requesterId, Pageable pageable) {
+        userRepository.findById(requesterId).orElseThrow(UserNotFoundException::new);
+
+        Page<CertificateDemandEntity> certificateDemandsPage = certificateDemandRepository.findAll(pageable);
 
         Collection<CertificateDemandResponseDto> certificateDemands = certificateDemandsPage.getContent().stream()
                 .map(this::convertToDto)

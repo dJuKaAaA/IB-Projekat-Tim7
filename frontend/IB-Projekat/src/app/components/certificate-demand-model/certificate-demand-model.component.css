@@ -1,0 +1,62 @@
+.certificate-model {
+    border: 1px solid black;
+    padding: 20px 30px;
+    width: 90%;
+    border-radius: 20px;
+}
+
+.certificate-model:hover {
+    cursor: pointer;
+}
+
+.certificate-model div h3 {
+    text-align: left;
+}
+
+.certificate-content {
+    width: 80%;
+    display: grid;
+    grid-template-columns: 35% 65%;
+}
+
+.content-label {
+
+}
+
+.show-more-button {
+    font-size: large;
+}
+
+.show-more-button:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.gray{
+    border-color: rgb(180, 180, 180);
+    border-width: 4px;
+}
+
+.red{
+    border-color: rgb(211, 7, 7);
+    border-width: 4px;
+}
+
+.green{
+    border-color: rgb(8, 142, 8);
+    border-width: 4px;
+}
+#buttons-area{
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+#accept{
+    border: 1px black solid;
+    display: inline-block;
+}
+
+#decline{
+    border: 1px black solid;
+    display: inline-block;
+}

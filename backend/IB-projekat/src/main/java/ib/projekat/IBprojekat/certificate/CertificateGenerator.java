@@ -1,6 +1,5 @@
 package ib.projekat.IBprojekat.certificate;
 
-import ib.projekat.IBprojekat.certificate.keystore.KeyStoreReader;
 import ib.projekat.IBprojekat.certificate.model.IssuerData;
 import ib.projekat.IBprojekat.certificate.model.SubjectData;
 import ib.projekat.IBprojekat.constant.GlobalConstants;
@@ -9,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.asn1.x509.BasicConstraints;
+import org.bouncycastle.asn1.x509.Extension;
+import org.bouncycastle.cert.CertIOException;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
@@ -23,20 +25,20 @@ import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
 public class CertificateGenerator {
 
-    // privatinim kljucem potpisujemo
+    private final GlobalConstants globalConstants;
+
+    // privatnim kljucem potpisujemo
     public X509Certificate generateCertificate(UserEntity requester, UserEntity requestedIssuer, PublicKey subjectPublicKey, PrivateKey issuerPrivateKey) {
         try {
-
             JcaContentSignerBuilder builder = new JcaContentSignerBuilder("SHA256WithRSAEncryption");
 
             Date validityStartDate = new Date(System.currentTimeMillis());
-            Date expirationDate = new Date(System.currentTimeMillis() + GlobalConstants.oneYearInMillis);
+            Date expirationDate = new Date(System.currentTimeMillis() + globalConstants.ONE_YEAR_IN_MILLIS);
             SubjectData subjectData = generateSubjectData(
                     requester,
                     validityStartDate,
@@ -52,11 +54,17 @@ public class CertificateGenerator {
 
             X509v3CertificateBuilder certGen = new JcaX509v3CertificateBuilder(
                     issuerData.getX500name(),
-                    new BigInteger(subjectData.getSerialNumber()),
+                    subjectData.getSerialNumber(),
                     subjectData.getStartDate(),
                     subjectData.getEndDate(),
                     subjectData.getX500name(),
                     subjectData.getPublicKey());
+
+            certGen.addExtension(
+                    Extension.basicConstraints,
+                    true,
+                    new BasicConstraints(true)
+            );
 
             X509CertificateHolder certHolder = certGen.build(contentSigner);
 
@@ -67,6 +75,8 @@ public class CertificateGenerator {
         } catch (IllegalArgumentException | IllegalStateException | OperatorCreationException |
                  CertificateException e) {
             e.printStackTrace();
+        } catch (CertIOException e) {
+            throw new RuntimeException(e);
         }
         return null;
     }
@@ -77,7 +87,7 @@ public class CertificateGenerator {
 
     private SubjectData generateSubjectData(UserEntity user, Date startDate, Date endDate, PublicKey publicKey) {
         // generating the serial number for the certificate
-        String serialNumber = String.valueOf(new Random().nextLong());
+        BigInteger serialNumber = new java.math.BigInteger(32, new java.security.SecureRandom());
 
         return new SubjectData(publicKey, buildX500Name(user), serialNumber, startDate, endDate);
     }

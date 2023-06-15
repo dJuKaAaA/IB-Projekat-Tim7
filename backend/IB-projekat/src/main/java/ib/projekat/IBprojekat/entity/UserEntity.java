@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.security.PublicKey;
+import java.util.Date;
 
 @Entity
 @Table(name = "users")
@@ -28,5 +28,6 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
     private boolean enabled;
+    private Date dateForChangePassword;
 
 }

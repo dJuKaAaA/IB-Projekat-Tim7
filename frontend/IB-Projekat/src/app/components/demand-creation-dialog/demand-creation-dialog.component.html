@@ -9,6 +9,7 @@
             <div class="form-field-container">
                 <label>Select certificate type</label>
                 <select [(ngModel)]="certificateType" name="certificate-type">
+                    <option value="ROOT">ROOT</option>
                     <option value="INTERMEDIATE">INTERMEDIATE</option>
                     <option value="END">END</option>
                 </select>
@@ -16,7 +17,7 @@
         </form>
     </div>
     <div mat-dialog-actions class="actions">
-        <button mat-button (click)="onCancelClick()">Cancel</button>
-        <button mat-button color="primary" (click)="onSaveClick()">Save</button>
+        <button (click)="onCancelClick()">Cancel</button>
+        <button (click)="onSaveClick()">Save</button>
     </div>
 </div>

@@ -34,5 +34,6 @@ public class CertificateEntity {
     private Date endDate;
     private PublicKey publicKey;
     private byte[] signature;
+    private boolean isPulled;
 
 }

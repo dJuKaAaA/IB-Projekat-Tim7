@@ -1,6 +1,7 @@
 export interface UserRequest {
-    name: string,
-    surname: string,
-    email: string,
-    password: string
+  name: string;
+  surname: string;
+  email: string;
+  password: string;
+  phoneNumber: string;
 }

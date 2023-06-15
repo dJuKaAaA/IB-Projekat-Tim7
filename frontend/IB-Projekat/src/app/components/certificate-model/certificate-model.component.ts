@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { CertificateResponse } from 'src/app/core/models/certificate-response.model';
 
 @Component({
@@ -6,11 +7,27 @@ import { CertificateResponse } from 'src/app/core/models/certificate-response.mo
   templateUrl: './certificate-model.component.html',
   styleUrls: ['./certificate-model.component.css']
 })
-export class CertificateModelComponent {
+export class CertificateModelComponent implements AfterViewInit {
 
   @Input() certificate: CertificateResponse = {} as CertificateResponse;
 
   @Output() emitter: EventEmitter<CertificateResponse> = new EventEmitter();
+
+  @ViewChild('certificateModel') certificateModel: ElementRef;
+
+  constructor(
+    private renderer: Renderer2,
+  ) {}
+
+  ngAfterViewInit(): void {
+    if (this.certificate.isPulled) {
+      this.renderer.setStyle(
+        this.certificateModel.nativeElement,
+        'background-color',
+        'rgb(235, 142, 142)'
+      );
+    }
+  }
 
   allDataVisible: boolean = false;
   showDataLabel: string = "Show more..."

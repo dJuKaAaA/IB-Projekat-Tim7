@@ -1,6 +1,13 @@
 <nav>
-    <a>View all</a>
-    <a>Demand history</a>
-    <a>Evaluate demands</a>
+    <a (click)="openAllCertificates()">View all</a>
+    <a *ngIf="authService.getRole() == 'ADMIN'" (click)="openAllDemands()">View all demands</a>
+    <a (click)="openMyCertificates()">My certificates</a>
+    <a (click)="openDemandHistory()">My demand history</a>
+    <a (click)="openEvaluateDemands()">Evaluate demands</a>
+    <a (click)="openValidationDialog()">Validate</a>
+    <a (click)="openDownloadDialog()">Download</a>
+    <a  *ngIf="authService.getRole() == 'ADMIN'" (click)="openPullDialog()">Pull</a>
+    <a (click)="validateFromUpload()">Validate from upload</a>
+    <a (click)="openResetPassword()">Reset password</a>
     <a (click)="logout()">Logout</a>
 </nav>

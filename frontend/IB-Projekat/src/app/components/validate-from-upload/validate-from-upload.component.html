@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>Upload and validate a certificate</h2>
+<form class="upload-validation-form">
+    <div class="form-field-container">
+        <label for="certPath">Certificate path</label>
+        <input type="file" accept=".crt" name="certPath" [(ngModel)]="certPath" (change)="onFileSelected($event)"/>
+    </div>
+</form>
+<div mat-dialog-actions class="actions">
+    <button (click)="onCancelClick()">Cancel</button>
+    <button (click)="validate()">Validate</button>
+</div>
