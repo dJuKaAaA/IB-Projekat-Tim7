@@ -84,7 +84,7 @@
 2023-06-15 17:02:26,430 INFO [https-jsse-nio-8081-exec-5] name: Ivan Djukanovic
 2023-06-15 17:02:26,431 ERROR [https-jsse-nio-8081-exec-5] Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception
 java.lang.NullPointerException: Cannot invoke "Object.toString()" because the return value of "java.util.Map.get(Object)" is null
-	at ib.projekat.IBprojekat.config.CustomAuthenticationSuccessHandler.onAuthenticationSuccess(GitHubAuthenticationSuccessHandler.java:37)
+	at ib.projekat.IBprojekat.config.oauthstuff.CustomAuthenticationSuccessHandler.onAuthenticationSuccess(GitHubAuthenticationSuccessHandler.java:37)
 	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.successfulAuthentication(AbstractAuthenticationProcessingFilter.java:333)
 	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:241)
 	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:221)
@@ -161,7 +161,7 @@ java.lang.NullPointerException: Cannot invoke "Object.toString()" because the re
 2023-06-15 17:02:32,008 INFO [https-jsse-nio-8081-exec-2] name: Ivan Djukanovic
 2023-06-15 17:02:32,008 ERROR [https-jsse-nio-8081-exec-2] Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception
 java.lang.NullPointerException: Cannot invoke "Object.toString()" because the return value of "java.util.Map.get(Object)" is null
-	at ib.projekat.IBprojekat.config.CustomAuthenticationSuccessHandler.onAuthenticationSuccess(GitHubAuthenticationSuccessHandler.java:37)
+	at ib.projekat.IBprojekat.config.oauthstuff.CustomAuthenticationSuccessHandler.onAuthenticationSuccess(GitHubAuthenticationSuccessHandler.java:37)
 	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.successfulAuthentication(AbstractAuthenticationProcessingFilter.java:333)
 	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:241)
 	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:221)

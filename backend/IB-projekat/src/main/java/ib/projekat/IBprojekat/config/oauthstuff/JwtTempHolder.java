@@ -1,4 +1,4 @@
-package ib.projekat.IBprojekat.config;
+package ib.projekat.IBprojekat.config.oauthstuff;
 
 import lombok.Getter;
 import lombok.Setter;

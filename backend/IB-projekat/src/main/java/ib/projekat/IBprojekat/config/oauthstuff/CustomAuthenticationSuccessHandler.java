@@ -1,22 +1,18 @@
-package ib.projekat.IBprojekat.config;
+package ib.projekat.IBprojekat.config.oauthstuff;
 
 import ib.projekat.IBprojekat.constant.GlobalConstants;
 import ib.projekat.IBprojekat.constant.Role;
 import ib.projekat.IBprojekat.dao.UserRepository;
-import ib.projekat.IBprojekat.dto.request.UserRequestDto;
 import ib.projekat.IBprojekat.entity.UserEntity;
 import ib.projekat.IBprojekat.websecurity.JwtService;
 import ib.projekat.IBprojekat.websecurity.UserDetailsImpl;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;

@@ -73,3 +73,8 @@
 2023-06-15 22:43:32,258 INFO [https-jsse-nio-8081-exec-8] Successfully fetched all certificates
 2023-06-15 22:47:11,360 INFO [https-jsse-nio-8081-exec-3] OAuth radi nekim cudom
 2023-06-15 22:47:11,667 INFO [https-jsse-nio-8081-exec-3] Started fetching all certificates
+2023-06-15 22:47:11,671 INFO [https-jsse-nio-8081-exec-3] Successfully fetched all certificates
+2023-06-15 22:50:36,904 INFO [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-06-15 22:50:36,904 INFO [SpringApplicationShutdownHook] HHH000477: Starting delayed evictData of schema as part of SessionFactory shut-down'
+2023-06-15 22:50:36,918 INFO [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2023-06-15 22:50:36,920 INFO [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.

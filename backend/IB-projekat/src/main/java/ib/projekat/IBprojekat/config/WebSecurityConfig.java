@@ -1,5 +1,6 @@
 package ib.projekat.IBprojekat.config;
 
+import ib.projekat.IBprojekat.config.oauthstuff.CustomAuthenticationSuccessHandler;
 import ib.projekat.IBprojekat.websecurity.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
