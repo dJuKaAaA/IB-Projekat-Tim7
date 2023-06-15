@@ -139,4 +139,8 @@ export class AuthService {
   public isLoggedIn(): boolean {
     return localStorage.getItem('jwt') != null;
   }
+
+  public loginWithGoogle(): Observable<TokenResponse> {
+    return this.httpClient.post<TokenResponse>(`${environment.baseUrl}/auth/google/login`, {});
+  }
 }

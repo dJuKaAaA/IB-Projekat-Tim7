@@ -1,5 +1,6 @@
 package ib.projekat.IBprojekat.service.impl;
 
+import ib.projekat.IBprojekat.config.JwtTempHolder;
 import ib.projekat.IBprojekat.constant.GlobalConstants;
 import ib.projekat.IBprojekat.constant.Role;
 import ib.projekat.IBprojekat.constant.VerificationCodeType;
@@ -18,6 +19,7 @@ import ib.projekat.IBprojekat.exception.*;
 import ib.projekat.IBprojekat.service.interf.IAuthService;
 import ib.projekat.IBprojekat.websecurity.JwtService;
 import ib.projekat.IBprojekat.websecurity.UserDetailsImpl;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,11 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +51,7 @@ public class AuthService implements IAuthService {
     private final VerificationCodeService verificationCodeService;
     private final PasswordHistoryRepository passwordHistoryRepository;
     private final GlobalConstants globalConstants;
+    private final JwtTempHolder jwtTempHolder;
     private final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
     @Override
@@ -268,6 +276,16 @@ public class AuthService implements IAuthService {
         userRepository.save(user);
 
         logger.info("Successfully reset password");
+    }
+
+    @Override
+    public TokenResponseDto loginWithGoogle() {
+        TokenResponseDto tokenResponse = TokenResponseDto.builder()
+                .token(jwtTempHolder.getJwt())
+                .build();
+        jwtTempHolder.setJwt(null);
+        logger.info("Successfully logged in with google OAuth");
+        return tokenResponse;
     }
 
     private UserEntity getUserByVerificationCodeRequest(VerifyVerificationCodeRequestDto verifyVerificationCodeRequestDto) {

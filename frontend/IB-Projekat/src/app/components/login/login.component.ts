@@ -86,8 +86,12 @@ export class LoginComponent {
       });
   }
 
-  loginWithGitHub(): void {
-    window.location.href = `${environment.baseUrl}/auth/github/oauth`;
+  // loginWithGitHub(): void {
+  //   window.location.href = `${environment.baseUrl}/auth/github/oauth`;
+  // }
+
+  loginWithGoogle(): void {
+    window.location.href = `${environment.baseUrl}/auth/google/oauth`;
   }
 
   goToResetPasswordPage() {

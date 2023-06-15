@@ -30,6 +30,7 @@ import { CertificateDemandsViewComponent } from './components/certificate-demand
 import { RetractCertificateDialogComponent } from './components/retract-certificate-dialog/retract-certificate-dialog.component';
 import { NgxCaptchaModule } from 'ngx-captcha';
 import { LoginVerificationCodeComponent } from './components/login-verification-code/login-verification-code.component';
+import { OAuthLoginComponent } from './components/oauth-login/oauth-login.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { LoginVerificationCodeComponent } from './components/login-verification-
     CertificateDemandsViewComponent,
     RetractCertificateDialogComponent,
     LoginVerificationCodeComponent,
+    OAuthLoginComponent,
   ],
   imports: [
     BrowserModule,

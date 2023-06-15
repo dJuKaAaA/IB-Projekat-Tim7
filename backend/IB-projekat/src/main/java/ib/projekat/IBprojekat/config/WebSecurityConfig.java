@@ -18,6 +18,7 @@ public class WebSecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
+    private final CustomAuthenticationSuccessHandler successHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -32,7 +33,7 @@ public class WebSecurityConfig {
                 .and()
                 .oauth2Client()
                 .and()
-                .oauth2Login().defaultSuccessUrl("/api/v1/auth/login/github")
+                .oauth2Login().successHandler(successHandler)
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

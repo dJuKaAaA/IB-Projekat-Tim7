@@ -1,5 +1,7 @@
 package ib.projekat.IBprojekat.controller;
 
+import com.nimbusds.oauth2.sdk.OAuth2Error;
+import com.nimbusds.oauth2.sdk.auth.JWTAuthentication;
 import ib.projekat.IBprojekat.constant.GlobalConstants;
 import ib.projekat.IBprojekat.constant.VerificationCodeType;
 import ib.projekat.IBprojekat.dto.request.*;
@@ -7,6 +9,7 @@ import ib.projekat.IBprojekat.dto.response.ReCaptchaResponse;
 import ib.projekat.IBprojekat.dto.response.TokenResponseDto;
 import ib.projekat.IBprojekat.dto.response.UserResponseDto;
 import ib.projekat.IBprojekat.exception.ReCaptchaException;
+import ib.projekat.IBprojekat.exception.UserNotFoundException;
 import ib.projekat.IBprojekat.service.interf.IAuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,11 +26,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -90,7 +97,6 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Code successfully verified!");
     }
 
-
     @PostMapping("/verifyRegistration")
     public ResponseEntity<UserResponseDto> verifyRegistration(@Valid @RequestBody VerifyVerificationCodeRequestDto registrationVerification) {
         return new ResponseEntity<>(authService.verifyRegistration(registrationVerification), HttpStatus.OK);
@@ -104,7 +110,6 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Password successfully changed!");
     }
 
-
     @PostMapping("/resetPassword")
     public ResponseEntity resetPassword(@Valid @RequestBody PasswordResetRequest passwordResetRequest) {
         Date passwordExpirationDate = new Date(System.currentTimeMillis() + globalConstants.PASSWORD_VALIDATION_IN_MILLIS);
@@ -117,17 +122,19 @@ public class AuthController {
         return new ResponseEntity<>(authService.verifyLogin(verifyUserLoginRequestDto), HttpStatus.OK);
     }
 
-    @GetMapping("/github/oauth")
-    public void redirectToGithubLogin(HttpServletResponse response) throws IOException {
-        response.sendRedirect("/oauth2/authorization/github");
+//    @GetMapping("/github/oauth")
+//    public void redirectToGithubLogin(HttpServletResponse response) throws IOException {
+//        response.sendRedirect("/oauth2/authorization/github");
+//    }
+
+    @GetMapping("/google/oauth")
+    public void redirectToGoogleLogin(HttpServletResponse response) throws IOException {
+        response.sendRedirect("/oauth2/authorization/google");
     }
 
-    @GetMapping("/login/github")
-    public String loginFromGithub(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        OAuth2AuthenticationToken authentication = (OAuth2AuthenticationToken) session.getAttribute("oauthToken");
-        return "Is authentication null: %s".formatted(authentication == null);
+    @PostMapping("/google/login")
+    public ResponseEntity<TokenResponseDto> loginWithGoogle() {
+        return new ResponseEntity<>(authService.loginWithGoogle(), HttpStatus.OK);
     }
-
 
 }
