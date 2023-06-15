@@ -8,17 +8,17 @@
     padding: 5vh 5vw;
   }
   
-  .pull-form>div {
+  .retract-form>div {
     width: 100%;
     margin: 5vh auto;
     display: block;
   }
   
-  .pull-form input {
+  .retract-form input {
     margin-top: 1vh;
   }
   
-  .pull-form select {
+  .retract-form select {
     margin-top: 1vh;
   }
   

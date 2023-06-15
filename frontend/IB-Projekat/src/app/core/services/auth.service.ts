@@ -17,7 +17,11 @@ import { VerifyLoginRequest } from '../models/verify-login-request.model';
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) { }
+
+  public loginWithGithub() {
+    return this.httpClient.get(`${environment.baseUrl}/auth/github/oauth`);
+  }
 
   public sendVerificationCode(verificationTarget: VerificationTarget) {
     return this.httpClient.post(
@@ -134,5 +138,9 @@ export class AuthService {
 
   public isLoggedIn(): boolean {
     return localStorage.getItem('jwt') != null;
+  }
+
+  public loginWithGoogle(): Observable<TokenResponse> {
+    return this.httpClient.post<TokenResponse>(`${environment.baseUrl}/auth/google/login`, {});
   }
 }

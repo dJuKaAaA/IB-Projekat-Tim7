@@ -1,5 +1,6 @@
 package ib.projekat.IBprojekat.config;
 
+import ib.projekat.IBprojekat.config.oauthstuff.CustomAuthenticationSuccessHandler;
 import ib.projekat.IBprojekat.websecurity.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +19,7 @@ public class WebSecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
+    private final CustomAuthenticationSuccessHandler successHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -29,6 +31,10 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .anyRequest().authenticated()
+                .and()
+                .oauth2Client()
+                .and()
+                .oauth2Login().successHandler(successHandler)
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

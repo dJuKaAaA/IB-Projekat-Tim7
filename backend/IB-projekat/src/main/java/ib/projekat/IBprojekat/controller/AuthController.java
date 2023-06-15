@@ -1,5 +1,7 @@
 package ib.projekat.IBprojekat.controller;
 
+import com.nimbusds.oauth2.sdk.OAuth2Error;
+import com.nimbusds.oauth2.sdk.auth.JWTAuthentication;
 import ib.projekat.IBprojekat.constant.GlobalConstants;
 import ib.projekat.IBprojekat.constant.VerificationCodeType;
 import ib.projekat.IBprojekat.dto.request.*;
@@ -7,17 +9,38 @@ import ib.projekat.IBprojekat.dto.response.ReCaptchaResponse;
 import ib.projekat.IBprojekat.dto.response.TokenResponseDto;
 import ib.projekat.IBprojekat.dto.response.UserResponseDto;
 import ib.projekat.IBprojekat.exception.ReCaptchaException;
+import ib.projekat.IBprojekat.exception.UserNotFoundException;
 import ib.projekat.IBprojekat.service.interf.IAuthService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
+import org.apache.coyote.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.Date;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -26,14 +49,13 @@ public class AuthController {
 
     private final IAuthService authService;
     private final GlobalConstants globalConstants;
-    @Autowired
-    RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
+    private final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @PostMapping("/login/{verificationCodeType}/")
     public ResponseEntity<UserResponseDto> login(@Valid @RequestBody LoginRequestDto loginRequest,
                                                  @PathVariable String verificationCodeType,
                                                  @RequestParam("g-recaptcha-response") String captchaResponse) {
-
 
         String params = "?secret=" + globalConstants.GOOGLE_RECAPTCHA_SECRET_KEY + "&response=" + captchaResponse;
         ReCaptchaResponse reCaptchaResponse = restTemplate.exchange(globalConstants.GOOGLE_RECAPTCHA_VERIFICATION_URL + params, HttpMethod.POST, null,
@@ -43,9 +65,9 @@ public class AuthController {
             VerificationCodeType convertedVerificationCodeType = VerificationCodeType.valueOf(verificationCodeType.toUpperCase());
             return new ResponseEntity<>(authService.login(loginRequest, convertedVerificationCodeType), HttpStatus.OK);
         } else {
+            logger.error("Recaptcha not ticked");
             throw new ReCaptchaException();
         }
-
     }
 
     @PostMapping("/create-account/{verificationCodeType}")
@@ -75,7 +97,6 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Code successfully verified!");
     }
 
-
     @PostMapping("/verifyRegistration")
     public ResponseEntity<UserResponseDto> verifyRegistration(@Valid @RequestBody VerifyVerificationCodeRequestDto registrationVerification) {
         return new ResponseEntity<>(authService.verifyRegistration(registrationVerification), HttpStatus.OK);
@@ -89,7 +110,6 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Password successfully changed!");
     }
 
-
     @PostMapping("/resetPassword")
     public ResponseEntity resetPassword(@Valid @RequestBody PasswordResetRequest passwordResetRequest) {
         Date passwordExpirationDate = new Date(System.currentTimeMillis() + globalConstants.PASSWORD_VALIDATION_IN_MILLIS);
@@ -102,5 +122,19 @@ public class AuthController {
         return new ResponseEntity<>(authService.verifyLogin(verifyUserLoginRequestDto), HttpStatus.OK);
     }
 
+//    @GetMapping("/github/oauth")
+//    public void redirectToGithubLogin(HttpServletResponse response) throws IOException {
+//        response.sendRedirect("/oauth2/authorization/github");
+//    }
+
+    @GetMapping("/google/oauth")
+    public void redirectToGoogleLogin(HttpServletResponse response) throws IOException {
+        response.sendRedirect("/oauth2/authorization/google");
+    }
+
+    @PostMapping("/google/login")
+    public ResponseEntity<TokenResponseDto> loginWithGoogle() {
+        return new ResponseEntity<>(authService.loginWithGoogle(), HttpStatus.OK);
+    }
 
 }

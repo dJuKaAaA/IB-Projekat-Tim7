@@ -31,7 +31,7 @@ export class MyCertificatesComponent {
       return;
     }
     if (confirm(`Are you sure you want to pull the certificate with serial number: "${certificate.serialNumber}"?`)) {
-      this.certificateService.pull(certificate.serialNumber).subscribe({
+      this.certificateService.retract(certificate.serialNumber).subscribe({
         next: () => {
           alert("Certificate, and the ones in it's downward chain, have been pulled successfully!")
         }, error: (error) => {

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 @Data
 @NoArgsConstructor
@@ -21,6 +22,7 @@ public class CertificateDemandRequestDto {
     @NotNull(message = "Requester id not provided!")
     private Long requesterId;
     @NotBlank(message = "Reason not provided")
+    @Length(max = 300, message = "Reason cannot have more than 300 characters!")
     private String reason;
 
 }

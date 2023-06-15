@@ -1,5 +1,6 @@
 package ib.projekat.IBprojekat.service.impl;
 
+import ib.projekat.IBprojekat.config.oauthstuff.JwtTempHolder;
 import ib.projekat.IBprojekat.constant.GlobalConstants;
 import ib.projekat.IBprojekat.constant.Role;
 import ib.projekat.IBprojekat.constant.VerificationCodeType;
@@ -19,6 +20,8 @@ import ib.projekat.IBprojekat.service.interf.IAuthService;
 import ib.projekat.IBprojekat.websecurity.JwtService;
 import ib.projekat.IBprojekat.websecurity.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,11 +45,12 @@ public class AuthService implements IAuthService {
     private final VerificationCodeService verificationCodeService;
     private final PasswordHistoryRepository passwordHistoryRepository;
     private final GlobalConstants globalConstants;
-
+    private final JwtTempHolder jwtTempHolder;
+    private final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
     @Override
     public UserResponseDto login(LoginRequestDto loginRequest, VerificationCodeType verificationCodeType) {
-
+        logger.info("Started login process");
 
         try {
             authenticationManager.authenticate(
@@ -71,12 +75,15 @@ public class AuthService implements IAuthService {
             verificationTargetRequestDto.setPhoneNumber(user.getPhoneNumber());
             sendVerificationCode(verificationTargetRequestDto);
         }
+        logger.info("Successfully finished login process");
         return new UserResponseDto(user);
     }
 
     @Override
     @Transactional
     public UserResponseDto createAccount(UserRequestDto userRequest, VerificationCodeType verificationCodeType) {
+        logger.info("Started account creation");
+
         Optional<UserEntity> potentiallyExistingUser = userRepository.findByEmail(userRequest.getEmail());
         if (potentiallyExistingUser.isPresent()) {
             UserEntity user = potentiallyExistingUser.get();
@@ -112,6 +119,7 @@ public class AuthService implements IAuthService {
 
         verificationCodeService.sendVerificationCode(newUser, verificationCodeType);
 
+        logger.info("Created account");
         return UserResponseDto.builder()
                 .id(newUser.getId())
                 .name(newUser.getName())
@@ -141,6 +149,8 @@ public class AuthService implements IAuthService {
 
     @Override
     public void verifyVerificationCode(VerifyVerificationCodeRequestDto verifyVerificationCodeRequestDto) {
+        logger.info("Started code verification process");
+
         UserEntity user = this.getUserByVerificationCodeRequest(verifyVerificationCodeRequestDto);
 
         VerificationCodeEntity retrievedVerificationCode =
@@ -148,15 +158,20 @@ public class AuthService implements IAuthService {
 
         verificationCodeService.verifyVerificationCode(retrievedVerificationCode, verifyVerificationCodeRequestDto);
 
+        logger.info("Verified code");
     }
 
     @Override
     public void sendVerificationCode(VerificationTargetRequestDto verificationTargetDto) {
+        logger.info("Started verification code sending process");
+
         UserEntity user = this.getUserFromVerificationTarget(verificationTargetDto);
         VerificationCodeType verificationCodeType =
                 this.getVerificationCodeTypeFromVerificationTarget(verificationTargetDto);
 
         verificationCodeService.sendVerificationCode(user, verificationCodeType);
+
+        logger.info("Sent verification code");
     }
 
     public TokenResponseDto verifyLogin(VerifyLoginRequestDto userLoginResponseDto) {
@@ -176,6 +191,8 @@ public class AuthService implements IAuthService {
 
         String jwt = jwtService.generateToken(claims, new UserDetailsImpl(user));
 
+        logger.info("Logged in after verifying code");
+
         return new TokenResponseDto(jwt);
 
     }
@@ -188,12 +205,16 @@ public class AuthService implements IAuthService {
         user.setEnabled(true);
         userRepository.save(user);
 
+        logger.info("Verified registration code");
+
         return new UserResponseDto(user);
     }
 
     @Override
     public void recoverPassword(PasswordRecoveryRequestDto passwordRecoveryDto, int passwordNonMatchCount,
                                 Date passwordValidationTime) {
+        logger.info("Started password recovery process");
+
         String userEmail = passwordRecoveryDto.getUserEmail();
         String userPhoneNumber = passwordRecoveryDto.getUserPhoneNumber();
         String newPassword = passwordRecoveryDto.getNewPassword();
@@ -219,11 +240,14 @@ public class AuthService implements IAuthService {
         user.setDateForChangePassword(passwordValidationTime);
         userRepository.save(user);
 
+        logger.info("Successfully recovered password");
     }
 
     @Override
     public void resetPassword(PasswordResetRequest passwordResetRequest, int passwordNonMatchCount,
                               Date passwordValidationTime) {
+        logger.info("Started password reset process");
+
         String userEmail = passwordResetRequest.getEmail();
         String oldPassword = passwordResetRequest.getOldPassword();
         String newPassword = passwordResetRequest.getNewPassword();
@@ -245,6 +269,17 @@ public class AuthService implements IAuthService {
         user.setDateForChangePassword(passwordValidationTime);
         userRepository.save(user);
 
+        logger.info("Successfully reset password");
+    }
+
+    @Override
+    public TokenResponseDto loginWithGoogle() {
+        TokenResponseDto tokenResponse = TokenResponseDto.builder()
+                .token(jwtTempHolder.getJwt())
+                .build();
+        jwtTempHolder.setJwt(null);
+        logger.info("Successfully logged in with google OAuth");
+        return tokenResponse;
     }
 
     private UserEntity getUserByVerificationCodeRequest(VerifyVerificationCodeRequestDto verifyVerificationCodeRequestDto) {

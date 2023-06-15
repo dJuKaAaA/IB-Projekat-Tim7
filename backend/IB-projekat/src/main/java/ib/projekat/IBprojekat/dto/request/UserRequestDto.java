@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 @Data
 @NoArgsConstructor
@@ -16,9 +17,11 @@ import lombok.NoArgsConstructor;
 public class UserRequestDto {
 
     @NotBlank(message = "Name not provided!")
+    @Length(max = 50, message = "Name cannot have more than 50 character!")
     private String name;
 
     @NotBlank(message = "Surname not provided!")
+    @Length(max = 50, message = "Surname cannot have more than 50 character!")
     private String surname;
 
     @NotBlank(message = "Phone number not provided!")

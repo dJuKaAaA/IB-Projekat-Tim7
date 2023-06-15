@@ -1,5 +1,6 @@
 package ib.projekat.IBprojekat.controller;
 
+import ib.projekat.IBprojekat.dto.response.CertificateDownloadResponseDto;
 import ib.projekat.IBprojekat.dto.request.UploadedCertificateRequestDto;
 import ib.projekat.IBprojekat.dto.response.CertificateResponseDto;
 import ib.projekat.IBprojekat.dto.response.PaginatedResponseDto;
@@ -13,9 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.security.Principal;
-import java.security.cert.CertificateException;
 
 @RestController
 @RequestMapping("/api/v1/certificate")
@@ -63,18 +62,18 @@ public class CertificateController {
         return HttpStatus.NO_CONTENT;
     }
 
-    @PutMapping("/{serialNumber}/pull")
+    @PutMapping("/{serialNumber}/retract")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public HttpStatus pull(@PathVariable("serialNumber") String serialNumber, Principal principal) {
-        certificateService.pullCertificate(serialNumber, principal.getName());
+    public HttpStatus retract(@PathVariable("serialNumber") String serialNumber, Principal principal) {
+        certificateService.retract(serialNumber, principal.getName());
         return HttpStatus.NO_CONTENT;
     }
 
     @GetMapping("/{serialNumber}/download")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<byte[]> download(@PathVariable String serialNumber) {
-        byte[] certificateFile = certificateService.prepareCertificateForDownload(serialNumber);
-        return new ResponseEntity<>(certificateFile, HttpStatus.OK);
+    public ResponseEntity<CertificateDownloadResponseDto> download(@PathVariable String serialNumber,
+                                                                   Principal principal) {
+        return new ResponseEntity<>(certificateService.prepareForDownload(serialNumber, principal.getName()), HttpStatus.OK);
     }
 
 }

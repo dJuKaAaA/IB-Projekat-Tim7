@@ -1,0 +1,185 @@
+2023-06-15 21:43:19,484 INFO [background-preinit] HV000001: Hibernate Validator 8.0.0.Final
+2023-06-15 21:43:19,507 INFO [main] Starting IbProjekatApplication using Java 19.0.2 with PID 13648 (C:\Users\ivand\Desktop\Faks\Projekti\IB\IB-Projekat-Tim7\backend\IB-projekat\target\classes started by ivandj in C:\Users\ivand\Desktop\Faks\Projekti\IB\IB-Projekat-Tim7\backend\IB-projekat)
+2023-06-15 21:43:19,507 DEBUG [main] Running with Spring Boot v3.0.4, Spring v6.0.6
+2023-06-15 21:43:19,508 INFO [main] No active profile set, falling back to 1 default profile: "default"
+2023-06-15 21:43:19,980 INFO [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-06-15 21:43:20,025 INFO [main] Finished Spring Data repository scanning in 41 ms. Found 5 JPA repository interfaces.
+2023-06-15 21:43:20,354 INFO [main] Tomcat initialized with port(s): 8081 (https)
+2023-06-15 21:43:20,359 INFO [main] Initializing ProtocolHandler ["https-jsse-nio-8081"]
+2023-06-15 21:43:20,361 INFO [main] Starting service [Tomcat]
+2023-06-15 21:43:20,362 INFO [main] Starting Servlet engine: [Apache Tomcat/10.1.5]
+2023-06-15 21:43:20,417 INFO [main] Initializing Spring embedded WebApplicationContext
+2023-06-15 21:43:20,417 INFO [main] Root WebApplicationContext: initialization completed in 880 ms
+2023-06-15 21:43:20,495 INFO [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-06-15 21:43:20,526 INFO [main] HHH000412: Hibernate ORM core version 6.1.7.Final
+2023-06-15 21:43:20,692 INFO [main] HikariPool-1 - Starting...
+2023-06-15 21:43:20,794 INFO [main] HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@17f8db6
+2023-06-15 21:43:20,796 INFO [main] HikariPool-1 - Start completed.
+2023-06-15 21:43:20,814 INFO [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2023-06-15 21:43:21,374 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 21:43:21,374 WARN [main] relation "certificate_demands" does not exist, skipping
+2023-06-15 21:43:21,375 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 21:43:21,375 WARN [main] relation "certificate_demands" does not exist, skipping
+2023-06-15 21:43:21,375 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 21:43:21,375 WARN [main] relation "certificate_demands" does not exist, skipping
+2023-06-15 21:43:21,376 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 21:43:21,376 WARN [main] relation "certificates" does not exist, skipping
+2023-06-15 21:43:21,376 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 21:43:21,376 WARN [main] relation "certificates" does not exist, skipping
+2023-06-15 21:43:21,376 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 21:43:21,376 WARN [main] relation "certificates" does not exist, skipping
+2023-06-15 21:43:21,376 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 21:43:21,376 WARN [main] relation "password_history_entity" does not exist, skipping
+2023-06-15 21:43:21,377 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 21:43:21,377 WARN [main] relation "verification_code" does not exist, skipping
+2023-06-15 21:43:21,377 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 21:43:21,377 WARN [main] table "certificate_demands" does not exist, skipping
+2023-06-15 21:43:21,377 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 21:43:21,378 WARN [main] table "certificates" does not exist, skipping
+2023-06-15 21:43:21,378 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 21:43:21,378 WARN [main] table "password_history_entity" does not exist, skipping
+2023-06-15 21:43:21,378 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 21:43:21,378 WARN [main] table "users" does not exist, skipping
+2023-06-15 21:43:21,378 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 21:43:21,378 WARN [main] table "verification_code" does not exist, skipping
+2023-06-15 21:43:21,379 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 21:43:21,379 WARN [main] sequence "certificate_demands_seq" does not exist, skipping
+2023-06-15 21:43:21,379 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 21:43:21,379 WARN [main] sequence "certificates_seq" does not exist, skipping
+2023-06-15 21:43:21,379 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 21:43:21,379 WARN [main] sequence "password_history_entity_seq" does not exist, skipping
+2023-06-15 21:43:21,380 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 21:43:21,380 WARN [main] sequence "users_seq" does not exist, skipping
+2023-06-15 21:43:21,380 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 21:43:21,380 WARN [main] sequence "verification_code_seq" does not exist, skipping
+2023-06-15 21:43:21,411 INFO [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-06-15 21:43:21,417 INFO [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-06-15 21:43:21,612 DEBUG [main] Filter 'jwtAuthenticationFilter' configured for use
+2023-06-15 21:43:21,954 WARN [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-06-15 21:43:22,142 INFO [main] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@7b57587e, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2ffc9be, org.springframework.security.web.context.SecurityContextHolderFilter@12581426, org.springframework.security.web.header.HeaderWriterFilter@1639ec7a, org.springframework.web.filter.CorsFilter@4005e63a, org.springframework.security.web.authentication.logout.LogoutFilter@6e512d7f, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@915c47b, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@2aea7775, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@5502f74c, ib.projekat.IBprojekat.websecurity.JwtAuthenticationFilter@136cad3e, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@7597ae32, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@30ae6721, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@57ac220f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@42014a, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@717b4de2, org.springframework.security.oauth2.client.web.OAuth2AuthorizationCodeGrantFilter@1e5f3c4a, org.springframework.security.web.session.SessionManagementFilter@62099f75, org.springframework.security.web.access.ExceptionTranslationFilter@22ab3e3b, org.springframework.security.web.access.intercept.AuthorizationFilter@22cf6c9c]
+2023-06-15 21:43:22,267 INFO [main] Starting ProtocolHandler ["https-jsse-nio-8081"]
+2023-06-15 21:43:22,383 INFO [main] Tomcat started on port(s): 8081 (https) with context path ''
+2023-06-15 21:43:22,388 INFO [main] Started IbProjekatApplication in 3.191 seconds (process running for 3.782)
+2023-06-15 21:43:53,632 INFO [https-jsse-nio-8081-exec-3] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-06-15 21:43:53,632 INFO [https-jsse-nio-8081-exec-3] Initializing Servlet 'dispatcherServlet'
+2023-06-15 21:43:53,633 INFO [https-jsse-nio-8081-exec-3] Completed initialization in 1 ms
+2023-06-15 21:43:56,345 INFO [https-jsse-nio-8081-exec-3] OAuth radi nekim cudom
+2023-06-15 21:43:56,758 WARN [https-jsse-nio-8081-exec-4] false
+2023-06-15 21:43:56,761 ERROR [https-jsse-nio-8081-exec-4] Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.NullPointerException: Cannot invoke "org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken.getPrincipal()" because "oauthToken" is null] with root cause
+java.lang.NullPointerException: Cannot invoke "org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken.getPrincipal()" because "oauthToken" is null
+	at ib.projekat.IBprojekat.service.impl.AuthService.loginWithGoogle(AuthService.java:281)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:578)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:698)
+	at ib.projekat.IBprojekat.service.impl.AuthService$$SpringCGLIB$$0.loginWithGoogle(<generated>)
+	at ib.projekat.IBprojekat.controller.AuthController.loginWithGoogle(AuthController.java:137)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:578)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:731)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:814)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:223)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.oauth2.client.web.OAuth2AuthorizationCodeGrantFilter.doFilterInternal(OAuth2AuthorizationCodeGrantFilter.java:183)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter.doFilterInternal(DefaultLogoutPageGeneratingFilter.java:58)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter.doFilter(DefaultLoginPageGeneratingFilter.java:188)
+	at org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter.doFilter(DefaultLoginPageGeneratingFilter.java:174)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at ib.projekat.IBprojekat.websecurity.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:38)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:227)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:221)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter.doFilterInternal(OAuth2AuthorizationRequestRedirectFilter.java:181)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter.doFilterInternal(OAuth2AuthorizationRequestRedirectFilter.java:181)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:177)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:542)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:119)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:357)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:400)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:859)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1734)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:1589)
+2023-06-15 21:44:46,137 INFO [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-06-15 21:44:46,137 INFO [SpringApplicationShutdownHook] HHH000477: Starting delayed evictData of schema as part of SessionFactory shut-down'
+2023-06-15 21:44:46,151 INFO [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2023-06-15 21:44:46,153 INFO [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.

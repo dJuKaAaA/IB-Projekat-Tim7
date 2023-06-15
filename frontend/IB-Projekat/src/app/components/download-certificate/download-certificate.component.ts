@@ -26,9 +26,9 @@ export class DownloadCertificateComponent {
     if(this.serialNumber == "")
       return;
     this.certificateService.download(this.serialNumber).subscribe({
-      next: data => {
-        const blob = new Blob([data], { type: 'application/x-x509-ca-cert' }); // change the MIME type to match your file type
-        const downloadUrl = URL.createObjectURL(blob);
+      next: response => {
+        const certificateBlob = new Blob([response.certificateBytes], { type: 'application/x-x509-ca-cert' }); 
+        const downloadUrl = URL.createObjectURL(certificateBlob);
 
         const link = document.createElement('a');
         link.href = downloadUrl;
@@ -36,11 +36,23 @@ export class DownloadCertificateComponent {
         link.click();
 
         URL.revokeObjectURL(downloadUrl);
+
+        if (response.certificatePrivateKeyBytes != undefined) {
+          const privateKeyBlob = new Blob([response.certificatePrivateKeyBytes], { type: 'application/octet-stream' });
+          const privateKeyDownloadUrl = URL.createObjectURL(privateKeyBlob);
+
+          const privateKeyLink = document.createElement('a');
+          privateKeyLink.href = privateKeyDownloadUrl;
+          privateKeyLink.download = this.serialNumber + '.key';  // change to .pfx if necessary
+          privateKeyLink.click();
+
+          URL.revokeObjectURL(privateKeyDownloadUrl);
+        }
       }, error: (error) => {
         if (error instanceof HttpErrorResponse) {
           // for some reason the front and back won't communicate and return the proper
           // error message for this method so I am forced to hard code it :(
-          alert("Certificate not found!");
+          alert(error.error.message);
         }
       }
     })

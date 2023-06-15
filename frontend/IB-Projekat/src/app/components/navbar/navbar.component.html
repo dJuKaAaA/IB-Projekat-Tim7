@@ -6,7 +6,7 @@
     <a (click)="openEvaluateDemands()">Evaluate demands</a>
     <a (click)="openValidationDialog()">Validate</a>
     <a (click)="openDownloadDialog()">Download</a>
-    <a  *ngIf="authService.getRole() == 'ADMIN'" (click)="openPullDialog()">Pull</a>
+    <a  *ngIf="authService.getRole() == 'ADMIN'" (click)="openRetractDialog()">Retract</a>
     <a (click)="validateFromUpload()">Validate from upload</a>
     <a (click)="openResetPassword()">Reset password</a>
     <a (click)="logout()">Logout</a>

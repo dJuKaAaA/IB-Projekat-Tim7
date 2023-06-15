@@ -24,6 +24,7 @@ export class CreateAccountComponent {
   public siteKey: string = environment.recaptchaSiteKey;
   private formBuilder: FormBuilder = new FormBuilder();
   isRecaptchaVerified: boolean = false;
+  createAccountButtonDisabled: boolean = false;
 
   public formGroup: FormGroup = this.formBuilder.group({
     name: ['', Validators.required],
@@ -39,12 +40,20 @@ export class CreateAccountComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   createAccount() {
+    this.createAccountButtonDisabled = true;
+
     if (this.formGroup.value.password != this.formGroup.value.confirmPassword) {
       alert('Passwords not matching!');
+      this.createAccountButtonDisabled = false;
       return;
     }
 
-    if (this.formGroup.valid || this.isRecaptchaVerified) {
+    if (this.formGroup.value.recaptcha == '') {
+      alert("Prove you are not a robot!");
+      this.createAccountButtonDisabled = false;
+    }
+
+    if (this.formGroup.valid) {
       const userRequest: UserRequest = {
         name: this.formGroup.value.name,
         surname: this.formGroup.value.surname,
@@ -71,6 +80,7 @@ export class CreateAccountComponent {
             },
             error: (error) => {
               if (error instanceof HttpErrorResponse) {
+                this.createAccountButtonDisabled = false;
                 alert(error.error.message);
               }
             },
@@ -90,11 +100,15 @@ export class CreateAccountComponent {
             },
             error: (error) => {
               if (error instanceof HttpErrorResponse) {
+                this.createAccountButtonDisabled = false;
                 alert(error.error.message);
               }
             },
           });
       }
+    } else {
+      this.createAccountButtonDisabled = false;
+      alert("Fill all the fields to continue!");
     }
   }
 

@@ -14,6 +14,7 @@ import { CertificateDemandsViewComponent } from './components/certificate-demand
 import { NotAuthorizedGuard } from './guards/not-authorized.guard';
 import { AuthorizedGuard } from './guards/authorized.guard';
 import { LoginVerificationCodeComponent } from './components/login-verification-code/login-verification-code.component';
+import { OAuthLoginComponent } from './components/oauth-login/oauth-login.component';
 
 const routes: Routes = [
   {
@@ -81,6 +82,11 @@ const routes: Routes = [
     path: 'certificate-demands',
     component: CertificateDemandsViewComponent,
     canActivate: [AuthorizedGuard],
+  },
+  {
+    path: 'oauth-login',
+    component: OAuthLoginComponent,
+    canActivate: [NotAuthorizedGuard],
   },
 ];
 

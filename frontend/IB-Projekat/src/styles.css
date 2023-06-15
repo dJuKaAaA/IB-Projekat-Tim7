@@ -61,4 +61,13 @@ button:focus {
     outline: auto;
 }
 
+button:disabled {
+    opacity: 0.25;
+}
+
+button:disabled:hover {
+    cursor: progress;
+    background-color: rgb(0, 126, 152);
+}
+
 

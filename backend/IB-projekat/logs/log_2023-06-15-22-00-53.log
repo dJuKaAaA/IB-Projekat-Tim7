@@ -1,0 +1,133 @@
+2023-06-15 22:00:53,493 INFO [background-preinit] HV000001: Hibernate Validator 8.0.0.Final
+2023-06-15 22:00:53,526 INFO [main] Starting IbProjekatApplication using Java 19.0.2 with PID 9164 (C:\Users\ivand\Desktop\Faks\Projekti\IB\IB-Projekat-Tim7\backend\IB-projekat\target\classes started by ivandj in C:\Users\ivand\Desktop\Faks\Projekti\IB\IB-Projekat-Tim7\backend\IB-projekat)
+2023-06-15 22:00:53,526 DEBUG [main] Running with Spring Boot v3.0.4, Spring v6.0.6
+2023-06-15 22:00:53,527 INFO [main] No active profile set, falling back to 1 default profile: "default"
+2023-06-15 22:00:54,091 INFO [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-06-15 22:00:54,150 INFO [main] Finished Spring Data repository scanning in 52 ms. Found 5 JPA repository interfaces.
+2023-06-15 22:00:54,675 INFO [main] Tomcat initialized with port(s): 8081 (https)
+2023-06-15 22:00:54,682 INFO [main] Initializing ProtocolHandler ["https-jsse-nio-8081"]
+2023-06-15 22:00:54,685 INFO [main] Starting service [Tomcat]
+2023-06-15 22:00:54,686 INFO [main] Starting Servlet engine: [Apache Tomcat/10.1.5]
+2023-06-15 22:00:54,750 INFO [main] Initializing Spring embedded WebApplicationContext
+2023-06-15 22:00:54,750 INFO [main] Root WebApplicationContext: initialization completed in 1188 ms
+2023-06-15 22:00:54,864 INFO [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-06-15 22:00:54,906 INFO [main] HHH000412: Hibernate ORM core version 6.1.7.Final
+2023-06-15 22:00:55,112 INFO [main] HikariPool-1 - Starting...
+2023-06-15 22:00:55,218 INFO [main] HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@1a89414e
+2023-06-15 22:00:55,219 INFO [main] HikariPool-1 - Start completed.
+2023-06-15 22:00:55,239 INFO [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2023-06-15 22:00:55,935 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 22:00:55,935 WARN [main] relation "certificate_demands" does not exist, skipping
+2023-06-15 22:00:55,935 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 22:00:55,935 WARN [main] relation "certificate_demands" does not exist, skipping
+2023-06-15 22:00:55,936 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 22:00:55,936 WARN [main] relation "certificate_demands" does not exist, skipping
+2023-06-15 22:00:55,936 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 22:00:55,937 WARN [main] relation "certificates" does not exist, skipping
+2023-06-15 22:00:55,937 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 22:00:55,937 WARN [main] relation "certificates" does not exist, skipping
+2023-06-15 22:00:55,937 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 22:00:55,937 WARN [main] relation "certificates" does not exist, skipping
+2023-06-15 22:00:55,938 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 22:00:55,938 WARN [main] relation "password_history_entity" does not exist, skipping
+2023-06-15 22:00:55,938 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 22:00:55,938 WARN [main] relation "verification_code" does not exist, skipping
+2023-06-15 22:00:55,938 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 22:00:55,938 WARN [main] table "certificate_demands" does not exist, skipping
+2023-06-15 22:00:55,939 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 22:00:55,939 WARN [main] table "certificates" does not exist, skipping
+2023-06-15 22:00:55,939 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 22:00:55,939 WARN [main] table "password_history_entity" does not exist, skipping
+2023-06-15 22:00:55,939 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 22:00:55,939 WARN [main] table "users" does not exist, skipping
+2023-06-15 22:00:55,939 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 22:00:55,939 WARN [main] table "verification_code" does not exist, skipping
+2023-06-15 22:00:55,940 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 22:00:55,940 WARN [main] sequence "certificate_demands_seq" does not exist, skipping
+2023-06-15 22:00:55,940 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 22:00:55,940 WARN [main] sequence "certificates_seq" does not exist, skipping
+2023-06-15 22:00:55,941 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 22:00:55,941 WARN [main] sequence "password_history_entity_seq" does not exist, skipping
+2023-06-15 22:00:55,941 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 22:00:55,941 WARN [main] sequence "users_seq" does not exist, skipping
+2023-06-15 22:00:55,941 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-15 22:00:55,941 WARN [main] sequence "verification_code_seq" does not exist, skipping
+2023-06-15 22:00:55,982 INFO [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-06-15 22:00:55,993 INFO [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-06-15 22:00:56,336 DEBUG [main] Filter 'jwtAuthenticationFilter' configured for use
+2023-06-15 22:00:56,804 WARN [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-06-15 22:00:57,004 INFO [main] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@56a8b19f, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@5927473a, org.springframework.security.web.context.SecurityContextHolderFilter@28806954, org.springframework.security.web.header.HeaderWriterFilter@38293d23, org.springframework.web.filter.CorsFilter@36c45b54, org.springframework.security.web.authentication.logout.LogoutFilter@56f8ab05, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@593d5f39, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@2be49c8c, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@5f160341, ib.projekat.IBprojekat.websecurity.JwtAuthenticationFilter@136cad3e, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@6b5fdbd0, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@2d6a6887, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@24e0bdb, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@348d1a5e, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3e5d10fc, org.springframework.security.oauth2.client.web.OAuth2AuthorizationCodeGrantFilter@6e512d7f, org.springframework.security.web.session.SessionManagementFilter@4973dacf, org.springframework.security.web.access.ExceptionTranslationFilter@4e132a9b, org.springframework.security.web.access.intercept.AuthorizationFilter@2ccfd2cb]
+2023-06-15 22:00:57,146 INFO [main] Starting ProtocolHandler ["https-jsse-nio-8081"]
+2023-06-15 22:00:57,263 INFO [main] Tomcat started on port(s): 8081 (https) with context path ''
+2023-06-15 22:00:57,268 INFO [main] Started IbProjekatApplication in 4.116 seconds (process running for 4.835)
+2023-06-15 22:01:05,345 INFO [https-jsse-nio-8081-exec-3] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-06-15 22:01:05,346 INFO [https-jsse-nio-8081-exec-3] Initializing Servlet 'dispatcherServlet'
+2023-06-15 22:01:05,346 INFO [https-jsse-nio-8081-exec-3] Completed initialization in 0 ms
+2023-06-15 22:01:08,135 INFO [https-jsse-nio-8081-exec-3] at_hash : V4r85PWCb-eOunFzkPHmDQ
+2023-06-15 22:01:08,135 INFO [https-jsse-nio-8081-exec-3] sub : 108624137993217401944
+2023-06-15 22:01:08,135 INFO [https-jsse-nio-8081-exec-3] email_verified : true
+2023-06-15 22:01:08,135 INFO [https-jsse-nio-8081-exec-3] iss : https://accounts.google.com
+2023-06-15 22:01:08,135 INFO [https-jsse-nio-8081-exec-3] given_name : Ivan
+2023-06-15 22:01:08,135 INFO [https-jsse-nio-8081-exec-3] locale : en
+2023-06-15 22:01:08,135 INFO [https-jsse-nio-8081-exec-3] nonce : tAXHRRVOvAS3LKTLA1pOhQE_zWmrGZ8mMPF5m764JOc
+2023-06-15 22:01:08,135 INFO [https-jsse-nio-8081-exec-3] picture : https://lh3.googleusercontent.com/a/AAcHTterSojdZZjsfImYEAZBoHw0n3E-HaEr_ulXnFlJ=s96-c
+2023-06-15 22:01:08,136 INFO [https-jsse-nio-8081-exec-3] aud : [910708360669-vbk26t65o0ne19d40nadfcpbvdlsfbvb.apps.googleusercontent.com]
+2023-06-15 22:01:08,136 INFO [https-jsse-nio-8081-exec-3] azp : 910708360669-vbk26t65o0ne19d40nadfcpbvdlsfbvb.apps.googleusercontent.com
+2023-06-15 22:01:08,136 INFO [https-jsse-nio-8081-exec-3] name : Ivan Đukanović
+2023-06-15 22:01:08,136 INFO [https-jsse-nio-8081-exec-3] exp : 2023-06-15T21:01:07Z
+2023-06-15 22:01:08,136 INFO [https-jsse-nio-8081-exec-3] family_name : Đukanović
+2023-06-15 22:01:08,136 INFO [https-jsse-nio-8081-exec-3] iat : 2023-06-15T20:01:07Z
+2023-06-15 22:01:08,136 INFO [https-jsse-nio-8081-exec-3] email : ivan.djukanovic07@gmail.com
+2023-06-15 22:01:08,136 INFO [https-jsse-nio-8081-exec-3] OAuth radi nekim cudom
+2023-06-15 22:01:52,784 INFO [https-jsse-nio-8081-exec-8] at_hash : ZQOs_mai89FBxuE2lxcDpQ
+2023-06-15 22:01:52,785 INFO [https-jsse-nio-8081-exec-8] sub : 108624137993217401944
+2023-06-15 22:01:52,785 INFO [https-jsse-nio-8081-exec-8] email_verified : true
+2023-06-15 22:01:52,785 INFO [https-jsse-nio-8081-exec-8] iss : https://accounts.google.com
+2023-06-15 22:01:52,785 INFO [https-jsse-nio-8081-exec-8] given_name : Ivan
+2023-06-15 22:01:52,785 INFO [https-jsse-nio-8081-exec-8] locale : en
+2023-06-15 22:01:52,785 INFO [https-jsse-nio-8081-exec-8] nonce : HIhvdi3WPM4HGhcDIEHHYlRc3FHSKfhDpM67UbQnjb8
+2023-06-15 22:01:52,785 INFO [https-jsse-nio-8081-exec-8] picture : https://lh3.googleusercontent.com/a/AAcHTterSojdZZjsfImYEAZBoHw0n3E-HaEr_ulXnFlJ=s96-c
+2023-06-15 22:01:52,785 INFO [https-jsse-nio-8081-exec-8] aud : [910708360669-vbk26t65o0ne19d40nadfcpbvdlsfbvb.apps.googleusercontent.com]
+2023-06-15 22:01:52,785 INFO [https-jsse-nio-8081-exec-8] azp : 910708360669-vbk26t65o0ne19d40nadfcpbvdlsfbvb.apps.googleusercontent.com
+2023-06-15 22:01:52,785 INFO [https-jsse-nio-8081-exec-8] name : Ivan Đukanović
+2023-06-15 22:01:52,785 INFO [https-jsse-nio-8081-exec-8] exp : 2023-06-15T21:01:52Z
+2023-06-15 22:01:52,785 INFO [https-jsse-nio-8081-exec-8] family_name : Đukanović
+2023-06-15 22:01:52,785 INFO [https-jsse-nio-8081-exec-8] iat : 2023-06-15T20:01:52Z
+2023-06-15 22:01:52,785 INFO [https-jsse-nio-8081-exec-8] email : ivan.djukanovic07@gmail.com
+2023-06-15 22:01:52,785 INFO [https-jsse-nio-8081-exec-8] OAuth radi nekim cudom
+2023-06-15 22:03:13,007 INFO [https-jsse-nio-8081-exec-2] at_hash : gR6HxTwGbrcSRDBv_EMd6g
+2023-06-15 22:03:13,007 INFO [https-jsse-nio-8081-exec-2] sub : 108624137993217401944
+2023-06-15 22:03:13,007 INFO [https-jsse-nio-8081-exec-2] email_verified : true
+2023-06-15 22:03:13,007 INFO [https-jsse-nio-8081-exec-2] iss : https://accounts.google.com
+2023-06-15 22:03:13,007 INFO [https-jsse-nio-8081-exec-2] given_name : Ivan
+2023-06-15 22:03:13,007 INFO [https-jsse-nio-8081-exec-2] locale : en
+2023-06-15 22:03:13,007 INFO [https-jsse-nio-8081-exec-2] nonce : oLEaQB_iHFZgDZUE5iEpEuN_-pZxFICh_C_YAR4bYnw
+2023-06-15 22:03:13,007 INFO [https-jsse-nio-8081-exec-2] picture : https://lh3.googleusercontent.com/a/AAcHTterSojdZZjsfImYEAZBoHw0n3E-HaEr_ulXnFlJ=s96-c
+2023-06-15 22:03:13,007 INFO [https-jsse-nio-8081-exec-2] aud : [910708360669-vbk26t65o0ne19d40nadfcpbvdlsfbvb.apps.googleusercontent.com]
+2023-06-15 22:03:13,007 INFO [https-jsse-nio-8081-exec-2] azp : 910708360669-vbk26t65o0ne19d40nadfcpbvdlsfbvb.apps.googleusercontent.com
+2023-06-15 22:03:13,007 INFO [https-jsse-nio-8081-exec-2] name : Ivan Đukanović
+2023-06-15 22:03:13,007 INFO [https-jsse-nio-8081-exec-2] exp : 2023-06-15T21:03:12Z
+2023-06-15 22:03:13,008 INFO [https-jsse-nio-8081-exec-2] family_name : Đukanović
+2023-06-15 22:03:13,008 INFO [https-jsse-nio-8081-exec-2] iat : 2023-06-15T20:03:12Z
+2023-06-15 22:03:13,008 INFO [https-jsse-nio-8081-exec-2] email : ivan.djukanovic07@gmail.com
+2023-06-15 22:03:13,008 INFO [https-jsse-nio-8081-exec-2] OAuth radi nekim cudom
+2023-06-15 22:03:30,067 INFO [https-jsse-nio-8081-exec-2] at_hash : wewcg3nEbqBGjirVoHssbQ
+2023-06-15 22:03:30,068 INFO [https-jsse-nio-8081-exec-2] sub : 108624137993217401944
+2023-06-15 22:03:30,068 INFO [https-jsse-nio-8081-exec-2] email_verified : true
+2023-06-15 22:03:30,068 INFO [https-jsse-nio-8081-exec-2] iss : https://accounts.google.com
+2023-06-15 22:03:30,068 INFO [https-jsse-nio-8081-exec-2] given_name : Ivan
+2023-06-15 22:03:30,068 INFO [https-jsse-nio-8081-exec-2] locale : en
+2023-06-15 22:03:30,068 INFO [https-jsse-nio-8081-exec-2] nonce : KmJ_Jgvqt29rQw-nHbVg-r1_tPUImShnRMrtJe9vskU
+2023-06-15 22:03:30,068 INFO [https-jsse-nio-8081-exec-2] picture : https://lh3.googleusercontent.com/a/AAcHTterSojdZZjsfImYEAZBoHw0n3E-HaEr_ulXnFlJ=s96-c
+2023-06-15 22:03:30,068 INFO [https-jsse-nio-8081-exec-2] aud : [910708360669-vbk26t65o0ne19d40nadfcpbvdlsfbvb.apps.googleusercontent.com]
+2023-06-15 22:03:30,068 INFO [https-jsse-nio-8081-exec-2] azp : 910708360669-vbk26t65o0ne19d40nadfcpbvdlsfbvb.apps.googleusercontent.com
+2023-06-15 22:03:30,068 INFO [https-jsse-nio-8081-exec-2] name : Ivan Đukanović
+2023-06-15 22:03:30,068 INFO [https-jsse-nio-8081-exec-2] exp : 2023-06-15T21:03:29Z
+2023-06-15 22:03:30,068 INFO [https-jsse-nio-8081-exec-2] family_name : Đukanović
+2023-06-15 22:03:30,068 INFO [https-jsse-nio-8081-exec-2] iat : 2023-06-15T20:03:29Z
+2023-06-15 22:03:30,068 INFO [https-jsse-nio-8081-exec-2] email : ivan.djukanovic07@gmail.com
+2023-06-15 22:03:30,068 INFO [https-jsse-nio-8081-exec-2] OAuth radi nekim cudom
+2023-06-15 22:05:19,163 INFO [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-06-15 22:05:19,163 INFO [SpringApplicationShutdownHook] HHH000477: Starting delayed evictData of schema as part of SessionFactory shut-down'
+2023-06-15 22:05:19,178 INFO [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2023-06-15 22:05:19,181 INFO [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
