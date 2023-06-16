@@ -1,5 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { response } from 'express';
 import { CertificateResponse } from 'src/app/core/models/certificate-response.model';
 import { PaginatedResponse } from 'src/app/core/models/paginated-response.model';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -16,13 +18,19 @@ export class MyCertificatesComponent {
 
   constructor(
     private certificateService: CertificateService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.certificateService.getForUser(this.authService.getId(), 0, 10).subscribe((response: PaginatedResponse<CertificateResponse>) => {
-      this.myCertificates = response.content;
-    })
+    this.certificateService.getForUser(this.authService.getId(), 0, 10).subscribe({
+      next: (response: PaginatedResponse<CertificateResponse>) => {
+        this.myCertificates = response.content;
+      }, error: (error) => {
+        if (error instanceof HttpErrorResponse) {
+        }
+      }
+    });
   }
 
   pullCertificate(certificate: CertificateResponse) {
