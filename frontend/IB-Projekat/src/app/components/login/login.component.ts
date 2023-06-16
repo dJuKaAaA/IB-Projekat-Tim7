@@ -22,6 +22,7 @@ export class LoginComponent {
   public siteKey: string = environment.recaptchaSiteKey;
   private formBuilder: FormBuilder = new FormBuilder();
   isRecaptchaVerified: boolean = false;
+  loginButtonDisabled: boolean = false;
 
   public formGroup: FormGroup = this.formBuilder.group({
     email: ['', Validators.required],
@@ -33,7 +34,15 @@ export class LoginComponent {
   constructor(private router: Router, private authService: AuthService) {}
 
   login() {
-    if (this.formGroup.valid || this.isRecaptchaVerified) {
+    this.loginButtonDisabled = true;
+
+    if (this.formGroup.value.recaptcha == '') {
+      alert("Prove you are not a robot!");
+      this.loginButtonDisabled = false;
+      return;
+    }
+    
+    if (this.formGroup.valid) {
       const loginRequest: LoginRequest = {
         email: this.formGroup.value.email,
         password: this.formGroup.value.password,
@@ -47,6 +56,8 @@ export class LoginComponent {
       } else {
         this.loginWithRecaptcha(loginRequest, '');
       }
+    } else {
+      this.loginButtonDisabled = false;
     }
   }
 
@@ -64,6 +75,7 @@ export class LoginComponent {
         error: (error) => {
           if (error instanceof HttpErrorResponse) {
             alert(JSON.stringify(error.error.message));
+            this.loginButtonDisabled = false;
 
             if (error.error.message === 'The password is outdated') {
               localStorage.setItem('email', this.formGroup.value.email);
@@ -72,6 +84,14 @@ export class LoginComponent {
           }
         },
       });
+  }
+
+  // loginWithGitHub(): void {
+  //   window.location.href = `${environment.baseUrl}/auth/github/oauth`;
+  // }
+
+  loginWithGoogle(): void {
+    window.location.href = `${environment.baseUrl}/auth/google/oauth`;
   }
 
   goToResetPasswordPage() {

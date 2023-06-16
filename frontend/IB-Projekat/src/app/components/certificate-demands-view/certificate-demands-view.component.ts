@@ -14,7 +14,7 @@ export class CertificateDemandsViewComponent {
   constructor(private certificateDemandService:CertificateDemandService, private authService:AuthService){}
 
   ngOnInit(): void {
-    this.certificateDemandService.getAll(this.authService.getId(), 0, 100).subscribe(
+    this.certificateDemandService.getAll(0, 100).subscribe(
       (data) => {
         this.showButtons = false;
         this.certificateDemands = data.content;

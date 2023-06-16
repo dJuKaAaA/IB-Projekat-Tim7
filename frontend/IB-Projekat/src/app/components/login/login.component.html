@@ -9,33 +9,26 @@
       <input type="password" name="password" formControlName="password" />
     </div>
     <div class="form-field-container">
-      <label for="verification-code-type" style="font-size: small"
-        >Select the way you want to receive activation code</label
-      >
-      <select
-        name="verification-code-type"
-        formControlName="verificationCodeType"
-      >
+      <label for="verification-code-type">Send verification code to</label>
+      <select name="verification-code-type" formControlName="verificationCodeType" style="width: 100%;">
         <option value="email">Email</option>
         <option value="phone">Phone</option>
       </select>
     </div>
     <div class="buttons-layout">
-      <button style="margin-top: 10px" type="submit" class="submit-button">
+      <button style="margin-top: 10px" type="submit" class="submit-button" [disabled]="loginButtonDisabled">
         Login
       </button>
-      <p class="create-account" (click)="goToCreateAccount()">
+      <div class="navigation-text" (click)="loginWithGoogle()">
+        <b>Login with Google</b>
+      </div>
+      <div class="navigation-text" (click)="goToCreateAccount()">
         Create an account
-      </p>
-      <p class="create-account" (click)="goToResetPassword()">
+      </div>
+      <div class="navigation-text" (click)="goToResetPassword()">
         <b>Forgot password?</b>
-      </p>
-      <ngx-recaptcha2
-        *ngIf="!isRecaptchaVerified"
-        #captchaElem
-        [siteKey]="siteKey"
-        formControlName="recaptcha"
-      >
+      </div>
+      <ngx-recaptcha2 *ngIf="!isRecaptchaVerified" #captchaElem [siteKey]="siteKey" formControlName="recaptcha">
       </ngx-recaptcha2>
     </div>
   </form>

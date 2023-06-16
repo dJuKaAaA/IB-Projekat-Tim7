@@ -37,7 +37,9 @@ export class VerifyRegistrationComponent {
           this.navigateToLogin();
         },
         error: (error) => {
-          alert(error.error.message);
+          if (error instanceof HttpErrorResponse) {
+            alert(error.error.message);
+          }
         },
       });
   }

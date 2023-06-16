@@ -11,6 +11,7 @@ import ib.projekat.IBprojekat.constant.Role;
 import ib.projekat.IBprojekat.dao.CertificateDemandRepository;
 import ib.projekat.IBprojekat.dao.CertificateRepository;
 import ib.projekat.IBprojekat.dao.UserRepository;
+import ib.projekat.IBprojekat.dto.response.CertificateDownloadResponseDto;
 import ib.projekat.IBprojekat.dto.request.UploadedCertificateRequestDto;
 import ib.projekat.IBprojekat.dto.response.CertificateResponseDto;
 import ib.projekat.IBprojekat.dto.response.PaginatedResponseDto;
@@ -21,6 +22,8 @@ import ib.projekat.IBprojekat.entity.UserEntity;
 import ib.projekat.IBprojekat.exception.*;
 import ib.projekat.IBprojekat.service.interf.ICertificateService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -44,15 +47,20 @@ public class CertificateService implements ICertificateService {
     private final KeyStoreReader keyStoreReader;
     private final Base64Utility base64Utility;
     private final GlobalConstants globalConstants;
+    private final Logger logger = LoggerFactory.getLogger(CertificateService.class);
 
     // return all certificate
     @Override
     public PaginatedResponseDto<CertificateResponseDto> getAll(Pageable pageable) {
+        logger.info("Started fetching all certificates");
+
         Page<CertificateEntity> certificatesPage = certificateRepository.findAll(pageable);
 
         Collection<CertificateResponseDto> certificatesResponse = certificatesPage.getContent().stream()
                 .map(this::convertToDto)
                 .toList();
+
+        logger.info("Successfully fetched all certificates");
         return new PaginatedResponseDto<>(
                 certificatesPage.getPageable().getPageNumber(),
                 certificatesResponse.size(),
@@ -63,6 +71,8 @@ public class CertificateService implements ICertificateService {
     // return all certificates for specific user
     @Override
     public PaginatedResponseDto<CertificateResponseDto> getForUser(Long userId, Pageable pageable) {
+        logger.info("Started fetching certificates for the user with the ID: %d".formatted(userId));
+
         userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         Page<CertificateEntity> certificatesPage = certificateRepository.findByUserId(userId, pageable);
@@ -71,6 +81,7 @@ public class CertificateService implements ICertificateService {
                 .map(this::convertToDto)
                 .toList();
 
+        logger.info("Successfully fetched certificates for the user with the ID: %d".formatted(userId));
         return new PaginatedResponseDto<>(
                 certificatesPage.getPageable().getPageNumber(),
                 certificates.size(),
@@ -81,6 +92,8 @@ public class CertificateService implements ICertificateService {
     // create certificate base on the certificate demand
     @Override
     public CertificateResponseDto create(Long demandId) {
+        logger.info("Started creation of certificate from certificate demand with ID: %d".formatted(demandId));
+
         CertificateDemandEntity certificateDemand = certificateDemandRepository.findById(demandId)
                 .orElseThrow(CertificateDemandNotFoundException::new);
         if (certificateDemand.getStatus() != CertificateDemandStatus.PENDING) {
@@ -164,11 +177,15 @@ public class CertificateService implements ICertificateService {
         certificateDemand.setStatus(CertificateDemandStatus.ACCEPTED);
         certificateDemandRepository.save(certificateDemand);
 
+        logger.info("Successfully created certificate from certificate demand with ID: %d".formatted(demandId));
+
         return convertToDto(certificateEntity);
     }
 
     @Override
     public void checkValidity(String serialNumber) {
+        logger.info("Started validity check for certificate with the serial number: %s".formatted(serialNumber));
+
         // find certificate
         CertificateEntity certificateEntity = certificateRepository.findBySerialNumber(serialNumber)
                 .orElseThrow(CertificateNotFoundException::new);
@@ -189,7 +206,7 @@ public class CertificateService implements ICertificateService {
 
         // iterate through the chain
         while (certificateEntity.getType() != CertificateType.ROOT) {
-            if (certificateEntity.isPulled()) {
+            if (certificateEntity.isRetracted()) {
                 throw new InvalidCertificateException("This certificate (or the one in it's chain) has been pulled by it's owner (or the admin)!");
             }
 
@@ -234,11 +251,19 @@ public class CertificateService implements ICertificateService {
             throw new SignatureIntegrityException();
         }
 
+        logger.info("Successfully finished validity check of certificate with serial number: %s".formatted(serialNumber));
+
     }
 
     @Override
     public void checkValidityFromUploadedCertificate(UploadedCertificateRequestDto uploadedCertificateRequest) {
+        logger.info("Started validity check for uploaded certificate");
+
         byte[] certBytes = Base64.getDecoder().decode(uploadedCertificateRequest.getBase64Certificate());
+
+        if (certBytes.length >= globalConstants.TEN_MBS_IN_BYTES) {
+            throw new CertificateTooLargeException("Certificate exceeds the 10MB limit!");
+        }
 
         try {
             CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
@@ -248,6 +273,8 @@ public class CertificateService implements ICertificateService {
         } catch (CertificateException e) {
             throw new InvalidCertificateException(e.getMessage());
         }
+
+        logger.info("Successfully finished validity check for uploaded certificate");
     }
 
     private void checkValidity(X509Certificate certificate) {
@@ -294,7 +321,7 @@ public class CertificateService implements ICertificateService {
         }
 
         // root validation and verification
-        if (certificateEntity.isPulled()) {
+        if (certificateEntity.isRetracted()) {
             throw new InvalidCertificateException("This certificate (or the one in it's chain) has been pulled by the owner!");
         }
 
@@ -314,7 +341,9 @@ public class CertificateService implements ICertificateService {
     }
 
     @Override
-    public void pullCertificate(String serialNumber, String userEmail) {
+    public void retract(String serialNumber, String userEmail) {
+        logger.info("Started retraction process of certificate with serial number: %s".formatted(serialNumber));
+
         UserEntity userEntity = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
 
         CertificateEntity certificateEntity = certificateRepository.findBySerialNumber(serialNumber)
@@ -327,39 +356,53 @@ public class CertificateService implements ICertificateService {
         }
 
         if (certificateEntity.getType() == CertificateType.ROOT) {
-            throw new CertificatePullException("Cannot pull ROOT certificates!");
+            throw new CertificateRetractionException("Cannot pull ROOT certificates!");
         }
 
-        if (certificateEntity.isPulled()) {
-            throw new CertificatePullException("Certificate is already pulled!");
+        if (certificateEntity.isRetracted()) {
+            throw new CertificateRetractionException("Certificate is already pulled!");
         }
 
         Stack<CertificateEntity> certificateStack = new Stack<>();
         certificateStack.push(certificateEntity);
         while (!certificateStack.empty()) {
             certificateEntity = certificateStack.pop();
-            certificateEntity.setPulled(true);
+            certificateEntity.setRetracted(true);
             certificateRepository.save(certificateEntity);
 
             Collection<CertificateEntity> childCertificates = certificateRepository.findBySignerId(certificateEntity.getId());
             for (CertificateEntity childCertificate : childCertificates) {
-                if (!childCertificate.isPulled()) {
+                if (!childCertificate.isRetracted()) {
                     certificateStack.push(childCertificate);
                 }
             }
         }
+
+        logger.info("Successfully finished retraction process of certificate with serial number: %s".formatted(serialNumber));
     }
 
     @Override
-    public byte[] prepareCertificateForDownload(String serialNumber) {
-        certificateRepository.findBySerialNumber(serialNumber).orElseThrow(CertificateNotFoundException::new);
+    public CertificateDownloadResponseDto prepareForDownload(String serialNumber, String userEmail) {
+        CertificateEntity certificateEntity = certificateRepository.findBySerialNumber(serialNumber)
+                .orElseThrow(CertificateNotFoundException::new);
+        CertificateDownloadResponseDto certificateDownloadRequest = new CertificateDownloadResponseDto();
+        if (certificateEntity.getIssuedTo().getEmail().equals(userEmail)) {
+            PrivateKey privateKey = keyStoreReader.readPrivateKey(
+                    globalConstants.JKS_PATH,
+                    globalConstants.jksPassword,
+                    serialNumber,
+                    globalConstants.jksPassword
+            );
+            certificateDownloadRequest.setCertificatePrivateKeyBytes(privateKey.getEncoded());
+        }
         X509Certificate certificate = (X509Certificate) keyStoreReader.readCertificate(
                 globalConstants.JKS_PATH,
                 globalConstants.jksPassword,
                 serialNumber
         );
         try {
-            return certificate.getEncoded();
+            certificateDownloadRequest.setCertificateBytes(certificate.getEncoded());
+            return certificateDownloadRequest;
         } catch (CertificateException e) {
             new RuntimeException(e);
         }
@@ -386,7 +429,7 @@ public class CertificateService implements ICertificateService {
                 .endDate(certificateEntity.getEndDate().toString())
                 .publicKey(certificateEntity.getPublicKey().toString())
                 .signature(base64Utility.encode(certificateEntity.getSignature()))
-                .isPulled(certificateEntity.isPulled())
+                .isPulled(certificateEntity.isRetracted())
                 .build();
     }
 

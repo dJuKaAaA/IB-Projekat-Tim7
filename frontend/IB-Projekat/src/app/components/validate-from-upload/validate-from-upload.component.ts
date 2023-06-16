@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { UploadedCertificateRequest } from 'src/app/core/models/uploaded-certificate-request.model';
 import { CertificateService } from 'src/app/core/services/certificate.service';
 
@@ -13,7 +14,8 @@ export class ValidateFromUploadComponent {
 
   constructor(
     private dialogRef: MatDialogRef<ValidateFromUploadComponent>,
-    private certificateService: CertificateService
+    private certificateService: CertificateService,
+    private router: Router
   ) {}
 
   certPath: string = "";

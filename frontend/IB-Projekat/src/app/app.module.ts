@@ -27,9 +27,11 @@ import { CertificateDemandModelComponent } from './components/certificate-demand
 import { CertificateReviewComponent } from './components/certificate-review/certificate-review.component';
 import { DownloadCertificateComponent } from './components/download-certificate/download-certificate.component';
 import { CertificateDemandsViewComponent } from './components/certificate-demands-view/certificate-demands-view.component';
-import { PullCertificateDialogComponent } from './components/pull-certificate-dialog/pull-certificate-dialog.component';
+import { RetractCertificateDialogComponent } from './components/retract-certificate-dialog/retract-certificate-dialog.component';
 import { NgxCaptchaModule } from 'ngx-captcha';
 import { LoginVerificationCodeComponent } from './components/login-verification-code/login-verification-code.component';
+import { OAuthLoginComponent } from './components/oauth-login/oauth-login.component';
+import { SessionExpiredCheckInterceptor } from './interceptor/session-expired-check.interceptor';
 
 @NgModule({
   declarations: [
@@ -54,8 +56,9 @@ import { LoginVerificationCodeComponent } from './components/login-verification-
     CertificateReviewComponent,
     DownloadCertificateComponent,
     CertificateDemandsViewComponent,
-    PullCertificateDialogComponent,
+    RetractCertificateDialogComponent,
     LoginVerificationCodeComponent,
+    OAuthLoginComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,6 +73,11 @@ import { LoginVerificationCodeComponent } from './components/login-verification-
     {
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: SessionExpiredCheckInterceptor,
       multi: true,
     },
   ],

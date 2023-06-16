@@ -49,11 +49,10 @@ public class CertificateDemandController {
         return new ResponseEntity<>(certificateDemandService.getByRequesterIdPending(requesterId, pageable), HttpStatus.OK);
     }
 
-    @GetMapping("/{requesterId}")
+    @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<PaginatedResponseDto<CertificateDemandResponseDto>> getAll(@PathVariable Long requesterId, Pageable pageable,Principal principal) {
-        authService.checkUserIdMatchesUserEmail(requesterId, principal.getName());
-        return new ResponseEntity<>(certificateDemandService.getAll(requesterId, pageable), HttpStatus.OK);
+    public ResponseEntity<PaginatedResponseDto<CertificateDemandResponseDto>> getAll(Pageable pageable) {
+        return new ResponseEntity<>(certificateDemandService.getAll(pageable), HttpStatus.OK);
     }
 
     @PutMapping("/{id}/reject")

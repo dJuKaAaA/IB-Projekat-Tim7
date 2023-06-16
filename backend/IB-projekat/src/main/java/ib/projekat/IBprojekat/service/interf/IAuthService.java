@@ -4,6 +4,7 @@ import ib.projekat.IBprojekat.constant.VerificationCodeType;
 import ib.projekat.IBprojekat.dto.request.*;
 import ib.projekat.IBprojekat.dto.response.TokenResponseDto;
 import ib.projekat.IBprojekat.dto.response.UserResponseDto;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -27,10 +28,9 @@ public interface IAuthService {
 
     UserResponseDto verifyRegistration(VerifyVerificationCodeRequestDto registrationVerificationRequestDto);
 
-
     void recoverPassword(PasswordRecoveryRequestDto passwordRecoveryDto, int passwordNonMatchCount,
                          Date passwordValidationTime);
-
     void resetPassword(PasswordResetRequest passwordResetRequest, int passwordNonMatchCount,
                        Date passwordValidationTime);
+    TokenResponseDto loginWithGoogle();
 }

@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CertificateService } from 'src/app/core/services/certificate.service';
 
@@ -13,7 +14,8 @@ export class ValidateCertificateDialogComponent {
 
   constructor(
     private dialogRef: MatDialogRef<ValidateCertificateDialogComponent>,
-    private certificateService: CertificateService
+    private certificateService: CertificateService,
+    private router: Router
   ) {}
 
   serialNumber: string = "";
