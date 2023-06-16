@@ -1,0 +1,79 @@
+2023-06-16 15:37:44,227 INFO [background-preinit] HV000001: Hibernate Validator 8.0.0.Final
+2023-06-16 15:37:44,260 INFO [main] Starting IbProjekatApplication using Java 19.0.2 with PID 9816 (C:\Users\ivand\Desktop\Faks\Projekti\IB\IB-Projekat-Tim7\backend\IB-projekat\target\classes started by ivandj in C:\Users\ivand\Desktop\Faks\Projekti\IB\IB-Projekat-Tim7\backend\IB-projekat)
+2023-06-16 15:37:44,260 DEBUG [main] Running with Spring Boot v3.0.4, Spring v6.0.6
+2023-06-16 15:37:44,261 INFO [main] No active profile set, falling back to 1 default profile: "default"
+2023-06-16 15:37:44,919 INFO [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-06-16 15:37:44,977 INFO [main] Finished Spring Data repository scanning in 51 ms. Found 5 JPA repository interfaces.
+2023-06-16 15:37:45,375 INFO [main] Tomcat initialized with port(s): 8081 (https)
+2023-06-16 15:37:45,383 INFO [main] Initializing ProtocolHandler ["https-jsse-nio-8081"]
+2023-06-16 15:37:45,385 INFO [main] Starting service [Tomcat]
+2023-06-16 15:37:45,385 INFO [main] Starting Servlet engine: [Apache Tomcat/10.1.5]
+2023-06-16 15:37:45,447 INFO [main] Initializing Spring embedded WebApplicationContext
+2023-06-16 15:37:45,447 INFO [main] Root WebApplicationContext: initialization completed in 1123 ms
+2023-06-16 15:37:45,545 INFO [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-06-16 15:37:45,600 INFO [main] HHH000412: Hibernate ORM core version 6.1.7.Final
+2023-06-16 15:37:45,866 INFO [main] HikariPool-1 - Starting...
+2023-06-16 15:37:46,022 INFO [main] HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@61e14b53
+2023-06-16 15:37:46,024 INFO [main] HikariPool-1 - Start completed.
+2023-06-16 15:37:46,073 INFO [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2023-06-16 15:37:46,833 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-16 15:37:46,833 WARN [main] relation "certificate_demands" does not exist, skipping
+2023-06-16 15:37:46,834 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-16 15:37:46,834 WARN [main] relation "certificate_demands" does not exist, skipping
+2023-06-16 15:37:46,834 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-16 15:37:46,834 WARN [main] relation "certificate_demands" does not exist, skipping
+2023-06-16 15:37:46,835 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-16 15:37:46,835 WARN [main] relation "certificates" does not exist, skipping
+2023-06-16 15:37:46,835 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-16 15:37:46,835 WARN [main] relation "certificates" does not exist, skipping
+2023-06-16 15:37:46,835 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-16 15:37:46,836 WARN [main] relation "certificates" does not exist, skipping
+2023-06-16 15:37:46,836 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-16 15:37:46,836 WARN [main] relation "password_history_entity" does not exist, skipping
+2023-06-16 15:37:46,836 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-16 15:37:46,836 WARN [main] relation "verification_code" does not exist, skipping
+2023-06-16 15:37:46,837 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-16 15:37:46,837 WARN [main] table "certificate_demands" does not exist, skipping
+2023-06-16 15:37:46,837 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-16 15:37:46,837 WARN [main] table "certificates" does not exist, skipping
+2023-06-16 15:37:46,837 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-16 15:37:46,838 WARN [main] table "password_history_entity" does not exist, skipping
+2023-06-16 15:37:46,838 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-16 15:37:46,838 WARN [main] table "users" does not exist, skipping
+2023-06-16 15:37:46,838 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-16 15:37:46,838 WARN [main] table "verification_code" does not exist, skipping
+2023-06-16 15:37:46,839 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-16 15:37:46,839 WARN [main] sequence "certificate_demands_seq" does not exist, skipping
+2023-06-16 15:37:46,839 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-16 15:37:46,839 WARN [main] sequence "certificates_seq" does not exist, skipping
+2023-06-16 15:37:46,839 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-16 15:37:46,839 WARN [main] sequence "password_history_entity_seq" does not exist, skipping
+2023-06-16 15:37:46,840 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-16 15:37:46,840 WARN [main] sequence "users_seq" does not exist, skipping
+2023-06-16 15:37:46,840 WARN [main] SQL Warning Code: 0, SQLState: 00000
+2023-06-16 15:37:46,840 WARN [main] sequence "verification_code_seq" does not exist, skipping
+2023-06-16 15:37:46,894 INFO [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-06-16 15:37:46,903 INFO [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-06-16 15:37:47,159 DEBUG [main] Filter 'jwtAuthenticationFilter' configured for use
+2023-06-16 15:37:47,607 WARN [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-06-16 15:37:47,930 INFO [main] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@2140de63, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2da273b3, org.springframework.security.web.context.SecurityContextHolderFilter@349469db, org.springframework.security.web.header.HeaderWriterFilter@48d6248d, org.springframework.web.filter.CorsFilter@6b02909d, org.springframework.security.web.authentication.logout.LogoutFilter@36c8e1c6, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@377a1763, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@15932faf, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@7066c00a, ib.projekat.IBprojekat.websecurity.JwtAuthenticationFilter@57777c23, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@47e02a89, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@655008a2, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@2ca4b010, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@6bd5aa8b, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@424461ad, org.springframework.security.oauth2.client.web.OAuth2AuthorizationCodeGrantFilter@4569b6a9, org.springframework.security.web.session.SessionManagementFilter@c32908c, org.springframework.security.web.access.ExceptionTranslationFilter@2f29046b, org.springframework.security.web.access.intercept.AuthorizationFilter@e62d757]
+2023-06-16 15:37:48,127 INFO [main] Starting ProtocolHandler ["https-jsse-nio-8081"]
+2023-06-16 15:37:48,317 INFO [main] Tomcat started on port(s): 8081 (https) with context path ''
+2023-06-16 15:37:48,322 INFO [main] Started IbProjekatApplication in 5.123 seconds (process running for 6.605)
+2023-06-16 15:38:38,155 INFO [https-jsse-nio-8081-exec-4] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-06-16 15:38:38,155 INFO [https-jsse-nio-8081-exec-4] Initializing Servlet 'dispatcherServlet'
+2023-06-16 15:38:38,156 INFO [https-jsse-nio-8081-exec-4] Completed initialization in 1 ms
+2023-06-16 15:38:51,767 INFO [https-jsse-nio-8081-exec-5] Started OAuth login process
+2023-06-16 15:38:51,848 INFO [https-jsse-nio-8081-exec-5] Successfully generated a jwt token with OAuth credentials
+2023-06-16 15:38:52,172 INFO [https-jsse-nio-8081-exec-5] Successfully logged in with google OAuth
+2023-06-16 15:38:52,227 INFO [https-jsse-nio-8081-exec-7] Started fetching all certificates
+2023-06-16 15:38:52,239 INFO [https-jsse-nio-8081-exec-7] Successfully fetched all certificates
+2023-06-16 15:38:58,995 INFO [https-jsse-nio-8081-exec-3] Started OAuth login process
+2023-06-16 15:38:58,998 INFO [https-jsse-nio-8081-exec-3] Successfully generated a jwt token with OAuth credentials
+2023-06-16 15:38:59,186 INFO [https-jsse-nio-8081-exec-5] Successfully logged in with google OAuth
+2023-06-16 15:38:59,210 INFO [https-jsse-nio-8081-exec-6] Started fetching all certificates
+2023-06-16 15:38:59,214 INFO [https-jsse-nio-8081-exec-6] Successfully fetched all certificates
+2023-06-16 15:46:58,888 INFO [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-06-16 15:46:58,889 INFO [SpringApplicationShutdownHook] HHH000477: Starting delayed evictData of schema as part of SessionFactory shut-down'
+2023-06-16 15:46:58,909 INFO [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2023-06-16 15:46:58,912 INFO [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.

@@ -31,6 +31,7 @@ import { RetractCertificateDialogComponent } from './components/retract-certific
 import { NgxCaptchaModule } from 'ngx-captcha';
 import { LoginVerificationCodeComponent } from './components/login-verification-code/login-verification-code.component';
 import { OAuthLoginComponent } from './components/oauth-login/oauth-login.component';
+import { SessionExpiredCheckInterceptor } from './interceptor/session-expired-check.interceptor';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,11 @@ import { OAuthLoginComponent } from './components/oauth-login/oauth-login.compon
     {
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: SessionExpiredCheckInterceptor,
       multi: true,
     },
   ],
